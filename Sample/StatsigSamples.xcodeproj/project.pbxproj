@@ -9,8 +9,7 @@
 /* Begin PBXBuildFile section */
 		5C10DDA92AD4FB60003C4CE1 /* BasicOnDeviceEvaluationsViewControllerObjC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C10DDA82AD4FB60003C4CE1 /* BasicOnDeviceEvaluationsViewControllerObjC.m */; };
 		5C8094602ADF17F2001AF600 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C80945F2ADF17F2001AF600 /* Constants.swift */; };
-		5C8094662ADF4FBE001AF600 /* BasicPrecomputedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C8094652ADF4FBE001AF600 /* BasicPrecomputedViewController.swift */; };
-		5C80946A2ADF822F001AF600 /* Statsig in Frameworks */ = {isa = PBXBuildFile; productRef = 5C8094692ADF822F001AF600 /* Statsig */; };
+		5CA3D0A02AEA24DE000F335F /* StatsigOnDeviceEvaluations in Frameworks */ = {isa = PBXBuildFile; productRef = 5CA3D09F2AEA24DE000F335F /* StatsigOnDeviceEvaluations */; };
 		5CAFD04F2ADAEEDD00ACAF79 /* PerfOnDeviceEvaluationsViewControllerObjC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CAFD04E2ADAEEDD00ACAF79 /* PerfOnDeviceEvaluationsViewControllerObjC.m */; };
 		5CDBFC9A2AD4EFE0002E6E60 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDBFC992AD4EFE0002E6E60 /* AppDelegate.swift */; };
 		5CDBFC9E2AD4EFE0002E6E60 /* BasicOnDeviceEvaluationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDBFC9D2AD4EFE0002E6E60 /* BasicOnDeviceEvaluationsViewController.swift */; };
@@ -22,16 +21,14 @@
 		5C10DDA62AD4FB60003C4CE1 /* StatsigSamples-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StatsigSamples-Bridging-Header.h"; sourceTree = "<group>"; };
 		5C10DDA72AD4FB60003C4CE1 /* BasicOnDeviceEvaluationsViewControllerObjC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BasicOnDeviceEvaluationsViewControllerObjC.h; sourceTree = "<group>"; };
 		5C10DDA82AD4FB60003C4CE1 /* BasicOnDeviceEvaluationsViewControllerObjC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BasicOnDeviceEvaluationsViewControllerObjC.m; sourceTree = "<group>"; };
-		5C80945E2ADEFA10001AF600 /* sdk */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = sdk; path = ..; sourceTree = "<group>"; };
+		5C52DCB52AEA234F00807F7D /* sdk */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = sdk; path = ..; sourceTree = "<group>"; };
 		5C80945F2ADF17F2001AF600 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		5C8094652ADF4FBE001AF600 /* BasicPrecomputedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicPrecomputedViewController.swift; sourceTree = "<group>"; };
 		5CAFD04D2ADAEEDD00ACAF79 /* PerfOnDeviceEvaluationsViewControllerObjC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PerfOnDeviceEvaluationsViewControllerObjC.h; sourceTree = "<group>"; };
 		5CAFD04E2ADAEEDD00ACAF79 /* PerfOnDeviceEvaluationsViewControllerObjC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PerfOnDeviceEvaluationsViewControllerObjC.m; sourceTree = "<group>"; };
 		5CDBFC962AD4EFE0002E6E60 /* StatsigSamples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StatsigSamples.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5CDBFC992AD4EFE0002E6E60 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5CDBFC9D2AD4EFE0002E6E60 /* BasicOnDeviceEvaluationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicOnDeviceEvaluationsViewController.swift; sourceTree = "<group>"; };
 		5CDBFCA72AD4EFE1002E6E60 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5CDBFCCB2AD4F0EB002E6E60 /* StatsigOnDeviceEvaluations */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = StatsigOnDeviceEvaluations; path = ..; sourceTree = "<group>"; };
 		5CE8F8AF2ADB772C0075CA71 /* SynchronousInitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynchronousInitViewController.swift; sourceTree = "<group>"; };
 		5CE8F8B12ADB9C130075CA71 /* SynchronousSpecs.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SynchronousSpecs.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -41,17 +38,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5C80946A2ADF822F001AF600 /* Statsig in Frameworks */,
+				5CA3D0A02AEA24DE000F335F /* StatsigOnDeviceEvaluations in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		5C80945D2ADEFA10001AF600 /* Packages */ = {
+		5C52DCB42AEA234F00807F7D /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				5C80945E2ADEFA10001AF600 /* sdk */,
+				5C52DCB52AEA234F00807F7D /* sdk */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -59,7 +56,6 @@
 		5C8094622ADF19D1001AF600 /* Examples */ = {
 			isa = PBXGroup;
 			children = (
-				5C8094642ADF4FA7001AF600 /* PrecomputedEvaluations */,
 				5CE8F8B12ADB9C130075CA71 /* SynchronousSpecs.json */,
 				5C8094632ADF19DA001AF600 /* OnDeviceEvaluations */,
 			);
@@ -79,21 +75,20 @@
 			path = OnDeviceEvaluations;
 			sourceTree = "<group>";
 		};
-		5C8094642ADF4FA7001AF600 /* PrecomputedEvaluations */ = {
+		5CA3D09E2AEA24DE000F335F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				5C8094652ADF4FBE001AF600 /* BasicPrecomputedViewController.swift */,
 			);
-			path = PrecomputedEvaluations;
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		5CDBFC8D2AD4EFE0002E6E60 = {
 			isa = PBXGroup;
 			children = (
-				5C80945D2ADEFA10001AF600 /* Packages */,
+				5C52DCB42AEA234F00807F7D /* Packages */,
 				5CDBFC982AD4EFE0002E6E60 /* App */,
 				5CDBFC972AD4EFE0002E6E60 /* Products */,
-				5CDBFCC92AD4F097002E6E60 /* Frameworks */,
+				5CA3D09E2AEA24DE000F335F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -117,14 +112,6 @@
 			path = App;
 			sourceTree = "<group>";
 		};
-		5CDBFCC92AD4F097002E6E60 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				5CDBFCCB2AD4F0EB002E6E60 /* StatsigOnDeviceEvaluations */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -142,7 +129,7 @@
 			);
 			name = StatsigSamples;
 			packageProductDependencies = (
-				5C8094692ADF822F001AF600 /* Statsig */,
+				5CA3D09F2AEA24DE000F335F /* StatsigOnDeviceEvaluations */,
 			);
 			productName = StatsigOnDeviceEvaluationsSample;
 			productReference = 5CDBFC962AD4EFE0002E6E60 /* StatsigSamples.app */;
@@ -200,7 +187,6 @@
 			files = (
 				5C10DDA92AD4FB60003C4CE1 /* BasicOnDeviceEvaluationsViewControllerObjC.m in Sources */,
 				5CE8F8B02ADB772C0075CA71 /* SynchronousInitViewController.swift in Sources */,
-				5C8094662ADF4FBE001AF600 /* BasicPrecomputedViewController.swift in Sources */,
 				5CAFD04F2ADAEEDD00ACAF79 /* PerfOnDeviceEvaluationsViewControllerObjC.m in Sources */,
 				5CDBFC9E2AD4EFE0002E6E60 /* BasicOnDeviceEvaluationsViewController.swift in Sources */,
 				5CDBFC9A2AD4EFE0002E6E60 /* AppDelegate.swift in Sources */,
@@ -406,9 +392,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		5C8094692ADF822F001AF600 /* Statsig */ = {
+		5CA3D09F2AEA24DE000F335F /* StatsigOnDeviceEvaluations */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = Statsig;
+			productName = StatsigOnDeviceEvaluations;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -1,7 +1,7 @@
 #import "PerfOnDeviceEvaluationsViewControllerObjC.h"
 #import "StatsigSamples-Swift.h"
 
-@import Statsig;
+@import StatsigOnDeviceEvaluations;
 
 
 static NSString * const CellIdentifier = @"Cell";

@@ -1,14 +1,11 @@
 import UIKit
 
-import StatsigOnDeviceEvaluations
-
 enum DemoType {
-    case swiftOnDeviceBasic
-    case swiftPrecompBasic
+    case swiftBasic
     case swiftSyncInit
 
-    case objcOnDeviceBasic
-    case objcOnDevicePerf
+    case objcBasic
+    case objcPerf
 }
 
 @main
@@ -22,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
 
         window = UIWindow()
-        window?.rootViewController = getViewController(.swiftPrecompBasic)
+        window?.rootViewController = getViewController(.swiftSyncInit)
         window?.makeKeyAndVisible()
 
         return true
@@ -30,19 +27,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private func getViewController(_ type: DemoType) -> UIViewController {
         switch type {
-        case .swiftOnDeviceBasic:
+        case .swiftBasic:
             return BasicOnDeviceEvaluationsViewController()
-
-        case .swiftPrecompBasic:
-            return BasicPrecomputedEvaluationsViewController()
 
         case .swiftSyncInit:
             return SynchronousInitViewController()
 
-        case .objcOnDeviceBasic:
+        case .objcBasic:
             return BasicOnDeviceEvaluationsViewControllerObjC()
 
-        case .objcOnDevicePerf:
+        case .objcPerf:
             return PerfOnDeviceEvaluationsViewControllerObjC()
         }
 

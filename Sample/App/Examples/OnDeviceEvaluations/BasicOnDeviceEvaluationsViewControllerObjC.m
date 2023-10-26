@@ -1,7 +1,7 @@
 #import "BasicOnDeviceEvaluationsViewControllerObjC.h"
 #import "StatsigSamples-Swift.h"
 
-@import Statsig;
+@import StatsigOnDeviceEvaluations;
 
 @implementation BasicOnDeviceEvaluationsViewControllerObjC
 

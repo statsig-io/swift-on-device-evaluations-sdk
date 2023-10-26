@@ -3,28 +3,28 @@
 import PackageDescription
 
 let package = Package(
-    name: "Statsig",
+    name: "StatsigOnDeviceEvaluations",
     platforms: [.iOS(.v13)],
     products: [
         .library(
-            name: "Statsig",
+            name: "StatsigOnDeviceEvaluations",
             targets: [
-                "Statsig",
+                "StatsigOnDeviceEvaluations",
             ]),
     ],
     dependencies: [
-        .package(url: "https://github.com/AliSoftware/OHHTTPStubs.git", from: "9.1.0"),
-        .package(url: "https://github.com/Quick/Quick.git", from: "7.3.0"),
-        .package(url: "https://github.com/Quick/Nimble.git", from: "13.0.0")
+         .package(url: "https://github.com/AliSoftware/OHHTTPStubs.git", from: "9.1.0"),
+         .package(url: "https://github.com/Quick/Quick.git", from: "7.3.0"),
+         .package(url: "https://github.com/Quick/Nimble.git", from: "13.0.0")
     ],
     targets: [
         .target(
-            name: "Statsig",
-            dependencies: ["StatsigInternalObjC"]),
+            name: "StatsigOnDeviceEvaluations",
+             dependencies: ["StatsigInternalObjC"]),
 
-        .target(
-            name: "StatsigInternalObjC",
-            dependencies: []),
+         .target(
+             name: "StatsigInternalObjC",
+             dependencies: []),
 
 
         // Unit Tests

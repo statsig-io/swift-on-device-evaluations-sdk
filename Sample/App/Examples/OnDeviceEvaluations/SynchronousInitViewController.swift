@@ -1,5 +1,5 @@
 import UIKit
-import Statsig
+import StatsigOnDeviceEvaluations
 
 class SynchronousInitViewController: UIViewController {
 
