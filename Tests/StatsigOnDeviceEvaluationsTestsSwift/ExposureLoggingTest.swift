@@ -20,7 +20,7 @@ final class ExposureLoggingTest: QuickSpec {
                     times: 1
                 )
 
-                let client = StatsigClient()
+                let client = StatsigOnDeviceEvaluationsClient()
 
                 waitUntil { done in
                     client.initialize("client-key") { err in

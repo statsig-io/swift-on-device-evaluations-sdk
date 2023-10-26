@@ -27,7 +27,7 @@ final class RulesetsTest: QuickSpec {
                 )
 
                 waitUntil { done in
-                    StatsigClient.shared.initialize("client-key") { err in
+                    StatsigOnDeviceEvaluationsClient.shared.initialize("client-key") { err in
                         done()
                     }
                 }
@@ -35,7 +35,7 @@ final class RulesetsTest: QuickSpec {
 
             for (key, value) in gates {
                 it("is correct for gate \(key)") {
-                    let gate = StatsigClient.shared.getFeatureGate(key, user)
+                    let gate = StatsigOnDeviceEvaluationsClient.shared.getFeatureGate(key, user)
 
                     expect(gate.name).to(equal(key))
                     expect(gate.ruleID).to(equal(value["rule_id"] as? String))
@@ -46,7 +46,7 @@ final class RulesetsTest: QuickSpec {
 
             for (key, value) in configs {
                 it("is correct for config \(key)") {
-                    let config = StatsigClient.shared.getDynamicConfig(key, user)
+                    let config = StatsigOnDeviceEvaluationsClient.shared.getDynamicConfig(key, user)
 
                     expect(config.name).to(equal(key))
                     expect(config.ruleID).to(equal(value["rule_id"] as? String))
@@ -57,7 +57,7 @@ final class RulesetsTest: QuickSpec {
 
             for (key, value) in layers {
                 it("is correct for layer \(key)") {
-                    let layer = StatsigClient.shared.getLayer(key, user)
+                    let layer = StatsigOnDeviceEvaluationsClient.shared.getLayer(key, user)
 
                     expect(layer.name).to(equal(key))
                     expect(layer.ruleID).to(equal(value["rule_id"] as? String))

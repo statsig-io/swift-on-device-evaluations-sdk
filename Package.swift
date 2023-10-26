@@ -20,63 +20,35 @@ let package = Package(
     targets: [
         .target(
             name: "StatsigOnDeviceEvaluations",
-             dependencies: ["StatsigInternalObjC"]),
-
-         .target(
-             name: "StatsigInternalObjC",
              dependencies: []),
 
-
         // Unit Tests
-//        .target(
-//            name: "StatsigTestUtils",
-//            dependencies: [
-//                "OHHTTPStubs",
-//                .product(name: "OHHTTPStubsSwift", package: "OHHTTPStubs")
-//            ],
-//            path: "Tests/TestUtils",
-//            resources:[
-//                .process("Resources")
-//            ]),
-//        .testTarget(
-//            name: "StatsigOnDeviceEvaluationsTestsSwift",
-//            dependencies: [
-//                "StatsigOnDeviceEvaluations",
-//                "StatsigTestUtils",
-//                "Quick",
-//                "Nimble"
-//            ]
-//        ),
-//        .testTarget(
-//            name: "StatsigOnDeviceEvaluationsTestsObjC",
-//            dependencies: [
-//                "StatsigOnDeviceEvaluations",
-//                "StatsigTestUtils",
-//                "Nimble"
-//            ]
-//        ),
-//        .testTarget(
-//            name: "StatsigPrecomputedEvaluationsTestsSwift",
-//            dependencies: [
-//                "StatsigPrecomputedEvaluations",
-//                "Quick",
-//                "Nimble",
-//                "OHHTTPStubs",
-//                .product(name: "OHHTTPStubsSwift", package: "OHHTTPStubs")
-//            ]
-//        ),
-//        .testTarget(
-//            name: "StatsigPrecomputedEvaluationsTestsObjC",
-//            dependencies: [
-//                "StatsigPrecomputedEvaluations",
-//                "Quick",
-//                "Nimble",
-//                "OHHTTPStubs",
-//                .product(name: "OHHTTPStubsSwift", package: "OHHTTPStubs")
-//            ],
-//            resources:[
-//                .process("Resources")
-//            ]
-//        )
+        .target(
+            name: "StatsigTestUtils",
+            dependencies: [
+                "OHHTTPStubs",
+                .product(name: "OHHTTPStubsSwift", package: "OHHTTPStubs")
+            ],
+            path: "Tests/TestUtils",
+            resources:[
+                .process("Resources")
+            ]),
+        .testTarget(
+            name: "StatsigOnDeviceEvaluationsTestsSwift",
+            dependencies: [
+                "StatsigOnDeviceEvaluations",
+                "StatsigTestUtils",
+                "Quick",
+                "Nimble"
+            ]
+        ),
+        .testTarget(
+            name: "StatsigOnDeviceEvaluationsTestsObjC",
+            dependencies: [
+                "StatsigOnDeviceEvaluations",
+                "StatsigTestUtils",
+                "Nimble"
+            ]
+        ),
     ]
 )

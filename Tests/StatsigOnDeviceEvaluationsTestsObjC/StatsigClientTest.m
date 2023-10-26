@@ -10,12 +10,12 @@
 @end
 
 @implementation StatsigClientTest {
-    StatsigClient *_client;
+    StatsigOnDeviceEvaluationsClient *_client;
     StatsigUser *_user;
 }
 
 - (void)setUp {
-    _client = [StatsigClient new];
+    _client = [StatsigOnDeviceEvaluationsClient new];
 
     _user =
     [StatsigUser
