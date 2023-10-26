@@ -37,7 +37,7 @@ public final class StatsigOnDeviceEvaluationsClient: NSObject {
         options: StatsigOptions? = nil,
         completion: InitCompletion? = nil
     ) {
-        self.network.sdkKey = sdkKey
+        self.network.initialize(sdkKey, options)
         self.logger.options = options
         self.options = options
         setValuesFromNetwork(completion: completion)
@@ -48,7 +48,7 @@ public final class StatsigOnDeviceEvaluationsClient: NSObject {
         _ sdkKey: String,
         initialSpecs: SynchronousSpecsValue,
         options: StatsigOptions? = nil) -> Error? {
-        self.network.sdkKey = sdkKey
+        self.network.initialize(sdkKey, options)
         self.logger.options = options
         self.options = options
         return setValuesFromInitialSpecs(initialSpecs)

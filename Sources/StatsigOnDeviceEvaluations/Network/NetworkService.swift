@@ -8,7 +8,6 @@ enum Endpoint: String {
     case logEvent = "/v1/rgstr"
 }
 
-let baseDownloadConfigSpecsUrl = "https://api.statsigcdn.com/v1/download_config_specs/"
 let defaultLogEventUrl = "https://api.statsig.com/v1/rgstr"
 let defaultInitializeUrl = "https://api.statsig.com/v1/initialize"
 
@@ -18,7 +17,16 @@ enum Result<T> {
 }
 
 public class NetworkService {
-    var sdkKey: String? = nil
+    private var sdkKey: String? = nil
+    private var options: StatsigOptions? = nil
+
+    func initialize(
+        _ sdkKey: String,
+        _ options: StatsigOptions?
+    ) {
+        self.sdkKey = sdkKey
+        self.options = options
+    }
 
     func get<T>(
         _ endpoint: Endpoint,
@@ -121,7 +129,12 @@ public class NetworkService {
 
         switch endpoint {
         case .downloadConfigSpecs:
-            url = URL(string: "\(baseDownloadConfigSpecsUrl)\(sdkKey).json")
+            if let options = self.options,
+                options.configSpecAPI != StatsigOptions.Defaults.configSpecAPI {
+                url = URL(string: options.configSpecAPI)
+            } else {
+                url = URL(string: "\(StatsigOptions.Defaults.configSpecAPI)\(sdkKey).json")
+            }
         case .initialize:
             url = URL(string: defaultInitializeUrl)
         case .logEvent:

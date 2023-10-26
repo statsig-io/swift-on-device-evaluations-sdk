@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
 
-  spec.name         = "Statsig"
-  spec.version      = "2.0.0"
+  spec.name         = "StatsigOnDeviceEvaluations"
+  spec.version      = "1.0.0"
   spec.summary      = "Statsig enables developers to ship code faster and more safely."
   spec.description  = <<-DESC
                    Statsig enables developers to ship code faster and more safely by providing:
@@ -13,7 +13,7 @@ Pod::Spec.new do |spec|
                      and also run A/B tests to understand whether a new feature actually helps your product before shipping.
                    DESC
 
-  spec.homepage     = "https://github.com/statsig-io/ios-sdk"
+  spec.homepage     = "https://github.com/statsig-io/swift-on-device-evaluations-sdk"
 
   spec.license      = { :type => "ISC", :file => "LICENSE" }
 
@@ -23,9 +23,8 @@ Pod::Spec.new do |spec|
   spec.osx.deployment_target = "10.13"
   spec.tvos.deployment_target = "10.0"
 
-  spec.source       = { :git => "https://github.com/statsig-io/ios-sdk.git", :tag => "v#{spec.version}" }
-  spec.source_files  = "Sources/Statsig/**/*.swift"
-  spec.default_subspec = 'StatsigInternalObjC'
+  spec.source       = { :git => "https://github.com/statsig-io/swift-on-device-evaluations-sdk.git", :tag => "v#{spec.version}" }
+  spec.source_files  = "Sources/StatsigOnDeviceEvaluations/**/*.swift"
 
   spec.swift_version = '5.0'
 
@@ -35,9 +34,5 @@ Pod::Spec.new do |spec|
       test_spec.dependency 'Quick'
       test_spec.dependency 'OHHTTPStubs'
       test_spec.dependency 'OHHTTPStubs/Swift'
-  end
-
-  spec.subspec 'StatsigInternalObjC' do |subspec|
-    subspec.source_files  = "Sources/StatsigInternalObjC/**/*.{h,m}"
   end
 end
