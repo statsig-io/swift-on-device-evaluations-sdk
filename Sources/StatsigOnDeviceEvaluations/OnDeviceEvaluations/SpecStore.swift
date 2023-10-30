@@ -18,12 +18,14 @@ enum ValueSource: String {
 struct SpecStoreSourceInfo {
     let source: ValueSource
     let receivedAt: Int64
+    let lcut: Int64
 }
 
 class SpecStore {
     public private(set) var sourceInfo = SpecStoreSourceInfo(
         source: .uninitialized,
-        receivedAt: 0
+        receivedAt: 0,
+        lcut: 0
     )
 
     private let queue = DispatchQueue(label: STORE_LABEL, attributes: .concurrent)
@@ -51,7 +53,8 @@ class SpecStore {
         queue.async(flags: .barrier) {
             self.sourceInfo = SpecStoreSourceInfo(
                 source: source,
-                receivedAt: Time.now()
+                receivedAt: Time.now(),
+                lcut: response.time
             )
             self.specs = newSpecs
         }

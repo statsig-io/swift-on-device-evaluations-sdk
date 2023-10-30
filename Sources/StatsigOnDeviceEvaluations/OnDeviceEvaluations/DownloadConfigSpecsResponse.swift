@@ -4,7 +4,7 @@ struct DownloadConfigSpecsResponse: Decodable {
     let featureGates: [Spec]
     let dynamicConfigs: [Spec]
     let layerConfigs: [Spec]
-    let time: Int
+    let time: Int64
     let hasUpdates: Bool
 
     enum CodingKeys: String, CodingKey {
@@ -29,7 +29,7 @@ struct Spec: Decodable {
 
 struct SpecRule: Decodable {
     let name: String
-    let passPercentage: Int
+    let passPercentage: Double
     let conditions: [SpecCondition]
     let returnValue: JsonValue
     let id: String

@@ -19,9 +19,11 @@ class EventLogger {
     }
 
     func enqueue(_ eventFactory: @escaping () -> StatsigEventInternal) {
-        DispatchQueue.global(qos: .background).async { [weak self] in
-            self?.enqueueImpl(eventFactory)
-        }
+        self.enqueueImpl(eventFactory)
+    }
+
+    func shutdown() {
+        self.flush()
     }
 
     func flush() {
@@ -51,8 +53,8 @@ class EventLogger {
     }
 
     private func enqueueImpl(_ eventFactory: () -> StatsigEventInternal) {
-        let event = eventFactory()
         let shouldFlush = queue.sync {
+            let event = eventFactory()
             events.append(event)
             let max = options?.maxEventQueueSize ?? StatsigOptions.Defaults.maxEventQueueSize
             return events.count >= max

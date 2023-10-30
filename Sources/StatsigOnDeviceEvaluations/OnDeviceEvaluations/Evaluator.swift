@@ -13,21 +13,21 @@ class Evaluator {
         self.store = store
     }
 
-    public func checkGate(_ name: String, _ user: StatsigUser) -> DetailedEvaluation {
+    public func checkGate(_ name: String, _ user: StatsigUserInternal) -> DetailedEvaluation {
         evaluateWithDetails(
             store.getSpecAndSrouceInfo(.gate, name),
             user
         )
     }
 
-    public func getConfig(_ name: String, _ user: StatsigUser) -> DetailedEvaluation {
+    public func getConfig(_ name: String, _ user: StatsigUserInternal) -> DetailedEvaluation {
         evaluateWithDetails(
             store.getSpecAndSrouceInfo(.config, name),
             user
         )
     }
 
-    public func getLayer(_ name: String, _ user: StatsigUser) -> DetailedEvaluation {
+    public func getLayer(_ name: String, _ user: StatsigUserInternal) -> DetailedEvaluation {
         evaluateWithDetails(
             store.getSpecAndSrouceInfo(.layer, name),
             user
@@ -39,26 +39,23 @@ class Evaluator {
 extension Evaluator {
     private func evaluateWithDetails(
         _ specAndSourceInfo: (spec: Spec?, sourceInfo: SpecStoreSourceInfo),
-        _ user: StatsigUser)
+        _ user: StatsigUserInternal)
     -> DetailedEvaluation {
         let (spec, info) = specAndSourceInfo
         guard let spec = spec else {
             return (
                 evaluation: .empty(),
-                details: .unrecognized()
+                details: .unrecognized(info)
             )
         }
 
         return (
             evaluation: evaluateSpec(spec, user),
-            details: EvaluationDetails(
-                reason: info.source.rawValue,
-                time: info.receivedAt
-            )
+            details: EvaluationDetails(sourceInfo: info)
         )
     }
 
-    private func evaluateSpec(_ spec: Spec, _ user: StatsigUser) -> EvaluationResult {
+    private func evaluateSpec(_ spec: Spec, _ user: StatsigUserInternal) -> EvaluationResult {
         guard spec.enabled else {
             return .disabled(spec.defaultValue)
         }
@@ -100,7 +97,7 @@ extension Evaluator {
         )
     }
 
-    private func evaluateRule(_ rule: SpecRule, _ user: StatsigUser) -> EvaluationResult {
+    private func evaluateRule(_ rule: SpecRule, _ user: StatsigUserInternal) -> EvaluationResult {
         var exposures = [[String: String]]()
         var pass = true
 
@@ -132,7 +129,7 @@ extension Evaluator {
 
     private func evaluateDelegate(
         _ rule: SpecRule,
-        _ user: StatsigUser,
+        _ user: StatsigUserInternal,
         _ exposures: [[String: String]]
     ) -> EvaluationResult? {
         guard let delegate = rule.configDelegate else {
@@ -154,7 +151,7 @@ extension Evaluator {
         )
     }
 
-    private func evaluateCondition(_ condition: SpecCondition, _ user: StatsigUser) -> EvaluationResult {
+    private func evaluateCondition(_ condition: SpecCondition, _ user: StatsigUserInternal) -> EvaluationResult {
         var value: JsonValue? = nil
         var pass = false
 
@@ -262,7 +259,7 @@ extension Evaluator {
     private func evaluateNestedGates(
         _ gateNames: [JsonValue],
         _ type: String,
-        _ user: StatsigUser
+        _ user: StatsigUserInternal
     ) -> EvaluationResult {
         let isMultiPassGateType = type == "multi_pass_gate"
         var exposures = [[String: String]]()
@@ -296,7 +293,7 @@ extension Evaluator {
 
     private func evaluateNestedGate(
         _ gateName: String,
-        _ user: StatsigUser
+        _ user: StatsigUserInternal
     ) -> EvaluationResult {
         var exposures = [[String: String]]()
         var passing = false
@@ -309,9 +306,11 @@ extension Evaluator {
 
             passing = gateResult.boolValue
             exposures.append(contentsOf: gateResult.secondaryExposures ?? [])
-            exposures.append(createGateExposureData(
-                gateName, passing, gateResult.ruleID
-            ))
+            exposures.append([
+                "gate": gateName,
+                "gateValue": String(passing),
+                "ruleID": gateResult.ruleID
+            ])
         }
 
         return .boolean(
@@ -323,14 +322,14 @@ extension Evaluator {
     private func evaluatePassPercentage(
         _ rule: SpecRule,
         _ specSalt: String,
-        _ user: StatsigUser
+        _ user: StatsigUserInternal
     ) -> Bool {
         let unitID = user.getUnitID(rule.idType) ?? ""
         let hash = computeUserHash("\(specSalt).\(rule.salt).\(unitID)")
-        return (hash % 10_000) < (rule.passPercentage * 100)
+        return Double(hash % 10_000) < (rule.passPercentage * 100.0)
     }
 
-    private func getHashForUserBucket(_ condition: SpecCondition, _ user: StatsigUser) -> UInt64 {
+    private func getHashForUserBucket(_ condition: SpecCondition, _ user: StatsigUserInternal) -> UInt64 {
         let unitID = user.getUnitID(condition.idType) ?? ""
         let salt = condition.additionalValues?["salt"]?.asString() ?? ""
         let hash = computeUserHash("\(salt).\(unitID)")

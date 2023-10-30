@@ -54,12 +54,19 @@ public final class StatsigOnDeviceEvaluationsClient: NSObject {
         return setValuesFromInitialSpecs(initialSpecs)
     }
 
+    @objc
+    public func shutdown() {
+        self.logger.shutdown()
+    }
+
     @objc(logEvent:forUser:)
     public func logEvent(_ event: StatsigEvent, _ user: StatsigUser) {
+        let userInternal = internalizeUser(user, options)
+
         logger.enqueue {
             StatsigEventInternal(
                 event: event,
-                user: user,
+                user: userInternal,
                 time: Int64(Date().timeIntervalSince1970 * 1000),
                 secondaryExposures: []
             )
@@ -92,15 +99,15 @@ extension StatsigOnDeviceEvaluationsClient {
 
     @objc(getFeatureGate:forUser:)
     public func getFeatureGate(_ name: String, _ user: StatsigUser) -> FeatureGate {
-        let (evaluation, details) = evaluator.checkGate(name, user)
+        let userInternal = internalizeUser(user, options)
+        let (evaluation, details) = evaluator.checkGate(name, userInternal)
 
         logger.enqueue{
             createGateExposure(
-                user: user,
+                user: userInternal,
                 gateName: name,
-                gateValue: evaluation.boolValue,
-                ruleID: evaluation.ruleID,
-                secondaryExposures: []
+                evaluation: evaluation,
+                details: details
             )
         }
 
@@ -138,22 +145,26 @@ extension StatsigOnDeviceEvaluationsClient {
 
     @objc(getLayer:forUser:)
     public func getLayer(_ name: String, _ user: StatsigUser) -> Layer {
-        let (evaluation, details) = evaluator.getLayer(name, user)
+        let userInternal = internalizeUser(user, options)
+        let (evaluation, details) = evaluator.getLayer(name, userInternal)
 
-        logger.enqueue {
-            createLayerExposure(
-                user: user,
-                gateName: name,
-                gateValue: evaluation.boolValue,
-                ruleID: evaluation.ruleID,
-                secondaryExposures: []
+        let logExposure: ParameterExposureFunc = { [weak self] layer, parameter in
+            let exposure = createLayerExposure(
+                user: userInternal,
+                layerName: name,
+                parameter: parameter,
+                evaluation: evaluation,
+                details: details
             )
+
+            self?.logger.enqueue { exposure }
         }
 
         return Layer(
             name: name,
             ruleID: evaluation.ruleID,
             evaluationDetails: details,
+            logParameterExposure: logExposure,
             value: evaluation.jsonValue?.serializeToDictionary()
         )
     }
@@ -206,16 +217,16 @@ extension StatsigOnDeviceEvaluationsClient {
     }
 
     private func getConfigImpl(_ name: String, _ user: StatsigUser) -> DetailedEvaluation {
-        let detailedEval = evaluator.getConfig(name, user)
-        let evaluation = detailedEval.evaluation
+        let userInternal = internalizeUser(user, options)
+        let detailedEval = evaluator.getConfig(name, userInternal)
+        let (evaluation, details) = detailedEval
 
         logger.enqueue {
             createConfigExposure(
-                user: user,
-                gateName: name,
-                gateValue: evaluation.boolValue,
-                ruleID: evaluation.ruleID,
-                secondaryExposures: []
+                user: userInternal,
+                configName: name,
+                evaluation: evaluation,
+                details: details
             )
         }
 

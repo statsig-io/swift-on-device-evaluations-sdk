@@ -1,5 +1,13 @@
 import Foundation
 
+@objc public class StatsigEnvironment: NSObject {
+    /**
+     The environment tier, eg 'production', 'staging' or 'development'
+     */
+    @objc public var tier: String?
+
+    public override init() {}
+}
 
 @objc public class StatsigOptions: NSObject {
     @objc public class Defaults: NSObject {
@@ -23,5 +31,12 @@ import Foundation
      */
     @objc public var eventLoggingAPI: String = Defaults.eventLoggingAPI
 
-    public override init() {}
+    /**
+     An object you can use to set environment variables that apply to all of your users in the same session and will be used for targeting purposes.
+     */
+    @objc public var environment: StatsigEnvironment
+
+    public override init() {
+        environment = StatsigEnvironment()
+    }
 }
