@@ -10,6 +10,7 @@ struct EvaluationResult {
     let isExperimentGroup: Bool
     let groupName: String?
     let explicitParameters: [String]?
+    let configDelegate: String?
 
     private init(
         ruleID: String? = nil,
@@ -20,7 +21,8 @@ struct EvaluationResult {
         undelegatedSecondaryExposures: [[String: String]]? = nil,
         isExperimentGroup: Bool = false,
         groupName: String? = nil,
-        explicitParameters: [String]? = nil
+        explicitParameters: [String]? = nil,
+        configDelegate: String? = nil
     ) {
         self.ruleID = ruleID ?? ""
         self.boolValue = boolValue
@@ -31,6 +33,7 @@ struct EvaluationResult {
         self.isExperimentGroup = isExperimentGroup
         self.groupName = groupName
         self.explicitParameters = explicitParameters
+        self.configDelegate = configDelegate
     }
 
     static func empty() -> EvaluationResult {
@@ -100,7 +103,8 @@ struct EvaluationResult {
             undelegatedSecondaryExposures: undelegatedSecondaryExposures,
             isExperimentGroup: base.isExperimentGroup,
             groupName: base.groupName,
-            explicitParameters: explicitParameters
+            explicitParameters: explicitParameters,
+            configDelegate: delegate
         )
     }
 

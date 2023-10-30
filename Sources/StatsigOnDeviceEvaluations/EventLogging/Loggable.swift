@@ -10,24 +10,29 @@ extension StatsigUserValueMap: Loggable {
     }
 }
 
-extension StatsigUser: Loggable {
+extension StatsigUserInternal: Loggable {
     func toLoggable() -> [String : Any] {
         var result: [String : Any?] = [
-            "userID" : userID,
-            "email": email,
-            "ip": ip,
-            "country": country,
-            "locale": locale,
-            "appVersion": appVersion,
-            "customIDs" : customIDs
+            "userID" : user.userID,
+            "email": user.email,
+            "ip": user.ip,
+            "country": user.country,
+            "locale": user.locale,
+            "appVersion": user.appVersion,
+            "customIDs" : user.customIDs,
+            "userAgent": user.userAgent
         ]
 
-        if !custom.values.isEmpty {
-            result["custom"] = custom.toLoggable()
+        if !user.custom.values.isEmpty {
+            result["custom"] = user.custom.toLoggable()
         }
 
-        if !customIDs.isEmpty {
-            result["customIDs"] = customIDs
+        if !user.customIDs.isEmpty {
+            result["customIDs"] = user.customIDs
+        }
+
+        if let env = environment, let tier = env.tier {
+            result["statsigEnvironment"] = ["tier": tier]
         }
 
         return result.compactMapValues { $0 }

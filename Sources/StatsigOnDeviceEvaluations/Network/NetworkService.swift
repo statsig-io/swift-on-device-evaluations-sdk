@@ -4,12 +4,8 @@ typealias NetworkCompletion<T: Decodable> = (_ data: T?, _ error: Error?) -> Voi
 
 enum Endpoint: String {
     case downloadConfigSpecs = "/v1/download_config_specs"
-    case initialize = "/v1/initialize"
     case logEvent = "/v1/rgstr"
 }
-
-let defaultLogEventUrl = "https://api.statsig.com/v1/rgstr"
-let defaultInitializeUrl = "https://api.statsig.com/v1/initialize"
 
 enum Result<T> {
     case error(Error)
@@ -129,16 +125,20 @@ public class NetworkService {
 
         switch endpoint {
         case .downloadConfigSpecs:
+            url = URL(string: "\(StatsigOptions.Defaults.configSpecAPI)\(sdkKey).json")
+
             if let options = self.options,
                 options.configSpecAPI != StatsigOptions.Defaults.configSpecAPI {
                 url = URL(string: options.configSpecAPI)
-            } else {
-                url = URL(string: "\(StatsigOptions.Defaults.configSpecAPI)\(sdkKey).json")
             }
-        case .initialize:
-            url = URL(string: defaultInitializeUrl)
+
         case .logEvent:
-            url = URL(string: defaultLogEventUrl)
+            url = URL(string: StatsigOptions.Defaults.eventLoggingAPI)
+
+            if let options = self.options,
+                options.eventLoggingAPI != StatsigOptions.Defaults.eventLoggingAPI {
+                url = URL(string: options.eventLoggingAPI)
+            }
         }
 
         guard let url = url else {
