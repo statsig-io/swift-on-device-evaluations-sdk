@@ -6,4 +6,5 @@ enum StatsigError: Error {
     case noDataReceivedInResponse
     case downloadConfigSpecsFailure
     case initializeNetworkFailure
+    case failedToDeserializeResponse
 }

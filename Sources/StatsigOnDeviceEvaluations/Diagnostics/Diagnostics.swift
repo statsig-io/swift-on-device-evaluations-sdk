@@ -4,48 +4,73 @@ public protocol MarkersContainer {
 }
 
 typealias MarkerAtomicDict = AtomicDictionary<[[String: Any]]>
+typealias DiagnosticsMarker = [String: Any]
 
-public class Diagnostics {
-    public static var instance: DiagnosticsImpl?
-    internal static var sampling = Int.random(in: 1...10000)
+class Diagnostics {
+    static var instance: DiagnosticsImpl?
 
-    public static var mark: MarkersContainer? {
+    static var mark: MarkersContainer? {
         get { return instance }
     }
 
-    public static func boot(_ disabled: Bool?) {
-        if disabled == true {
-            return
-        }
-
-        if (sampling != 1) {
-            return
-        }
-
+    static func boot() {
         instance = DiagnosticsImpl()
     }
 
-    public static func shutdown() {
+    static func shutdown() {
         instance = nil
     }
+
+    static func log(_ logger: EventLogger, context: MarkerContext) {
+        guard
+            let instance = instance,
+            let markers = instance.getMarkers(forContext: context),
+            !markers.isEmpty
+        else {
+            return
+        }
+
+        instance.clearMarkers(forContext: context)
+
+        logger.enqueue { createDiagnosticsEvent(context, markers) }
+    }
+
 }
 
-public class DiagnosticsImpl: MarkersContainer {
-    public var overall: OverallMarker
-    public var initialize: InitializeMarkers
+class DiagnosticsImpl: MarkersContainer {
+    var overall: OverallMarker
+    var initialize: InitializeMarkers
 
-    private var markers = MarkerAtomicDict(label: "com.Statsig.Diagnostics")
+    private var markers = MarkerAtomicDict(label: "com.Statsig.OnDeviceEval.Diagnostics")
 
     fileprivate init() {
         self.overall = OverallMarker(markers)
         self.initialize = InitializeMarkers(markers)
     }
 
-    public func getMarkers(forContext context: MarkerContext) -> [[String: Any]]? {
+    func getMarkers(forContext context: MarkerContext) -> [DiagnosticsMarker]? {
         return markers[context.rawValue]
     }
 
-    public func clearMarkers(forContext context: MarkerContext) {
+    func clearMarkers(forContext context: MarkerContext) {
         markers[context.rawValue] = []
     }
+}
+
+
+internal func createDiagnosticsEvent(
+    _ context: MarkerContext,
+    _ markers: [DiagnosticsMarker]
+) -> StatsigEventInternal {
+    StatsigEventInternal(
+        eventName: "statsig::diagnostics",
+        value: nil,
+        metadata: [
+            "context" : context.rawValue,
+            "markers" : markers
+        ],
+        user: .empty(),
+        time: Time.now(),
+        secondaryExposures: nil
+    )
 }

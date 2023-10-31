@@ -15,21 +15,21 @@ class Evaluator {
 
     public func checkGate(_ name: String, _ user: StatsigUserInternal) -> DetailedEvaluation {
         evaluateWithDetails(
-            store.getSpecAndSrouceInfo(.gate, name),
+            store.getSpecAndSourceInfo(.gate, name),
             user
         )
     }
 
     public func getConfig(_ name: String, _ user: StatsigUserInternal) -> DetailedEvaluation {
         evaluateWithDetails(
-            store.getSpecAndSrouceInfo(.config, name),
+            store.getSpecAndSourceInfo(.config, name),
             user
         )
     }
 
     public func getLayer(_ name: String, _ user: StatsigUserInternal) -> DetailedEvaluation {
         evaluateWithDetails(
-            store.getSpecAndSrouceInfo(.layer, name),
+            store.getSpecAndSourceInfo(.layer, name),
             user
         )
     }
@@ -136,7 +136,7 @@ extension Evaluator {
             return nil
         }
 
-        let specAndInfo = store.getSpecAndSrouceInfo(.config, delegate)
+        let specAndInfo = store.getSpecAndSourceInfo(.config, delegate)
         guard let spec = specAndInfo.spec else {
             return nil
         }
@@ -298,7 +298,7 @@ extension Evaluator {
         var exposures = [[String: String]]()
         var passing = false
 
-        if let gateSpec = store.getSpecAndSrouceInfo(.gate, gateName).spec {
+        if let gateSpec = store.getSpecAndSourceInfo(.gate, gateName).spec {
             let gateResult = evaluateSpec(gateSpec, user)
             if gateResult.unsupported {
                 return gateResult

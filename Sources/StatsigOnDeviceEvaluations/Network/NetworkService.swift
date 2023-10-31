@@ -12,6 +12,11 @@ enum Result<T> {
     case ok(T)
 }
 
+struct DiagnosticsMarkers {
+    let network: NetworkMarker?
+    let process: ProcessMarker?
+}
+
 public class NetworkService {
     private var sdkKey: String? = nil
     private var options: StatsigOptions? = nil
@@ -36,7 +41,12 @@ public class NetworkService {
 
         case .ok(var request):
             request.httpMethod = "GET"
-            send(request, retries: 0, completion: completion)
+            send(
+                request,
+                retries: 0,
+                markers: getDiagnosticsMarkerForEndpoint(endpoint),
+                completion: completion
+            )
         }
     }
 
@@ -64,7 +74,12 @@ public class NetworkService {
             request.httpBody = data
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-            send(request, retries: retries ?? 0, completion: completion)
+            send(
+                request,
+                retries: retries ?? 0,
+                markers: getDiagnosticsMarkerForEndpoint(endpoint),
+                completion: completion
+            )
         }
     }
 
@@ -72,10 +87,14 @@ public class NetworkService {
         _ request: URLRequest,
         retries: UInt,
         backoffMs: UInt = 1000,
-        completion: @escaping NetworkCompletion<T>
+        markers: InitializeMarkers?,
+        completion: @escaping NetworkCompletion<T>,
+        failedAttempts: UInt = 0
     ) {
+        let attempt = failedAttempts + 1
+
         func onFailure(_ error: Error) {
-            if retries <= 0 {
+            if failedAttempts > retries {
                 completion(nil, error)
                 return
             }
@@ -84,15 +103,21 @@ public class NetworkService {
             DispatchQueue.main.asyncAfter(deadline: .now() + backoffSec) { [weak self] in
                 self?.send(
                     request,
-                    retries: retries - 1,
+                    retries: retries,
                     backoffMs: backoffMs * 2,
-                    completion: completion
+                    markers: markers,
+                    completion: completion,
+                    failedAttempts: attempt
                 )
             }
         }
 
+        markers?.network.start(attempt: attempt)
+
         let task = URLSession.shared.dataTask(with: request) {
-            data, response, err in
+            [weak markers] data, response, err in
+
+            markers?.network.end(attempt, data, response, err)
 
             if let error = err {
                 return onFailure(error)
@@ -102,15 +127,35 @@ public class NetworkService {
                 return onFailure(StatsigError.noDataReceivedInResponse)
             }
 
+            var decodeError: Error?
+            var decoded: T?
             do {
-                let decoded = try JSONDecoder().decode(T.self, from: data)
-                completion(decoded, nil)
+                markers?.process.start()
+                decoded = try JSONDecoder().decode(T.self, from: data)
             } catch {
-                return onFailure(error)
+                decodeError = error
+            }
+
+            let wasDecodingSuccessful = decodeError == nil && decoded != nil
+            markers?.process.end(success: wasDecodingSuccessful)
+
+            if wasDecodingSuccessful {
+                completion(decoded, nil)
+            } else {
+                onFailure(decodeError ?? StatsigError.failedToDeserializeResponse)
             }
         }
 
         task.resume()
+    }
+
+    private func getDiagnosticsMarkerForEndpoint(_ endpoint: Endpoint) -> InitializeMarkers? {
+        switch endpoint {
+        case .downloadConfigSpecs:
+            return Diagnostics.mark?.initialize
+        default:
+            return nil
+        }
     }
 
     private func getRequestForEndpoint(
@@ -128,7 +173,7 @@ public class NetworkService {
             url = URL(string: "\(StatsigOptions.Defaults.configSpecAPI)\(sdkKey).json")
 
             if let options = self.options,
-                options.configSpecAPI != StatsigOptions.Defaults.configSpecAPI {
+               options.configSpecAPI != StatsigOptions.Defaults.configSpecAPI {
                 url = URL(string: options.configSpecAPI)
             }
 
@@ -136,7 +181,7 @@ public class NetworkService {
             url = URL(string: StatsigOptions.Defaults.eventLoggingAPI)
 
             if let options = self.options,
-                options.eventLoggingAPI != StatsigOptions.Defaults.eventLoggingAPI {
+               options.eventLoggingAPI != StatsigOptions.Defaults.eventLoggingAPI {
                 url = URL(string: options.eventLoggingAPI)
             }
         }

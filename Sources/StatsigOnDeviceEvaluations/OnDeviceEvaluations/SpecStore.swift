@@ -60,11 +60,15 @@ class SpecStore {
         }
     }
 
-    func getSpecAndSrouceInfo(_ type: SpecType, _ name: String) -> (spec: Spec?, sourceInfo: SpecStoreSourceInfo) {
+    func getSpecAndSourceInfo(_ type: SpecType, _ name: String) -> (spec: Spec?, sourceInfo: SpecStoreSourceInfo) {
         queue.sync {(
             specs[type]?[name],
             self.sourceInfo
         )}
+    }
+
+    func getSourceInfo() -> SpecStoreSourceInfo {
+        queue.sync { self.sourceInfo }
     }
 }
 

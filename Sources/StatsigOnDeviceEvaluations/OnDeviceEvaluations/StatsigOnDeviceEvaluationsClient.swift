@@ -15,7 +15,7 @@ public final class StatsigOnDeviceEvaluationsClient: NSObject {
     let evaluator: Evaluator
     let network: NetworkService
     let logger: EventLogger
-    var emitter: StatsigClientEventEmitter
+    let emitter: StatsigClientEventEmitter
 
     @objc(sharedInstance)
     public static var shared: StatsigOnDeviceEvaluationsClient = {
@@ -37,21 +37,33 @@ public final class StatsigOnDeviceEvaluationsClient: NSObject {
         options: StatsigOptions? = nil,
         completion: InitCompletion? = nil
     ) {
+        let endDiagnostics = trackInitDiagnostics()
+
         self.network.initialize(sdkKey, options)
         self.logger.options = options
         self.options = options
-        setValuesFromNetwork(completion: completion)
+
+        setValuesFromNetwork { error in
+            endDiagnostics(error)
+            completion?(error)
+        }
     }
 
     @objc(initializeSyncWithSDKKey:initialSpecs:options:)
     public func initializeSync(
         _ sdkKey: String,
         initialSpecs: SynchronousSpecsValue,
-        options: StatsigOptions? = nil) -> Error? {
+        options: StatsigOptions? = nil
+    ) -> Error? {
+        let endDiagnostics = trackInitDiagnostics()
+
         self.network.initialize(sdkKey, options)
         self.logger.options = options
         self.options = options
-        return setValuesFromInitialSpecs(initialSpecs)
+
+        let error = setValuesFromInitialSpecs(initialSpecs)
+        endDiagnostics(error)
+        return error
     }
 
     @objc
@@ -60,17 +72,13 @@ public final class StatsigOnDeviceEvaluationsClient: NSObject {
     }
 
     @objc(logEvent:forUser:)
-    public func logEvent(_ event: StatsigEvent, _ user: StatsigUser) {
+    public func logEvent(
+        _ event: StatsigEvent,
+        _ user: StatsigUser
+    ) {
         let userInternal = internalizeUser(user, options)
 
-        logger.enqueue {
-            StatsigEventInternal(
-                event: event,
-                user: userInternal,
-                time: Int64(Date().timeIntervalSince1970 * 1000),
-                secondaryExposures: []
-            )
-        }
+        logger.enqueue { event.toInternal(userInternal, nil) }
     }
 
     @objc
@@ -231,5 +239,27 @@ extension StatsigOnDeviceEvaluationsClient {
         }
 
         return detailedEval
+    }
+
+    private func trackInitDiagnostics() -> (Error?) -> Void {
+        Diagnostics.boot()
+        Diagnostics.mark?.overall.start()
+
+        return { error in
+            let sourceInfo = self.store.getSourceInfo()
+            let lcut = sourceInfo.lcut
+
+            Diagnostics.mark?.overall.end(
+                success: error == nil,
+                details: [
+                    "reason": sourceInfo.source.rawValue,
+                    "configSyncTime": lcut,
+                    "initTime": lcut,
+                    "serverTime": Time.now()
+                ],
+                errorMessage: nil
+            )
+            Diagnostics.log(self.logger, context: .initialize)
+        }
     }
 }
