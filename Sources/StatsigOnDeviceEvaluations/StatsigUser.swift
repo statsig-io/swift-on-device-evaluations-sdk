@@ -10,6 +10,7 @@ import Foundation
     @objc public var country: String?
     @objc public var locale: String?
     @objc public var appVersion: String?
+    @objc public var environment: StatsigEnvironment?
 
     @objc public lazy var custom: StatsigUserValueMap = {
         StatsigUserValueMap()
@@ -18,8 +19,6 @@ import Foundation
     @objc public lazy var privateAttributes: StatsigUserValueMap = {
         StatsigUserValueMap()
     }()
-
-    internal var environment: [String: String]?
 
     public init(userID: String) {
         self.userID = userID

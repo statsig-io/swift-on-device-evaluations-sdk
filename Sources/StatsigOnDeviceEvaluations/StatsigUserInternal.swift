@@ -2,7 +2,6 @@ import Foundation
 
 struct StatsigUserInternal {
     let user: StatsigUser
-    let environment: StatsigEnvironment?
 
     internal func getUnitID(_ type: String) -> String? {
         let lowered = type.lowercased()
@@ -63,14 +62,14 @@ struct StatsigUserInternal {
 
     private func getEnvironmentValueString(_ field: String) -> String? {
         switch field {
-        case "tier": return environment?.tier
+        case "tier": return user.environment?.tier
         default: return nil
         }
     }
 }
 
 func internalizeUser(_ user: StatsigUser, _ options: StatsigOptions?) -> StatsigUserInternal {
-    StatsigUserInternal(user: user, environment: options?.environment)
+    StatsigUserInternal(user: user)
 }
 
 extension StatsigUserValueMap {

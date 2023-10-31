@@ -17,6 +17,7 @@ internal func createGateExposure(
 ) -> StatsigEventInternal {
     let metadata = createExposureMetadata(evaluation, details, [
         "gate": gateName,
+        "gateValue": "\(evaluation.boolValue)"
     ])
 
     return StatsigEvent(

@@ -56,7 +56,7 @@ public class NetworkService {
             guard JSONSerialization.isValidJSONObject(payload),
                   let data = try? JSONSerialization.data(withJSONObject: payload)
             else {
-                completion(nil, StatsigError.invalidPayload)
+                completion(nil, StatsigError.invalidRequestPayload)
                 return
             }
 
@@ -106,7 +106,7 @@ public class NetworkService {
                 let decoded = try JSONDecoder().decode(T.self, from: data)
                 completion(decoded, nil)
             } catch {
-                completion(nil, error)
+                return onFailure(error)
             }
         }
 
