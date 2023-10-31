@@ -2,11 +2,7 @@ import Foundation
 
 @objc public enum StatsigClientEvent: Int {
     case eventsFlushed
-    case valuesUpdated
-    case valuesUpdateError
 }
-
-typealias StatsigListeningID = String
 
 @objc public protocol StatsigListening: AnyObject {
     @objc(onStatsigClientEvent:withEventData:)
