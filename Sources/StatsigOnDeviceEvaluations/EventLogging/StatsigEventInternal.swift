@@ -1,7 +1,9 @@
 import Foundation
 
 internal struct StatsigEventInternal {
-    let event: StatsigEvent
+    let eventName: String
+    let value: StatsigEventValue?
+    let metadata: [String: Any]?
     let user: StatsigUserInternal
     let time: Int64
     let secondaryExposures: SecondaryExposures?
@@ -24,7 +26,7 @@ internal func createGateExposure(
         eventName: GATE_EXPOSURE_NAME,
         metadata: metadata
     )
-    .toInternal(user, evaluation.secondaryExposures)
+    .toInternalWithExposures(user, evaluation.secondaryExposures)
 }
 
 internal func createConfigExposure(
@@ -41,7 +43,7 @@ internal func createConfigExposure(
         eventName: CONFIG_EXPOSURE_NAME,
         metadata: metadata
     )
-    .toInternal(user, evaluation.secondaryExposures)
+    .toInternalWithExposures(user, evaluation.secondaryExposures)
 }
 
 internal func createLayerExposure(
@@ -70,7 +72,7 @@ internal func createLayerExposure(
         eventName: LAYER_EXPOSURE_NAME,
         metadata:metadata
     )
-    .toInternal(user, exposures)
+    .toInternalWithExposures(user, exposures)
 }
 
 internal func createExposureMetadata(
@@ -95,16 +97,25 @@ internal func createExposureMetadata(
     return result
 }
 
-private extension StatsigEvent {
-    func toInternal(
+extension StatsigEvent {
+    func toInternalWithExposures(
         _ user: StatsigUserInternal,
         _ secondaryExposures: SecondaryExposures?
+    )  -> StatsigEventInternal {
+        toInternal(user, secondaryExposures ?? [])
+    }
+
+    func toInternal(
+        _ user: StatsigUserInternal,
+        _ secondaryExposures: SecondaryExposures? = nil
     ) -> StatsigEventInternal {
         StatsigEventInternal(
-            event: self,
+            eventName: self.eventName,
+            value: self.value,
+            metadata: self.metadata,
             user: user,
-            time: Int64(Date().timeIntervalSince1970 * 1000),
-            secondaryExposures: secondaryExposures ?? []
+            time: Time.now(),
+            secondaryExposures: secondaryExposures
         )
     }
 }

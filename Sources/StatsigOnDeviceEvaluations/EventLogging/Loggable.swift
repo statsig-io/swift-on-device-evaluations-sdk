@@ -42,18 +42,18 @@ extension StatsigUserInternal: Loggable {
 extension StatsigEventInternal: Loggable {
     func toLoggable() -> [String : Any] {
         var result: [String: Any] = [
-            "eventName": event.eventName,
+            "eventName": eventName,
             "user": user.toLoggable(),
             "time": time,
             //            "statsigMetadata": statsigMetadata,
             //            "allocatedExperimentHash": allocatedExperimentHash,
         ]
 
-        if let value = event.value {
+        if let value = value {
             result["value"] = value
         }
 
-        if let metadata = event.metadata {
+        if let metadata = metadata {
             result["metadata"] = metadata
         }
 

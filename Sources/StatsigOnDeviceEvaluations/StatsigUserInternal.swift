@@ -4,6 +4,10 @@ struct StatsigUserInternal {
     let user: StatsigUser
     let environment: StatsigEnvironment?
 
+    static func empty() -> StatsigUserInternal {
+        StatsigUserInternal(user: StatsigUser(userID: ""), environment: nil)
+    }
+
     internal func getUnitID(_ type: String) -> String? {
         let lowered = type.lowercased()
 

@@ -7,14 +7,14 @@ public class NetworkMarker: MarkerBase {
         self.init(recorder, context: .initialize, markerKey: key)
     }
 
-    public func start(attempt: Int) {
+    public func start(attempt: UInt) {
         super.start([
             "step": step,
             "attempt": attempt
         ])
     }
 
-    public func end(_ attempt: Int, _ data: Data?, _ response: URLResponse?, _ error: Error?) {
+    public func end(_ attempt: UInt, _ data: Data?, _ response: URLResponse?, _ error: Error?) {
         let isSuccess = error == nil && response?.isOK == true
 
         var args: [String: Any] = [
