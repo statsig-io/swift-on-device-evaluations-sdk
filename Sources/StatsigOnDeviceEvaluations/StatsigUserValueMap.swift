@@ -44,5 +44,6 @@ public protocol StatsigUserValue {}
 extension String: StatsigUserValue {}
 extension Double: StatsigUserValue {}
 extension Int: StatsigUserValue {}
+extension UInt: StatsigUserValue {}
 extension Bool: StatsigUserValue {}
 extension Array<String>: StatsigUserValue {}

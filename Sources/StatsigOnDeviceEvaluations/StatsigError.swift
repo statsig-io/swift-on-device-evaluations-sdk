@@ -1,7 +1,7 @@
 enum StatsigError: Error {
     case invalidSDKKey
     case invalidUrl
-    case invalidPayload
+    case invalidRequestPayload
     case invalidSynchronousSpecs
     case noDataReceivedInResponse
     case downloadConfigSpecsFailure

@@ -3,6 +3,7 @@ import Foundation
 public enum JsonValue: Decodable, Equatable {
     case string(String)
     case int(Int64)
+    case uint(UInt64)
     case double(Double)
     case bool(Bool)
     case dictionary([String: JsonValue])
@@ -26,11 +27,17 @@ public enum JsonValue: Decodable, Equatable {
             self = .int(Int64(value))
         }
 
+        else if let value = value as? UInt {
+            self = .uint(UInt64(value))
+        }
+
         else if let value = value as? Bool {
             self = .bool(value)
         }
 
-        return nil
+        else {
+            return nil
+        }
     }
 
     public init(from decoder: Decoder) throws {
@@ -40,8 +47,12 @@ public enum JsonValue: Decodable, Equatable {
             self = .string(stringVal)
         }
 
-        else if let intVal = try? container.decode(Int.self) {
+        else if let intVal = try? container.decode(Int64.self) {
             self = .int(Int64(intVal))
+        }
+
+        else if let uintVal = try? container.decode(UInt64.self) {
+            self = .uint(UInt64(uintVal))
         }
 
         else if let doubleVal = try? container.decode(Double.self) {
@@ -80,6 +91,8 @@ extension JsonValue: Encodable {
         case .string(let value):
             try container.encode(value)
         case .int(let value):
+            try container.encode(value)
+        case .uint(let value):
             try container.encode(value)
         case .double(let value):
             try container.encode(value)
@@ -128,6 +141,9 @@ extension JsonValue {
         case .int(let value):
             return String(value)
 
+        case .uint(let value):
+            return String(value)
+
         case .double(let value):
             return String(value)
 
@@ -146,8 +162,13 @@ extension JsonValue {
         switch self {
         case .int(let value):
             return Double(value)
+
+        case .uint(let value):
+            return Double(value)
+
         case .double(let value):
             return value
+
         default:
             return nil
         }

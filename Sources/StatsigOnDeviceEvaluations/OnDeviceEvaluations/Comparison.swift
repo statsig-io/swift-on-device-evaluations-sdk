@@ -127,7 +127,19 @@ enum Comparison {
     static func stringWithRegex(
         _ value: JsonValue?,
         _ target: JsonValue?) -> Bool {
-            return false
+            guard let value = value?.asString(),
+                  let target = target?.asString() else {
+                return false
+            }
+
+            do {
+                let regex = try NSRegularExpression(pattern: target)
+                let range = NSRange(value.startIndex..<value.endIndex, in: value)
+                let matches = regex.matches(in: value, range: range)
+                return !matches.isEmpty
+            } catch {
+                return false
+            }
         }
 
     static func time(

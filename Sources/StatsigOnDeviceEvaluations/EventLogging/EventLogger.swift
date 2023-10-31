@@ -11,11 +11,16 @@ class EventLogger {
     private let emitter: StatsigClientEventEmitter
 
     private var events: [StatsigEventInternal] = []
+    private var flushTimer: Timer?
 
     init(_ network: NetworkService,
          _ emitter: StatsigClientEventEmitter) {
         self.network = network
         self.emitter = emitter
+
+        DispatchQueue.main.async { [weak self] in
+            self?.startFlushTimer()
+        }
     }
 
     func enqueue(_ eventFactory: @escaping () -> StatsigEventInternal) {
@@ -23,6 +28,7 @@ class EventLogger {
     }
 
     func shutdown() {
+        self.flushTimer?.invalidate()
         self.flush()
     }
 
@@ -56,12 +62,26 @@ class EventLogger {
         let shouldFlush = queue.sync {
             let event = eventFactory()
             events.append(event)
-            let max = options?.maxEventQueueSize ?? StatsigOptions.Defaults.maxEventQueueSize
+
+            let max = options?.eventQueueMaxSize ?? StatsigOptions.Defaults.eventQueueMaxSize
             return events.count >= max
         }
 
         if (shouldFlush) {
             flush()
+        }
+    }
+
+    private func startFlushTimer() {
+        flushTimer?.invalidate()
+
+        let interval = options?.eventQueueInternalMs ?? StatsigOptions.Defaults.eventQueueInternalMs
+
+        flushTimer = Timer.scheduledTimer(
+            withTimeInterval: TimeInterval(interval) / 1000.0,
+            repeats: true
+        ) { [weak self] _ in
+            self?.flush()
         }
     }
 }
