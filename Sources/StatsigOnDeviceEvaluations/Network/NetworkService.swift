@@ -1,6 +1,11 @@
 import Foundation
 
-typealias NetworkCompletion<T: Decodable> = (_ data: T?, _ error: Error?) -> Void
+struct DecodedResult<T: Decodable> {
+    let decoded: T
+    let data: Data
+}
+
+typealias NetworkCompletion<T: Decodable> = (_ result: DecodedResult<T>?, _ error: Error?) -> Void
 
 enum Endpoint: String {
     case downloadConfigSpecs = "/v1/download_config_specs"
@@ -21,7 +26,7 @@ public class NetworkService {
     private var sdkKey: String? = nil
     private var options: StatsigOptions? = nil
 
-    func initialize(
+    func setRequiredFields(
         _ sdkKey: String,
         _ options: StatsigOptions?
     ) {
@@ -139,8 +144,8 @@ public class NetworkService {
             let wasDecodingSuccessful = decodeError == nil && decoded != nil
             markers?.process.end(success: wasDecodingSuccessful)
 
-            if wasDecodingSuccessful {
-                completion(decoded, nil)
+            if wasDecodingSuccessful, let decoded = decoded {
+                completion(DecodedResult(decoded: decoded, data: data), nil)
             } else {
                 onFailure(decodeError ?? StatsigError.failedToDeserializeResponse)
             }

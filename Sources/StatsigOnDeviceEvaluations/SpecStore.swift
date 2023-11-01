@@ -36,7 +36,42 @@ class SpecStore {
         specs = [:]
     }
 
-    func setValues(_ response: DownloadConfigSpecsResponse, source: ValueSource) {
+    public func setAndCacheValues(
+        response: DownloadConfigSpecsResponse,
+        responseData: Data,
+        sdkKey: String,
+        source: ValueSource
+    ) {
+        setValues(response, source: source)
+        FileUtil.writeToCache(sdkKey.djb2(), responseData)
+    }
+
+    func getSpecAndSourceInfo(_ type: SpecType, _ name: String) -> (spec: Spec?, sourceInfo: SpecStoreSourceInfo) {
+        queue.sync {(
+            specs[type]?[name],
+            self.sourceInfo
+        )}
+    }
+
+    func getSourceInfo() -> SpecStoreSourceInfo {
+        queue.sync { self.sourceInfo }
+    }
+
+    func loadFromCache(_ sdkKey: String) {
+        guard let data = FileUtil.readFromCache(sdkKey.djb2()) else {
+            return
+        }
+
+        do {
+            let decoded = try JSONDecoder()
+                .decode(DownloadConfigSpecsResponse.self, from: data)
+            setValues(decoded, source: .cache)
+        } catch {
+            return
+        }
+    }
+
+    private func setValues(_ response: DownloadConfigSpecsResponse, source: ValueSource) {
         let newSpecs = [
             (SpecType.gate, response.featureGates),
             (SpecType.config, response.dynamicConfigs),
@@ -58,17 +93,6 @@ class SpecStore {
             )
             self.specs = newSpecs
         }
-    }
-
-    func getSpecAndSourceInfo(_ type: SpecType, _ name: String) -> (spec: Spec?, sourceInfo: SpecStoreSourceInfo) {
-        queue.sync {(
-            specs[type]?[name],
-            self.sourceInfo
-        )}
-    }
-
-    func getSourceInfo() -> SpecStoreSourceInfo {
-        queue.sync { self.sourceInfo }
     }
 }
 
