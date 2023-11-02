@@ -8,7 +8,7 @@ public protocol SynchronousSpecsValue {}
 extension NSData: SynchronousSpecsValue {}
 extension NSString: SynchronousSpecsValue {}
 
-public final class StatsigOnDeviceEvaluationsClient: NSObject {
+public final class Statsig: NSObject {
     var options: StatsigOptions?
 
     let store: SpecStore
@@ -18,8 +18,8 @@ public final class StatsigOnDeviceEvaluationsClient: NSObject {
     let emitter: StatsigClientEventEmitter
 
     @objc(sharedInstance)
-    public static var shared: StatsigOnDeviceEvaluationsClient = {
-        return StatsigOnDeviceEvaluationsClient()
+    public static var shared: Statsig = {
+        return Statsig()
     }()
 
     @objc public override init() {
@@ -100,7 +100,7 @@ public final class StatsigOnDeviceEvaluationsClient: NSObject {
 
 
 // MARK: Check APIs
-extension StatsigOnDeviceEvaluationsClient {
+extension Statsig {
     @objc(checkGate:forUser:)
     public func checkGate(_ name: String, _ user: StatsigUser) -> Bool {
         return getFeatureGate(name, user).value
@@ -181,7 +181,7 @@ extension StatsigOnDeviceEvaluationsClient {
 
 
 // MARK: Private
-extension StatsigOnDeviceEvaluationsClient {
+extension Statsig {
     private func setValuesFromNetwork(_ sdkKey: String, completion: InitCompletion? = nil) {
         network.get(.downloadConfigSpecs) {
             [weak self] (result: DecodedResult<DownloadConfigSpecsResponse>?, error) in

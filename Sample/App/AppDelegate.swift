@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
 
         window = UIWindow()
-        window?.rootViewController = getViewController(.swiftBasic)
+        window?.rootViewController = getViewController(.objcPerf)
         window?.makeKeyAndVisible()
 
         return true

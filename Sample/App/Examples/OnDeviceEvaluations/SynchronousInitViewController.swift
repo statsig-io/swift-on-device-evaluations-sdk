@@ -7,7 +7,7 @@ class SynchronousInitViewController: UIViewController {
         super.viewDidLoad()
 
         let user = StatsigUser(userID: "a-user")
-        let client = StatsigOnDeviceEvaluationsClient.shared
+        let client = Statsig.shared
 
         let path = Bundle.main.path(forResource: "SynchronousSpecs", ofType: "json")!
         let url = URL(fileURLWithPath: path)
