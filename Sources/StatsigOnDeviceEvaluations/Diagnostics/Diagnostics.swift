@@ -8,6 +8,7 @@ typealias DiagnosticsMarker = [String: Any]
 
 class Diagnostics {
     static var instance: DiagnosticsImpl?
+    static var disabled = false
 
     static var mark: MarkersContainer? {
         get { return instance }
@@ -22,6 +23,10 @@ class Diagnostics {
     }
 
     static func log(_ logger: EventLogger, context: MarkerContext) {
+        if disabled {
+            return
+        }
+
         guard
             let instance = instance,
             let markers = instance.getMarkers(forContext: context),
