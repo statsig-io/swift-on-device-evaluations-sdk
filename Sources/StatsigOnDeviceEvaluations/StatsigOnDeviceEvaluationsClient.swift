@@ -39,11 +39,12 @@ public final class StatsigOnDeviceEvaluationsClient: NSObject {
     ) {
         let endDiagnostics = trackInitDiagnostics()
 
-        self.network.initialize(sdkKey, options)
+        self.network.setRequiredFields(sdkKey, options)
         self.logger.options = options
         self.options = options
+        self.store.loadFromCache(sdkKey)
 
-        setValuesFromNetwork { error in
+        setValuesFromNetwork(sdkKey) { error in
             endDiagnostics(error)
             completion?(error)
         }
@@ -57,11 +58,11 @@ public final class StatsigOnDeviceEvaluationsClient: NSObject {
     ) -> Error? {
         let endDiagnostics = trackInitDiagnostics()
 
-        self.network.initialize(sdkKey, options)
+        self.network.setRequiredFields(sdkKey, options)
         self.logger.options = options
         self.options = options
 
-        let error = setValuesFromInitialSpecs(initialSpecs)
+        let error = setValuesFromInitialSpecs(sdkKey, initialSpecs)
         endDiagnostics(error)
         return error
     }
@@ -181,26 +182,32 @@ extension StatsigOnDeviceEvaluationsClient {
 
 // MARK: Private
 extension StatsigOnDeviceEvaluationsClient {
-    private func setValuesFromNetwork(completion: InitCompletion? = nil) {
+    private func setValuesFromNetwork(_ sdkKey: String, completion: InitCompletion? = nil) {
         network.get(.downloadConfigSpecs) {
-            [weak self] (data: DownloadConfigSpecsResponse?, error) in
+            [weak self] (result: DecodedResult<DownloadConfigSpecsResponse>?, error) in
 
             if let error = error {
                 completion?(error)
                 return
             }
 
-            guard let data = data else {
+            guard let result = result else {
                 completion?(StatsigError.downloadConfigSpecsFailure)
                 return
             }
 
-            self?.store.setValues(data, source: .network)
+            self?.store.setAndCacheValues(
+                response: result.decoded,
+                responseData: result.data,
+                sdkKey: sdkKey,
+                source: .network
+            )
+
             completion?(nil)
         }
     }
 
-    private func setValuesFromInitialSpecs(_ initialValues: SynchronousSpecsValue) -> Error? {
+    private func setValuesFromInitialSpecs(_ sdkKey: String, _ initialValues: SynchronousSpecsValue) -> Error? {
         var data: Data?
 
         if let initialValues = initialValues as? Data {
@@ -217,7 +224,14 @@ extension StatsigOnDeviceEvaluationsClient {
         do {
             let decoded = try JSONDecoder()
                 .decode(DownloadConfigSpecsResponse.self, from: data)
-            store.setValues(decoded, source: .bootstrap)
+
+            store.setAndCacheValues(
+                response: decoded,
+                responseData: data,
+                sdkKey: sdkKey,
+                source: .bootstrap
+            )
+
             return nil
         } catch {
             return error

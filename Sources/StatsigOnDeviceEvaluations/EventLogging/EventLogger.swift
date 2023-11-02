@@ -50,10 +50,10 @@ class EventLogger {
                 //                "statsigMetadata": forUser.deviceEnvironment
             ],
             retries: 3
-        ) { [weak emitter] (data: LogEventResponse?, error) in
+        ) { [weak emitter] (result: DecodedResult<LogEventResponse>?, error) in
             emitter?.emit(.eventsFlushed, [
                 "events": pending,
-                "success": error == nil && data?.success == true
+                "success": error == nil && result?.decoded.success == true
             ])
         }
     }
