@@ -17,7 +17,7 @@ StatsigListening
 @implementation PerfOnDeviceEvaluationsViewControllerObjC {
     UICollectionView *_collectionView;
     NSInteger _numCells;
-    StatsigOnDeviceEvaluationsClient *_statsig;
+    Statsig *_statsig;
 }
 
 - (void)viewDidLoad {
@@ -25,10 +25,10 @@ StatsigListening
 
     [self setupCollectionView];
 
-    _statsig = [StatsigOnDeviceEvaluationsClient sharedInstance];
+    _statsig = [Statsig sharedInstance];
 
     StatsigOptions *opts = [StatsigOptions new];
-    opts.maxEventQueueSize = 50;
+    opts.eventQueueMaxSize = 50;
 
     [_statsig
      initializeWithSDKKey:Constants.CLIENT_SDK_KEY

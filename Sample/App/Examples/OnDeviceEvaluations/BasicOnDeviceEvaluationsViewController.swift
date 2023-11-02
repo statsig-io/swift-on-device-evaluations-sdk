@@ -15,7 +15,7 @@ class BasicOnDeviceEvaluationsViewController: UIViewController {
             "tags": ["cool", "rad", "neat"],
         ])
 
-        let client = StatsigOnDeviceEvaluationsClient.shared
+        let client = Statsig.shared
 
         client.initialize(Constants.CLIENT_SDK_KEY) { [weak client] err in
             if let err = err {

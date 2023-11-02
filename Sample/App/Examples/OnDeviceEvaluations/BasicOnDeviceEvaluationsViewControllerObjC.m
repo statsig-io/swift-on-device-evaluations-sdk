@@ -20,7 +20,7 @@
     [custom setStrings:@[@"cool", @"rad", @"neat"] forKey:@"tags"];
     user.custom = custom;
 
-    StatsigOnDeviceEvaluationsClient *client = [StatsigOnDeviceEvaluationsClient sharedInstance];
+    Statsig *client = [Statsig sharedInstance];
 
     [client
      initializeWithSDKKey:Constants.CLIENT_SDK_KEY
