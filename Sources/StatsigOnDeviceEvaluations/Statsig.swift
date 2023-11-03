@@ -1,6 +1,7 @@
 import Foundation
 
 public typealias InitCompletion = (_ error: Error?) -> Void
+public typealias ShutdownCompletion = (_ error: Error?) -> Void
 
 @objc
 public protocol SynchronousSpecsValue {}
@@ -68,8 +69,8 @@ public final class Statsig: NSObject {
     }
 
     @objc
-    public func shutdown() {
-        self.logger.shutdown()
+    public func shutdown(completion: ShutdownCompletion? = nil) {
+        self.logger.shutdown { err in completion?(err) }
     }
 
     @objc(logEvent:forUser:)

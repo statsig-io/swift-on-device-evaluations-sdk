@@ -45,8 +45,7 @@ extension StatsigEventInternal: Loggable {
             "eventName": eventName,
             "user": user.toLoggable(),
             "time": time,
-            //            "statsigMetadata": statsigMetadata,
-            //            "allocatedExperimentHash": allocatedExperimentHash,
+            "statsigMetadata": StatsigMetadata.get().toLoggable(),
         ]
 
         if let value = value {

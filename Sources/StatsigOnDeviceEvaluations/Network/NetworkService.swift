@@ -197,9 +197,12 @@ public class NetworkService {
 
         var request = URLRequest(url: url)
 
+        let statsigMetadata = StatsigMetadata.get()
+
         request.setValue(sdkKey, forHTTPHeaderField: Headers.StatsigAPIKey)
-        request.setValue("ios-on-device-eval", forHTTPHeaderField: Headers.StatsigSDKType)
-        request.setValue("1.0.0", forHTTPHeaderField: Headers.StatsigSDKVersion)
+        request.setValue(statsigMetadata.sdkType, forHTTPHeaderField: Headers.StatsigSDKType)
+        request.setValue(statsigMetadata.sdkVersion, forHTTPHeaderField: Headers.StatsigSDKVersion)
+        request.setValue(statsigMetadata.sessionID, forHTTPHeaderField: Headers.StatsigSessionID)
         request.setValue("\(Time.now())", forHTTPHeaderField: Headers.StatsigClientTime)
 
         return .ok(request)
@@ -211,4 +214,5 @@ fileprivate enum Headers {
     static let StatsigClientTime = "STATSIG-CLIENT-TIME"
     static let StatsigSDKType = "STATSIG-SDK-TYPE"
     static let StatsigSDKVersion = "STATSIG-SDK-VERSION"
+    static let StatsigSessionID = "STATSIG-SESSION-ID"
 }
