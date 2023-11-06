@@ -1,6 +1,7 @@
 import Foundation
 
 public typealias InitCompletion = (_ error: Error?) -> Void
+public typealias ShutdownCompletion = (_ error: Error?) -> Void
 
 @objc
 public protocol SynchronousSpecsValue {}
@@ -37,15 +38,15 @@ public final class Statsig: NSObject {
         options: StatsigOptions? = nil,
         completion: InitCompletion? = nil
     ) {
-        let endDiagnostics = trackInitDiagnostics()
+        let markEnd = Diagnostics.trackInit()
 
         self.network.setRequiredFields(sdkKey, options)
         self.logger.options = options
         self.options = options
         self.store.loadFromCache(sdkKey)
 
-        setValuesFromNetwork(sdkKey) { error in
-            endDiagnostics(error)
+        setValuesFromNetwork(sdkKey) { [weak logger, weak store] error in
+            markEnd(logger, store?.sourceInfo, error)
             completion?(error)
         }
     }
@@ -56,20 +57,20 @@ public final class Statsig: NSObject {
         initialSpecs: SynchronousSpecsValue,
         options: StatsigOptions? = nil
     ) -> Error? {
-        let endDiagnostics = trackInitDiagnostics()
+        let markEnd = Diagnostics.trackInit()
 
         self.network.setRequiredFields(sdkKey, options)
         self.logger.options = options
         self.options = options
 
         let error = setValuesFromInitialSpecs(sdkKey, initialSpecs)
-        endDiagnostics(error)
+        markEnd(logger, store.sourceInfo, error)
         return error
     }
 
     @objc
-    public func shutdown() {
-        self.logger.shutdown()
+    public func shutdown(completion: ShutdownCompletion? = nil) {
+        self.logger.shutdown { err in completion?(err) }
     }
 
     @objc(logEvent:forUser:)
@@ -77,8 +78,7 @@ public final class Statsig: NSObject {
         _ event: StatsigEvent,
         _ user: StatsigUser
     ) {
-        let userInternal = internalizeUser(user, options)
-
+        let userInternal = user.toInternal(options)
         logger.enqueue { event.toInternal(userInternal, nil) }
     }
 
@@ -108,7 +108,7 @@ extension Statsig {
 
     @objc(getFeatureGate:forUser:)
     public func getFeatureGate(_ name: String, _ user: StatsigUser) -> FeatureGate {
-        let userInternal = internalizeUser(user, options)
+        let userInternal = user.toInternal(options)
         let (evaluation, details) = evaluator.checkGate(name, userInternal)
 
         logger.enqueue{
@@ -154,7 +154,7 @@ extension Statsig {
 
     @objc(getLayer:forUser:)
     public func getLayer(_ name: String, _ user: StatsigUser) -> Layer {
-        let userInternal = internalizeUser(user, options)
+        let userInternal = user.toInternal(options)
         let (evaluation, details) = evaluator.getLayer(name, userInternal)
 
         let logExposure: ParameterExposureFunc = { [weak self] layer, parameter in
@@ -239,7 +239,7 @@ extension Statsig {
     }
 
     private func getConfigImpl(_ name: String, _ user: StatsigUser) -> DetailedEvaluation {
-        let userInternal = internalizeUser(user, options)
+        let userInternal = user.toInternal(options)
         let detailedEval = evaluator.getConfig(name, userInternal)
         let (evaluation, details) = detailedEval
 
@@ -253,27 +253,5 @@ extension Statsig {
         }
 
         return detailedEval
-    }
-
-    private func trackInitDiagnostics() -> (Error?) -> Void {
-        Diagnostics.boot()
-        Diagnostics.mark?.overall.start()
-
-        return { error in
-            let sourceInfo = self.store.getSourceInfo()
-            let lcut = sourceInfo.lcut
-
-            Diagnostics.mark?.overall.end(
-                success: error == nil,
-                details: [
-                    "reason": sourceInfo.source.rawValue,
-                    "configSyncTime": lcut,
-                    "initTime": lcut,
-                    "serverTime": Time.now()
-                ],
-                errorMessage: nil
-            )
-            Diagnostics.log(self.logger, context: .initialize)
-        }
     }
 }

@@ -22,7 +22,33 @@ class Diagnostics {
         instance = nil
     }
 
-    static func log(_ logger: EventLogger, context: MarkerContext) {
+    static func trackInit() -> (EventLogger?, SpecStoreSourceInfo?, Error?) -> Void {
+        Diagnostics.boot()
+        Diagnostics.mark?.overall.start()
+
+        return { logger, sourceInfo, error in
+            guard let logger = logger, let sourceInfo = sourceInfo else {
+                return
+            }
+
+            let lcut = sourceInfo.lcut
+
+            Diagnostics.mark?.overall.end(
+                success: error == nil,
+                details: [
+                    "reason": sourceInfo.source.rawValue,
+                    "configSyncTime": lcut,
+                    "initTime": lcut,
+                    "serverTime": Time.now()
+                ],
+                errorMessage: nil
+            )
+
+            log(logger, context: .initialize)
+        }
+    }
+
+    private static func log(_ logger: EventLogger, context: MarkerContext) {
         if disabled {
             return
         }

@@ -24,13 +24,13 @@
     _user.locale = @"en_US";
     _user.appVersion = @"4.20.0";
 
-    [_user.custom setString:@"jkw" forKey:@"name"];
-    [_user.custom setDouble:1.2 forKey:@"speed"];
-    [_user.custom setStrings:@[@"cool", @"rad", @"neat"] forKey:@"tags"];
-
-    [_user.privateAttributes setString:@"jkw" forKey:@"name"];
-    [_user.privateAttributes setInteger:42 forKey:@"level"];
-    [_user.privateAttributes setBoolean:true forKey:@"verified"];
+//    [_user.custom setString:@"jkw" forKey:@"name"];
+//    [_user.custom setDouble:1.2 forKey:@"speed"];
+//    [_user.custom setStrings:@[@"cool", @"rad", @"neat"] forKey:@"tags"];
+//
+//    [_user.privateAttributes setString:@"jkw" forKey:@"name"];
+//    [_user.privateAttributes setInteger:42 forKey:@"level"];
+//    [_user.privateAttributes setBoolean:true forKey:@"verified"];
 }
 
 - (void)testUserValues {

@@ -2,6 +2,8 @@ import Foundation
 
 fileprivate let LOGGER_LABEL = "com.statsig.event_logger"
 
+typealias EventFlushCompletion = (_ error: Error?) -> Void
+
 class EventLogger {
 
     var options: StatsigOptions?
@@ -27,12 +29,12 @@ class EventLogger {
         self.enqueueImpl(eventFactory)
     }
 
-    func shutdown() {
+    func shutdown(completion: EventFlushCompletion? = nil) {
         self.flushTimer?.invalidate()
-        self.flush()
+        self.flush(completion)
     }
 
-    func flush() {
+    func flush(_ completion: EventFlushCompletion? = nil) {
         let pending = queue.sync {
             let result = events
             events = []
@@ -47,10 +49,11 @@ class EventLogger {
             .logEvent,
             payload: [
                 "events": pending.map { $0.toLoggable() },
-                //                "statsigMetadata": forUser.deviceEnvironment
+                "statsigMetadata": StatsigMetadata.get().toLoggable()
             ],
             retries: 3
         ) { [weak emitter] (result: DecodedResult<LogEventResponse>?, error) in
+            completion?(error)
             emitter?.emit(.eventsFlushed, [
                 "events": pending,
                 "success": error == nil && result?.decoded.success == true
