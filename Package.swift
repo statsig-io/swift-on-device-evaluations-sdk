@@ -4,7 +4,7 @@ import PackageDescription
 
 let package = Package(
     name: "StatsigOnDeviceEvaluations",
-    platforms: [.iOS(.v13)],
+    platforms: [.iOS(.v13), .tvOS(.v13), .macOS(.v10_15)],
     products: [
         .library(
             name: "StatsigOnDeviceEvaluations",
