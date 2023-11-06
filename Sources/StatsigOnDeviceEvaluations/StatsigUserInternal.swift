@@ -73,8 +73,10 @@ struct StatsigUserInternal {
     }
 }
 
-func internalizeUser(_ user: StatsigUser, _ options: StatsigOptions?) -> StatsigUserInternal {
-    StatsigUserInternal(user: user, environment: options?.environment)
+extension StatsigUser {
+    func toInternal(_ options: StatsigOptions?) -> StatsigUserInternal {
+        StatsigUserInternal(user: self, environment: options?.environment)
+    }
 }
 
 extension StatsigUserValueMap {
