@@ -24,7 +24,7 @@
      times:1];
 
     waitUntil(^(void (^done)(void)){
-        [[StatsigOnDeviceEvaluationsClient sharedInstance]
+        [[Statsig sharedInstance]
          initializeWithSDKKey:@"client-key"
          options:nil
          completion:^(NSError * _Nullable err) {
@@ -35,7 +35,7 @@
 
 - (void)testGetFeatureGate {
     FeatureGate *gate =
-    [[StatsigOnDeviceEvaluationsClient sharedInstance]
+    [[Statsig sharedInstance]
      getFeatureGate:@"test_public" forUser:_user];
     expect(gate.value).to(beTrue());
 }
