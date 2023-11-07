@@ -24,6 +24,10 @@ class BasicOnDeviceEvaluationsViewController: UIViewController {
 
             let result = client?.getFeatureGate("a_gate", user)
             print("Result: \(result?.value == true ? "Pass": "Fail")")
+
+            DispatchQueue.main.async {
+                self.view.backgroundColor = result?.value == true ? UIColor.systemGreen : UIColor.systemRed
+            }
         }
     }
 

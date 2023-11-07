@@ -36,8 +36,12 @@
          getFeatureGate:@"a_gate"
          forUser:user];
 
-        NSLog(@"Result: %@", gate ? @"Pass" : @"Fail");
+        NSLog(@"Result: %@", gate.value ? @"Pass" : @"Fail");
         NSLog(@"Details: %@", gate.evaluationDetails.reason);
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.view.backgroundColor = gate.value == true ? UIColor.systemGreenColor : UIColor.systemRedColor;
+        });
     }];
 
     [client
