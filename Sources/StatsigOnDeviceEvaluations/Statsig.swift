@@ -25,11 +25,13 @@ public final class Statsig: NSObject {
 
     @objc public override init() {
         emitter = StatsigClientEventEmitter()
-        store = SpecStore()
+        store = SpecStore(emitter)
         evaluator = Evaluator(store)
         network = NetworkService()
         logger = EventLogger(network, emitter)
         super.init()
+
+        subscribeToApplicationLifecycle()
     }
 
     @objc(initializeWithSDKKey:options:completion:)
@@ -71,6 +73,7 @@ public final class Statsig: NSObject {
     @objc
     public func shutdown(completion: ShutdownCompletion? = nil) {
         self.logger.shutdown { err in completion?(err) }
+        unsubscribeFromApplicationLifecycle()
     }
 
     @objc(logEvent:forUser:)
