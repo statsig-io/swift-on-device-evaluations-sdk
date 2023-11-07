@@ -1,7 +1,16 @@
 import Foundation
 
-@objc public enum StatsigClientEvent: Int {
+@objc public enum StatsigClientEvent: Int, CustomStringConvertible {
     case eventsFlushed
+    case valuesUpdated
+
+    public var description : String {
+        switch self {
+        case .eventsFlushed: return "eventsFlushed"
+        case .valuesUpdated: return "valuesUpdated"
+        }
+      }
+
 }
 
 @objc public protocol StatsigListening: AnyObject {

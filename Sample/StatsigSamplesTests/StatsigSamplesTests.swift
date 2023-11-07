@@ -8,6 +8,7 @@ final class StatsigSamplesTests: XCTestCase {
         let controllers: [UIViewController] = [
             BasicOnDeviceEvaluationsViewController(),
             SynchronousInitViewController(),
+            ClientEventsViewController(),
             BasicOnDeviceEvaluationsViewControllerObjC(),
             PerfOnDeviceEvaluationsViewControllerObjC()
         ]

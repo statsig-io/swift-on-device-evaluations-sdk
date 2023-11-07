@@ -7,6 +7,7 @@ let Examples: [(String, UIViewController)] = [
     ( "Basic (ObjC)", BasicOnDeviceEvaluationsViewControllerObjC() ),
     ( "Perf (ObjC)", PerfOnDeviceEvaluationsViewControllerObjC() ),
     ( "Synchronous Init (Swift)", SynchronousInitViewController() ),
+    ( "Statsig Client Events (Swift)", ClientEventsViewController() ),
 ]
 
 

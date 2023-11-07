@@ -20,13 +20,17 @@ class EventLogger {
         self.network = network
         self.emitter = emitter
 
-        DispatchQueue.main.async { [weak self] in
-            self?.startFlushTimer()
-        }
+        start()
     }
 
     func enqueue(_ eventFactory: @escaping () -> StatsigEventInternal) {
         self.enqueueImpl(eventFactory)
+    }
+
+    func start() {
+        DispatchQueue.main.async { [weak self] in
+            self?.startFlushTimer()
+        }
     }
 
     func shutdown(completion: EventFlushCompletion? = nil) {
@@ -45,17 +49,21 @@ class EventLogger {
             return
         }
 
+        let loggable = pending.map { $0.toLoggable() }
+
         network.post(
             .logEvent,
             payload: [
-                "events": pending.map { $0.toLoggable() },
+                "events": loggable,
                 "statsigMetadata": StatsigMetadata.get().toLoggable()
             ],
             retries: 3
         ) { [weak emitter] (result: DecodedResult<LogEventResponse>?, error) in
+
             completion?(error)
+
             emitter?.emit(.eventsFlushed, [
-                "events": pending,
+                "events": loggable,
                 "success": error == nil && result?.decoded.success == true
             ])
         }
