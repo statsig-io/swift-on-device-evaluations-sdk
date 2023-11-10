@@ -22,7 +22,9 @@ jobs:
         run: git clone https://oauth2:$repo_pat@github.com/statsig-io/kong.git .
 
       - name: Install Deps
-        run: npm install
+        run: |
+          npm install
+          brew install coreutils
 
       - name: Setup iOS SDK
         run: npm run kong -- setup swift-on-device-eval -v
