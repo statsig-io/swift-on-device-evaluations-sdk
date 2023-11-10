@@ -28,4 +28,4 @@ jobs:
         run: npm run kong -- setup swift-on-device-eval -v
 
       - name: Run Tests
-        run: npm run kong -- test swift-on-device-eval -r
+        run: npm run kong -- test swift-on-device-eval -r -v
