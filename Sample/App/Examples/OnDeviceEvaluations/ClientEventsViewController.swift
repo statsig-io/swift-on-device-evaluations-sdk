@@ -15,6 +15,9 @@ class ClientEventsViewController: UIViewController {
         setupNavbar()
 
         statsig.addListener(self)
+
+        _ = statsig.checkGate("a_gate") // Fires "Uninitialized" error
+
         statsig.initialize(Constants.CLIENT_SDK_KEY)
     }
 }

@@ -126,8 +126,6 @@ struct EvaluationResult {
     }
 
     static func unsupported(_ reason: String) -> EvaluationResult {
-        print("[Statsig] Unsupported condition or operator: \(reason)")
-
         return EvaluationResult(
             ruleID: "default",
             unsupported: true

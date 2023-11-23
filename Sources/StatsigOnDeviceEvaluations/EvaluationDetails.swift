@@ -7,6 +7,14 @@ public class EvaluationDetails: NSObject {
     @objc public let receivedAt: Int64
     @objc public let lcut: Int64
 
+    static func userError(_ storeInfo: SpecStoreSourceInfo) -> EvaluationDetails {
+        EvaluationDetails(
+            reason: "UserError",
+            lcut: storeInfo.lcut,
+            receivedAt: storeInfo.receivedAt
+        )
+    }
+
     static func unrecognized(_ storeInfo: SpecStoreSourceInfo) -> EvaluationDetails {
         EvaluationDetails(
             reason: "Unrecognized",

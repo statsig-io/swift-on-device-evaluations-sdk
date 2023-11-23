@@ -2,6 +2,8 @@ import Foundation
 
 fileprivate let STORE_LABEL = "com.statsig.spec_store"
 
+typealias SpecAndSourceInfoTuple = (spec: Spec?, type: SpecType, sourceInfo: SpecStoreSourceInfo)
+
 enum SpecType {
     case gate
     case config
@@ -48,9 +50,13 @@ class SpecStore {
         FileUtil.writeToCache(sdkKey.djb2(), responseData)
     }
 
-    func getSpecAndSourceInfo(_ type: SpecType, _ name: String) -> (spec: Spec?, sourceInfo: SpecStoreSourceInfo) {
+    func getSpecAndSourceInfo(
+        _ type: SpecType,
+        _ name: String
+    ) -> SpecAndSourceInfoTuple {
         queue.sync {(
             specs[type]?[name],
+            type,
             self.sourceInfo
         )}
     }

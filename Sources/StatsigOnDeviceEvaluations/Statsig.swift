@@ -10,13 +10,15 @@ extension NSData: SynchronousSpecsValue {}
 extension NSString: SynchronousSpecsValue {}
 
 public final class Statsig: NSObject {
-    var options: StatsigOptions?
-
     let store: SpecStore
     let evaluator: Evaluator
     let network: NetworkService
     let logger: EventLogger
     let emitter: StatsigClientEventEmitter
+
+    var hasCalledInit = false
+    var options: StatsigOptions?
+    var globalUser: StatsigUser?
 
     @objc(sharedInstance)
     public static var shared: Statsig = {
@@ -26,7 +28,7 @@ public final class Statsig: NSObject {
     @objc public override init() {
         emitter = StatsigClientEventEmitter()
         store = SpecStore(emitter)
-        evaluator = Evaluator(store)
+        evaluator = Evaluator(store, emitter)
         network = NetworkService()
         logger = EventLogger(network, emitter)
         super.init()
@@ -40,6 +42,8 @@ public final class Statsig: NSObject {
         options: StatsigOptions? = nil,
         completion: InitCompletion? = nil
     ) {
+        hasCalledInit = true
+
         let markEnd = Diagnostics.trackInit()
 
         self.network.setRequiredFields(sdkKey, options)
@@ -59,6 +63,8 @@ public final class Statsig: NSObject {
         initialSpecs: SynchronousSpecsValue,
         options: StatsigOptions? = nil
     ) -> Error? {
+        hasCalledInit = true
+
         let markEnd = Diagnostics.trackInit()
 
         self.network.setRequiredFields(sdkKey, options)
@@ -76,18 +82,9 @@ public final class Statsig: NSObject {
         unsubscribeFromApplicationLifecycle()
     }
 
-    @objc(logEvent:forUser:)
-    public func logEvent(
-        _ event: StatsigEvent,
-        _ user: StatsigUser
-    ) {
-        let userInternal = user.toInternal(options)
-        logger.enqueue { event.toInternal(userInternal, nil) }
-    }
-
     @objc
-    public func flushEvents() {
-        logger.flush()
+    public func setGlobalUser(_ user: StatsigUser) {
+        globalUser = user
     }
 
     @objc
@@ -105,22 +102,25 @@ public final class Statsig: NSObject {
 // MARK: Check APIs
 extension Statsig {
     @objc(checkGate:forUser:)
-    public func checkGate(_ name: String, _ user: StatsigUser) -> Bool {
+    public func checkGate(_ name: String, _ user: StatsigUser? = nil) -> Bool {
         return getFeatureGate(name, user).value
     }
 
     @objc(getFeatureGate:forUser:)
-    public func getFeatureGate(_ name: String, _ user: StatsigUser) -> FeatureGate {
-        let userInternal = user.toInternal(options)
+    public func getFeatureGate(_ name: String, _ user: StatsigUser? = nil) -> FeatureGate {
+        verifyInitState()
+        let userInternal = getInternalUser(user)
         let (evaluation, details) = evaluator.checkGate(name, userInternal)
 
-        logger.enqueue{
-            createGateExposure(
-                user: userInternal,
-                gateName: name,
-                evaluation: evaluation,
-                details: details
-            )
+        if let userInternal = userInternal {
+            logger.enqueue{
+                createGateExposure(
+                    user: userInternal,
+                    gateName: name,
+                    evaluation: evaluation,
+                    details: details
+                )
+            }
         }
 
         return FeatureGate(
@@ -132,7 +132,8 @@ extension Statsig {
     }
 
     @objc(getDynamicConfig:forUser:)
-    public func getDynamicConfig(_ name: String, _ user: StatsigUser) -> DynamicConfig {
+    public func getDynamicConfig(_ name: String, _ user: StatsigUser? = nil) -> DynamicConfig {
+        verifyInitState()
         let (evaluation, details) = getConfigImpl(name, user)
 
         return DynamicConfig(
@@ -144,7 +145,8 @@ extension Statsig {
     }
 
     @objc(getExperiment:forUser:)
-    public func getExperiment(_ name: String, _ user: StatsigUser) -> Experiment {
+    public func getExperiment(_ name: String, _ user: StatsigUser? = nil) -> Experiment {
+        verifyInitState()
         let (evaluation, details) = getConfigImpl(name, user)
 
         return Experiment(
@@ -156,11 +158,16 @@ extension Statsig {
     }
 
     @objc(getLayer:forUser:)
-    public func getLayer(_ name: String, _ user: StatsigUser) -> Layer {
-        let userInternal = user.toInternal(options)
+    public func getLayer(_ name: String, _ user: StatsigUser? = nil) -> Layer {
+        verifyInitState()
+        let userInternal = getInternalUser(user)
         let (evaluation, details) = evaluator.getLayer(name, userInternal)
 
         let logExposure: ParameterExposureFunc = { [weak self] layer, parameter in
+            guard let userInternal = userInternal else {
+                return
+            }
+
             let exposure = createLayerExposure(
                 user: userInternal,
                 layerName: name,
@@ -179,6 +186,28 @@ extension Statsig {
             logParameterExposure: logExposure,
             value: evaluation.jsonValue?.serializeToDictionary()
         )
+    }
+}
+
+
+// MARK: Logging
+
+extension Statsig {
+    @objc(logEvent:forUser:)
+    public func logEvent(
+        _ event: StatsigEvent,
+        _ user: StatsigUser? = nil
+    ) {
+        verifyInitState()
+
+        if let userInternal = getInternalUser(user) {
+            logger.enqueue { event.toInternal(userInternal, nil) }
+        }
+    }
+
+    @objc
+    public func flushEvents() {
+        logger.flush()
     }
 }
 
@@ -241,20 +270,44 @@ extension Statsig {
         }
     }
 
-    private func getConfigImpl(_ name: String, _ user: StatsigUser) -> DetailedEvaluation {
-        let userInternal = user.toInternal(options)
+    private func getConfigImpl(_ name: String, _ user: StatsigUser?) -> DetailedEvaluation {
+        let userInternal = getInternalUser(user)
         let detailedEval = evaluator.getConfig(name, userInternal)
         let (evaluation, details) = detailedEval
 
-        logger.enqueue {
-            createConfigExposure(
-                user: userInternal,
-                configName: name,
-                evaluation: evaluation,
-                details: details
-            )
+        if let userInternal = userInternal {
+            logger.enqueue {
+                createConfigExposure(
+                    user: userInternal,
+                    configName: name,
+                    evaluation: evaluation,
+                    details: details
+                )
+            }
         }
 
         return detailedEval
+    }
+
+
+    private func getInternalUser(_ user: StatsigUser?) -> StatsigUserInternal? {
+        guard let user = user ?? globalUser else {
+            return nil
+        }
+
+        return StatsigUserInternal(
+            user: user,
+            environment: options?.environment
+        )
+    }
+
+    private func verifyInitState(_ functionName: String = #function) {
+        if hasCalledInit {
+            return
+        }
+
+        let message = "\(functionName) called before Statsig.initialize."
+        emitter.emit(.error, ["message": message])
+        print("[Statsig]: \(message)")
     }
 }

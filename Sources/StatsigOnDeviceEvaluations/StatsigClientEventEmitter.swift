@@ -3,14 +3,15 @@ import Foundation
 @objc public enum StatsigClientEvent: Int, CustomStringConvertible {
     case eventsFlushed
     case valuesUpdated
+    case error
 
     public var description : String {
         switch self {
         case .eventsFlushed: return "eventsFlushed"
         case .valuesUpdated: return "valuesUpdated"
+        case .error: return "error"
         }
-      }
-
+    }
 }
 
 @objc public protocol StatsigListening: AnyObject {

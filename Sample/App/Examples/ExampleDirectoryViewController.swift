@@ -8,6 +8,7 @@ let Examples: [(String, UIViewController)] = [
     ( "Perf (ObjC)", PerfOnDeviceEvaluationsViewControllerObjC() ),
     ( "Synchronous Init (Swift)", SynchronousInitViewController() ),
     ( "Statsig Client Events (Swift)", ClientEventsViewController() ),
+    ( "Statsig Global User (Swift)", GlobalUserOnDeviceEvaluationsViewController() ),
 ]
 
 
