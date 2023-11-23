@@ -59,6 +59,7 @@ public class NetworkService {
         _ endpoint: Endpoint,
         payload: [String: Any],
         retries: UInt? = nil,
+        headers: [String: String]? = nil,
         completion: @escaping NetworkCompletion<T>
     ) {
         let result = getRequestForEndpoint(endpoint, sdkKey)
@@ -78,6 +79,10 @@ public class NetworkService {
             request.httpMethod = "POST"
             request.httpBody = data
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+            headers?.forEach { (key: String, value: String) in
+                request.setValue(value, forHTTPHeaderField: key)
+            }
 
             send(
                 request,

@@ -57,7 +57,8 @@ class EventLogger {
                 "events": loggable,
                 "statsigMetadata": StatsigMetadata.get().toLoggable()
             ],
-            retries: 3
+            retries: 3,
+            headers: ["STATSIG-EVENT-COUNT": String(loggable.count)]
         ) { [weak emitter] (result: DecodedResult<LogEventResponse>?, error) in
 
             completion?(error)

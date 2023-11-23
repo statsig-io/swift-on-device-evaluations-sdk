@@ -108,8 +108,7 @@ extension Statsig {
 
     @objc(getFeatureGate:forUser:)
     public func getFeatureGate(_ name: String, _ user: StatsigUser? = nil) -> FeatureGate {
-        verifyInitState()
-        let userInternal = getInternalUser(user)
+        let userInternal = internalUserBoundary(user)
         let (evaluation, details) = evaluator.checkGate(name, userInternal)
 
         if let userInternal = userInternal {
@@ -133,7 +132,6 @@ extension Statsig {
 
     @objc(getDynamicConfig:forUser:)
     public func getDynamicConfig(_ name: String, _ user: StatsigUser? = nil) -> DynamicConfig {
-        verifyInitState()
         let (evaluation, details) = getConfigImpl(name, user)
 
         return DynamicConfig(
@@ -146,7 +144,6 @@ extension Statsig {
 
     @objc(getExperiment:forUser:)
     public func getExperiment(_ name: String, _ user: StatsigUser? = nil) -> Experiment {
-        verifyInitState()
         let (evaluation, details) = getConfigImpl(name, user)
 
         return Experiment(
@@ -159,8 +156,7 @@ extension Statsig {
 
     @objc(getLayer:forUser:)
     public func getLayer(_ name: String, _ user: StatsigUser? = nil) -> Layer {
-        verifyInitState()
-        let userInternal = getInternalUser(user)
+        let userInternal = internalUserBoundary(user)
         let (evaluation, details) = evaluator.getLayer(name, userInternal)
 
         let logExposure: ParameterExposureFunc = { [weak self] layer, parameter in
@@ -198,9 +194,7 @@ extension Statsig {
         _ event: StatsigEvent,
         _ user: StatsigUser? = nil
     ) {
-        verifyInitState()
-
-        if let userInternal = getInternalUser(user) {
+        if let userInternal = internalUserBoundary(user) {
             logger.enqueue { event.toInternal(userInternal, nil) }
         }
     }
@@ -270,8 +264,8 @@ extension Statsig {
         }
     }
 
-    private func getConfigImpl(_ name: String, _ user: StatsigUser?) -> DetailedEvaluation {
-        let userInternal = getInternalUser(user)
+    private func getConfigImpl(_ name: String, _ user: StatsigUser?, _ callingFunction: String = #function) -> DetailedEvaluation {
+        let userInternal = internalUserBoundary(user, callingFunction)
         let detailedEval = evaluator.getConfig(name, userInternal)
         let (evaluation, details) = detailedEval
 
@@ -290,7 +284,12 @@ extension Statsig {
     }
 
 
-    private func getInternalUser(_ user: StatsigUser?) -> StatsigUserInternal? {
+    private func internalUserBoundary(
+        _ user: StatsigUser?,
+        _ callingFunction: String = #function
+    ) -> StatsigUserInternal? {
+        reportInitState(callingFunction)
+
         guard let user = user ?? globalUser else {
             return nil
         }
@@ -301,12 +300,12 @@ extension Statsig {
         )
     }
 
-    private func verifyInitState(_ functionName: String = #function) {
+    private func reportInitState(_ callingFunction: String) {
         if hasCalledInit {
             return
         }
 
-        let message = "\(functionName) called before Statsig.initialize."
+        let message = "\(callingFunction) called before Statsig.initialize."
         emitter.emit(.error, ["message": message])
         print("[Statsig]: \(message)")
     }
