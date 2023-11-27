@@ -17,4 +17,16 @@ public class DynamicConfig: ConfigBase {
             evaluationDetails
         )
     }
+
+    internal static func empty(
+        _ name: String,
+        _ evalDetails: EvaluationDetails
+    ) -> DynamicConfig {
+        DynamicConfig(
+            name: name,
+            ruleID: "",
+            evaluationDetails: evalDetails,
+            value: nil
+        )
+    }
 }

@@ -26,17 +26,17 @@ extension Statsig {
     }
 
     @objc private func appWillForeground() {
-        logger.start()
+        context?.logger.start()
     }
 
     @objc private func appWillBackground() {
-        DispatchQueue.global().async { [weak self] in
-            self?.logger.flush()
+        DispatchQueue.global().async { [weak context] in
+            context?.logger.flush()
         }
     }
 
     @objc private func appWillTerminate() {
-        logger.flush()
+        context?.logger.flush()
     }
 }
 

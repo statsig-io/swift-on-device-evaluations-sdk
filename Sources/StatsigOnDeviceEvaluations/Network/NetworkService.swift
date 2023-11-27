@@ -23,13 +23,10 @@ struct DiagnosticsMarkers {
 }
 
 public class NetworkService {
-    private var sdkKey: String? = nil
-    private var options: StatsigOptions? = nil
+    let sdkKey: String
+    let options: StatsigOptions?
 
-    func setRequiredFields(
-        _ sdkKey: String,
-        _ options: StatsigOptions?
-    ) {
+    init(_ sdkKey: String, _ options: StatsigOptions?) {
         self.sdkKey = sdkKey
         self.options = options
     }

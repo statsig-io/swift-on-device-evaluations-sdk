@@ -23,6 +23,14 @@ public class EvaluationDetails: NSObject {
         )
     }
 
+    static func uninitialized() -> EvaluationDetails {
+        EvaluationDetails(
+            reason: "Uninitialized",
+            lcut: 0,
+            receivedAt: 0
+        )
+    }
+
     internal init(reason: String, lcut: Int64, receivedAt: Int64) {
         self.reason = reason
         self.lcut = lcut
