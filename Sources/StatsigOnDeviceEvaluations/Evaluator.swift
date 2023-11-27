@@ -15,7 +15,7 @@ class Evaluator {
         self.emitter = emitter
     }
 
-    public func checkGate(_ name: String, _ user: StatsigUserInternal?) -> DetailedEvaluation {
+    public func checkGate(_ name: String, _ user: StatsigUserInternal) -> DetailedEvaluation {
         evaluateWithDetails(
             name,
             store.getSpecAndSourceInfo(.gate, name),
@@ -23,7 +23,7 @@ class Evaluator {
         )
     }
 
-    public func getConfig(_ name: String, _ user: StatsigUserInternal?) -> DetailedEvaluation {
+    public func getConfig(_ name: String, _ user: StatsigUserInternal) -> DetailedEvaluation {
         evaluateWithDetails(
             name,
             store.getSpecAndSourceInfo(.config, name),
@@ -31,7 +31,7 @@ class Evaluator {
         )
     }
 
-    public func getLayer(_ name: String, _ user: StatsigUserInternal?) -> DetailedEvaluation {
+    public func getLayer(_ name: String, _ user: StatsigUserInternal) -> DetailedEvaluation {
         evaluateWithDetails(
             name,
             store.getSpecAndSourceInfo(.layer, name),
@@ -44,27 +44,14 @@ class Evaluator {
 extension Evaluator {
     private func evaluateWithDetails(
         _ unhashedName: String,
-        _ specAndSourceInfo: SpecAndSourceInfoTuple,
-        _ user: StatsigUserInternal?)
+        _ specAndSourceInfo: SpecAndSourceInfo,
+        _ user: StatsigUserInternal)
     -> DetailedEvaluation {
-        let (spec, type, info) = specAndSourceInfo
+        let (spec, info) = specAndSourceInfo
         guard let spec = spec else {
             return (
                 evaluation: .empty(),
                 details: .unrecognized(info)
-            )
-        }
-
-        guard let user = user else {
-            let message = "No user given when checking \(type) '\(spec.name)'."
-            + " Please provide a StatsigUser or call setGlobalUser."
-
-            emitter.emit(.error, ["message": message])
-            print("[Statsig]: \(message)")
-
-            return (
-                evaluation: .empty(),
-                details: .userError(info)
             )
         }
 
@@ -377,11 +364,7 @@ extension Evaluator {
 // MARK: Unsupported Eval
 extension Evaluator {
     func getUnsupportedResult(_ reason: String) -> EvaluationResult {
-        let message = "Unsupported condition or operator: \(reason)"
-
-        emitter.emit(.error, ["message": message])
-        print("[Statsig]: \(message)")
-
+        emitter.emitError("Unsupported condition or operator: \(reason)")
         return .unsupported(reason)
     }
 }

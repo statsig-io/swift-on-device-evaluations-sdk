@@ -13,7 +13,6 @@ let Examples: [(String, UIViewController)] = [
     ( "Basic (ObjC)", BasicOnDeviceEvaluationsViewControllerObjC() ),
     ( "Perf (ObjC)", PerfOnDeviceEvaluationsViewControllerObjC() ),
     ( "Statsig Client Events (ObjC)", ClientEventsViewControllerObjC() ),
-
 ]
 
 

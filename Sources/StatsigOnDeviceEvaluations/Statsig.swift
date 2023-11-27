@@ -80,13 +80,13 @@ public final class Statsig: NSObject {
 
     @objc
     public func shutdown(completion: ShutdownCompletion? = nil) {
-        context()?.logger.shutdown { err in completion?(err) }
+        getContext()?.logger.shutdown { err in completion?(err) }
         unsubscribeFromApplicationLifecycle()
     }
 
     @objc
     public func setGlobalUser(_ user: StatsigUser) {
-        context()?.globalUser = user
+        getContext()?.globalUser = user
     }
 
     @objc
@@ -97,16 +97,6 @@ public final class Statsig: NSObject {
     @objc
     public func removeListener(_ listener: StatsigListening) {
         emitter.removeListener(listener)
-    }
-
-    internal func context(_ caller: String = #function) -> StatsigContext? {
-        if context == nil {
-            let message = "\(caller) called before Statsig.initialize."
-            print("[Statsig]: \(message)")
-            emitter.emit(.error, ["message": message])
-        }
-
-        return context
     }
 }
 
@@ -120,22 +110,23 @@ extension Statsig {
 
     @objc(getFeatureGate:forUser:)
     public func getFeatureGate(_ name: String, _ user: StatsigUser? = nil) -> FeatureGate {
-        guard let context = context() else {
+        guard let context = getContext() else {
             return .empty(name, .uninitialized())
         }
 
-        let userInternal = getInternalizedUser(context, user)
+        guard let userInternal = getInternalizedUser(context, user) else {
+            return .empty(name, .userError(context.store.sourceInfo))
+        }
+
         let (evaluation, details) = context.evaluator.checkGate(name, userInternal)
 
-        if let userInternal = userInternal {
-            context.logger.enqueue{
-                createGateExposure(
-                    user: userInternal,
-                    gateName: name,
-                    evaluation: evaluation,
-                    details: details
-                )
-            }
+        context.logger.enqueue{
+            createGateExposure(
+                user: userInternal,
+                gateName: name,
+                evaluation: evaluation,
+                details: details
+            )
         }
 
         return FeatureGate(
@@ -148,11 +139,15 @@ extension Statsig {
 
     @objc(getDynamicConfig:forUser:)
     public func getDynamicConfig(_ name: String, _ user: StatsigUser? = nil) -> DynamicConfig {
-        guard let context = context() else {
+        guard let context = getContext() else {
             return .empty(name, .uninitialized())
         }
 
-        let (evaluation, details) = getConfigImpl(context, name, user)
+        guard let userInternal = getInternalizedUser(context, user) else {
+            return .empty(name, .userError(context.store.sourceInfo))
+        }
+
+        let (evaluation, details) = getConfigImpl(context, userInternal, name)
 
         return DynamicConfig(
             name: name,
@@ -164,11 +159,15 @@ extension Statsig {
 
     @objc(getExperiment:forUser:)
     public func getExperiment(_ name: String, _ user: StatsigUser? = nil) -> Experiment {
-        guard let context = context() else {
+        guard let context = getContext() else {
             return .emptyExperiment(name, .uninitialized())
         }
 
-        let (evaluation, details) = getConfigImpl(context, name, user)
+        guard let userInternal = getInternalizedUser(context, user) else {
+            return .emptyExperiment(name, .userError(context.store.sourceInfo))
+        }
+
+        let (evaluation, details) = getConfigImpl(context, userInternal, name)
 
         return Experiment(
             name: name,
@@ -180,18 +179,17 @@ extension Statsig {
 
     @objc(getLayer:forUser:)
     public func getLayer(_ name: String, _ user: StatsigUser? = nil) -> Layer {
-        guard let context = context() else {
+        guard let context = getContext() else {
             return .empty(name, .uninitialized())
         }
 
-        let userInternal = getInternalizedUser(context, user)
+        guard let userInternal = getInternalizedUser(context, user) else {
+            return .empty(name, .userError(context.store.sourceInfo))
+        }
+
         let (evaluation, details) = context.evaluator.getLayer(name, userInternal)
 
         let logExposure: ParameterExposureFunc = { [weak context] layer, parameter in
-            guard let userInternal = userInternal else {
-                return
-            }
-
             let exposure = createLayerExposure(
                 user: userInternal,
                 layerName: name,
@@ -222,7 +220,7 @@ extension Statsig {
         _ event: StatsigEvent,
         _ user: StatsigUser? = nil
     ) {
-        guard let context = context() else {
+        guard let context = getContext() else {
             return
         }
 
@@ -233,7 +231,7 @@ extension Statsig {
 
     @objc
     public func flushEvents() {
-        context()?.logger.flush()
+        getContext()?.logger.flush()
     }
 }
 
@@ -308,34 +306,40 @@ extension Statsig {
 
     private func getConfigImpl(
         _ context: StatsigContext,
-        _ name: String,
-        _ user: StatsigUser?,
-        _ callingFunction: String = #function
+        _ userInternal: StatsigUserInternal,
+        _ name: String
     ) -> DetailedEvaluation {
-        let userInternal = getInternalizedUser(context, user, callingFunction)
         let detailedEval = context.evaluator.getConfig(name, userInternal)
         let (evaluation, details) = detailedEval
 
-        if let userInternal = userInternal {
-            context.logger.enqueue {
-                createConfigExposure(
-                    user: userInternal,
-                    configName: name,
-                    evaluation: evaluation,
-                    details: details
-                )
-            }
+        context.logger.enqueue {
+            createConfigExposure(
+                user: userInternal,
+                configName: name,
+                evaluation: evaluation,
+                details: details
+            )
         }
 
         return detailedEval
     }
 
+    private func getContext(_ caller: String = #function) -> StatsigContext? {
+        if context == nil {
+            emitter.emitError("\(caller) called before Statsig.initialize.")
+        }
+
+        return context
+    }
+
     private func getInternalizedUser(
         _ context: StatsigContext,
         _ user: StatsigUser?,
-        _ callingFunction: String = #function
+        _ caller: String = #function
     ) -> StatsigUserInternal? {
         guard let user = user ?? context.globalUser else {
+            emitter.emitError("No user given when calling \(caller)."
+                              + " Please provide a StatsigUser or call setGlobalUser.")
             return nil
         }
 
@@ -344,4 +348,5 @@ extension Statsig {
             environment: context.options?.environment
         )
     }
+
 }

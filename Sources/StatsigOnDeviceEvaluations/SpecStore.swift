@@ -2,7 +2,7 @@ import Foundation
 
 fileprivate let STORE_LABEL = "com.statsig.spec_store"
 
-typealias SpecAndSourceInfoTuple = (spec: Spec?, type: SpecType, sourceInfo: SpecStoreSourceInfo)
+typealias SpecAndSourceInfo = (spec: Spec?, sourceInfo: SpecStoreSourceInfo)
 
 enum SpecType {
     case gate
@@ -53,10 +53,9 @@ class SpecStore {
     func getSpecAndSourceInfo(
         _ type: SpecType,
         _ name: String
-    ) -> SpecAndSourceInfoTuple {
+    ) -> SpecAndSourceInfo {
         queue.sync {(
             specs[type]?[name],
-            type,
             self.sourceInfo
         )}
     }

@@ -37,4 +37,9 @@ class StatsigClientEventEmitter {
             listener.onStatsigClientEvent(event, data)
         }
     }
+
+    public func emitError(_ message: String) {
+        emit(.error, ["message": message])
+        print("[Statsig]: \(message)")
+    }
 }
