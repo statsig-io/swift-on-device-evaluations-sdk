@@ -48,6 +48,16 @@ import Foundation
         self.country = country
         self.locale = locale
         self.appVersion = appVersion
+
+        super.init()
+
+        if let custom = custom {
+            self.custom = StatsigUserValueMap(custom)
+        }
+
+        if let attributes = privateAttributes {
+            self.privateAttributes = StatsigUserValueMap(attributes)
+        }
     }
 
     @objc
