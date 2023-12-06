@@ -8,13 +8,16 @@ typealias DetailedEvaluation = (
 
 class Evaluator {
     private let store: SpecStore
+    private let emitter: StatsigClientEventEmitter
 
-    init(_ store: SpecStore) {
+    init(_ store: SpecStore, _ emitter: StatsigClientEventEmitter) {
         self.store = store
+        self.emitter = emitter
     }
 
     public func checkGate(_ name: String, _ user: StatsigUserInternal) -> DetailedEvaluation {
         evaluateWithDetails(
+            name,
             store.getSpecAndSourceInfo(.gate, name),
             user
         )
@@ -22,6 +25,7 @@ class Evaluator {
 
     public func getConfig(_ name: String, _ user: StatsigUserInternal) -> DetailedEvaluation {
         evaluateWithDetails(
+            name,
             store.getSpecAndSourceInfo(.config, name),
             user
         )
@@ -29,6 +33,7 @@ class Evaluator {
 
     public func getLayer(_ name: String, _ user: StatsigUserInternal) -> DetailedEvaluation {
         evaluateWithDetails(
+            name,
             store.getSpecAndSourceInfo(.layer, name),
             user
         )
@@ -38,7 +43,8 @@ class Evaluator {
 // MARK: Private
 extension Evaluator {
     private func evaluateWithDetails(
-        _ specAndSourceInfo: (spec: Spec?, sourceInfo: SpecStoreSourceInfo),
+        _ unhashedName: String,
+        _ specAndSourceInfo: SpecAndSourceInfo,
         _ user: StatsigUserInternal)
     -> DetailedEvaluation {
         let (spec, info) = specAndSourceInfo
@@ -177,7 +183,7 @@ extension Evaluator {
 
         case "multi_pass_gate", "multi_fail_gate":
             guard let gates = target?.asJsonArray() else {
-                return .unsupported(type)
+                return getUnsupportedResult(type)
             }
 
             return evaluateNestedGates(gates, type, user)
@@ -206,10 +212,10 @@ extension Evaluator {
             break
 
         case "ip_based", "ua_based":
-            return .unsupported(type)
+            return getUnsupportedResult(type)
 
         default:
-            return .unsupported(condition.type.lowercased())
+            return getUnsupportedResult(condition.type.lowercased())
         }
 
         let op = condition.operator?.lowercased()
@@ -244,12 +250,12 @@ extension Evaluator {
             pass = value != target
 
         case "in_segment_list":
-            return .unsupported("in_segment_list")
+            return getUnsupportedResult("in_segment_list")
         case "not_in_segment_list":
-            return .unsupported("not_in_segment_list")
+            return getUnsupportedResult("not_in_segment_list")
 
         default:
-            return .unsupported("Operator Was Null")
+            return getUnsupportedResult("Operator Was Null")
         }
 
         return .boolean(pass)
@@ -267,7 +273,7 @@ extension Evaluator {
 
         for name in gateNames {
             guard let name = name.asString() else {
-                return .unsupported("Expected gate name to be string.")
+                return getUnsupportedResult("Expected gate name to be string.")
             }
 
             let result = evaluateNestedGate(name, user)
@@ -351,19 +357,15 @@ extension Evaluator {
         }
 
         return uint64Value
-//        let data = Data(value.utf8)
-//        var digest = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
-//
-//        data.withUnsafeBytes {
-//            _ = CC_SHA256($0.baseAddress, CC_LONG(data.count), &digest)
-//        }
-//
-//        let uint64Array = Array(digest.prefix(MemoryLayout<UInt64>.size))
-//        let uint64Value = uint64Array.withUnsafeBytes {
-//            $0.load(as: UInt64.self)
-//        }
-//
-//        return UInt64(bigEndian: uint64Value)
+    }
+}
+
+
+// MARK: Unsupported Eval
+extension Evaluator {
+    func getUnsupportedResult(_ reason: String) -> EvaluationResult {
+        emitter.emitError("Unsupported condition or operator: \(reason)")
+        return .unsupported(reason)
     }
 }
 

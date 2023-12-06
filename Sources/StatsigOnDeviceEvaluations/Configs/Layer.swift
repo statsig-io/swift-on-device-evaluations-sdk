@@ -24,6 +24,19 @@ public class Layer: ConfigBase {
         )
     }
 
+    internal static func empty(
+        _ name: String,
+        _ evalDetails: EvaluationDetails
+    ) -> Layer {
+        Layer(
+            name: name,
+            ruleID: "",
+            evaluationDetails: evalDetails,
+            logParameterExposure: nil,
+            value: nil
+        )
+    }
+
     @objc
     public func getValue(param: String, fallback: Any) -> Any {
         guard let result = value[param] else {

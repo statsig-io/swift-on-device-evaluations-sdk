@@ -7,6 +7,7 @@ class ClientEventsViewController: UIViewController {
     var user = StatsigUser(userID: "a-user")
     var receivedEvents: [(Int64, StatsigClientEvent, [String: String])] = []
     var tableView: UITableView!
+    var shouldDemoErrorEvents = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -15,6 +16,11 @@ class ClientEventsViewController: UIViewController {
         setupNavbar()
 
         statsig.addListener(self)
+
+        if shouldDemoErrorEvents {
+            _ = statsig.checkGate("a_gate") // Fires "Uninitialized" error
+        }
+
         statsig.initialize(Constants.CLIENT_SDK_KEY)
     }
 }

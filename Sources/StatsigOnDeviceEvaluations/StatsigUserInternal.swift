@@ -73,12 +73,6 @@ struct StatsigUserInternal {
     }
 }
 
-extension StatsigUser {
-    func toInternal(_ options: StatsigOptions?) -> StatsigUserInternal {
-        StatsigUserInternal(user: self, environment: options?.environment)
-    }
-}
-
 extension StatsigUserValueMap {
     subscript(key: String) -> JsonValue? {
         get {

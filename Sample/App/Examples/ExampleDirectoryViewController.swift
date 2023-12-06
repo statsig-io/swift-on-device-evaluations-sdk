@@ -3,11 +3,16 @@ import Foundation
 import UIKit
 
 let Examples: [(String, UIViewController)] = [
+    // Swift
     ( "Basic (Swift)", BasicOnDeviceEvaluationsViewController() ),
-    ( "Basic (ObjC)", BasicOnDeviceEvaluationsViewControllerObjC() ),
-    ( "Perf (ObjC)", PerfOnDeviceEvaluationsViewControllerObjC() ),
     ( "Synchronous Init (Swift)", SynchronousInitViewController() ),
     ( "Statsig Client Events (Swift)", ClientEventsViewController() ),
+    ( "Statsig Global User (Swift)", GlobalUserOnDeviceEvaluationsViewController() ),
+
+    // Objective C
+    ( "Basic (ObjC)", BasicOnDeviceEvaluationsViewControllerObjC() ),
+    ( "Perf (ObjC)", PerfOnDeviceEvaluationsViewControllerObjC() ),
+    ( "Statsig Client Events (ObjC)", ClientEventsViewControllerObjC() ),
 ]
 
 

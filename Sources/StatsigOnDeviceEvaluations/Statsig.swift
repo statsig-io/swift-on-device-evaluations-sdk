@@ -9,14 +9,31 @@ public protocol SynchronousSpecsValue {}
 extension NSData: SynchronousSpecsValue {}
 extension NSString: SynchronousSpecsValue {}
 
-public final class Statsig: NSObject {
-    var options: StatsigOptions?
-
+class StatsigContext {
     let store: SpecStore
     let evaluator: Evaluator
     let network: NetworkService
     let logger: EventLogger
-    let emitter: StatsigClientEventEmitter
+    let sdkKey: String
+    let options: StatsigOptions?
+
+    var globalUser: StatsigUser?
+
+    init(_ emitter: StatsigClientEventEmitter, _ sdkKey: String, _ options: StatsigOptions?) {
+        store = SpecStore(emitter)
+        evaluator = Evaluator(store, emitter)
+        network = NetworkService(sdkKey, options)
+        logger = EventLogger(options, network, emitter)
+
+        self.sdkKey = sdkKey
+        self.options = options
+    }
+}
+
+public final class Statsig: NSObject {
+    let emitter = StatsigClientEventEmitter()
+
+    var context: StatsigContext?
 
     @objc(sharedInstance)
     public static var shared: Statsig = {
@@ -24,13 +41,7 @@ public final class Statsig: NSObject {
     }()
 
     @objc public override init() {
-        emitter = StatsigClientEventEmitter()
-        store = SpecStore(emitter)
-        evaluator = Evaluator(store)
-        network = NetworkService()
-        logger = EventLogger(network, emitter)
         super.init()
-
         subscribeToApplicationLifecycle()
     }
 
@@ -42,13 +53,12 @@ public final class Statsig: NSObject {
     ) {
         let markEnd = Diagnostics.trackInit()
 
-        self.network.setRequiredFields(sdkKey, options)
-        self.logger.options = options
-        self.options = options
-        self.store.loadFromCache(sdkKey)
+        let context = StatsigContext(emitter, sdkKey, options)
+        context.store.loadFromCache(sdkKey)
+        self.context = context
 
-        setValuesFromNetwork(sdkKey) { [weak logger, weak store] error in
-            markEnd(logger, store?.sourceInfo, error)
+        setValuesFromNetwork(context) { [weak context] error in
+            markEnd(context?.logger, context?.store.sourceInfo, error)
             completion?(error)
         }
     }
@@ -60,34 +70,23 @@ public final class Statsig: NSObject {
         options: StatsigOptions? = nil
     ) -> Error? {
         let markEnd = Diagnostics.trackInit()
+        let context = StatsigContext(emitter, sdkKey, options)
 
-        self.network.setRequiredFields(sdkKey, options)
-        self.logger.options = options
-        self.options = options
-
-        let error = setValuesFromInitialSpecs(sdkKey, initialSpecs)
-        markEnd(logger, store.sourceInfo, error)
+        let error = setValuesFromInitialSpecs(context, initialSpecs)
+        markEnd(context.logger, context.store.sourceInfo, error)
+        self.context = context
         return error
     }
 
     @objc
     public func shutdown(completion: ShutdownCompletion? = nil) {
-        self.logger.shutdown { err in completion?(err) }
+        getContext()?.logger.shutdown { err in completion?(err) }
         unsubscribeFromApplicationLifecycle()
     }
 
-    @objc(logEvent:forUser:)
-    public func logEvent(
-        _ event: StatsigEvent,
-        _ user: StatsigUser
-    ) {
-        let userInternal = user.toInternal(options)
-        logger.enqueue { event.toInternal(userInternal, nil) }
-    }
-
     @objc
-    public func flushEvents() {
-        logger.flush()
+    public func setGlobalUser(_ user: StatsigUser) {
+        getContext()?.globalUser = user
     }
 
     @objc
@@ -105,16 +104,23 @@ public final class Statsig: NSObject {
 // MARK: Check APIs
 extension Statsig {
     @objc(checkGate:forUser:)
-    public func checkGate(_ name: String, _ user: StatsigUser) -> Bool {
+    public func checkGate(_ name: String, _ user: StatsigUser? = nil) -> Bool {
         return getFeatureGate(name, user).value
     }
 
     @objc(getFeatureGate:forUser:)
-    public func getFeatureGate(_ name: String, _ user: StatsigUser) -> FeatureGate {
-        let userInternal = user.toInternal(options)
-        let (evaluation, details) = evaluator.checkGate(name, userInternal)
+    public func getFeatureGate(_ name: String, _ user: StatsigUser? = nil) -> FeatureGate {
+        guard let context = getContext() else {
+            return .empty(name, .uninitialized())
+        }
 
-        logger.enqueue{
+        guard let userInternal = getInternalizedUser(context, user) else {
+            return .empty(name, .userError(context.store.sourceInfo))
+        }
+
+        let (evaluation, details) = context.evaluator.checkGate(name, userInternal)
+
+        context.logger.enqueue{
             createGateExposure(
                 user: userInternal,
                 gateName: name,
@@ -132,8 +138,16 @@ extension Statsig {
     }
 
     @objc(getDynamicConfig:forUser:)
-    public func getDynamicConfig(_ name: String, _ user: StatsigUser) -> DynamicConfig {
-        let (evaluation, details) = getConfigImpl(name, user)
+    public func getDynamicConfig(_ name: String, _ user: StatsigUser? = nil) -> DynamicConfig {
+        guard let context = getContext() else {
+            return .empty(name, .uninitialized())
+        }
+
+        guard let userInternal = getInternalizedUser(context, user) else {
+            return .empty(name, .userError(context.store.sourceInfo))
+        }
+
+        let (evaluation, details) = getConfigImpl(context, userInternal, name)
 
         return DynamicConfig(
             name: name,
@@ -144,8 +158,16 @@ extension Statsig {
     }
 
     @objc(getExperiment:forUser:)
-    public func getExperiment(_ name: String, _ user: StatsigUser) -> Experiment {
-        let (evaluation, details) = getConfigImpl(name, user)
+    public func getExperiment(_ name: String, _ user: StatsigUser? = nil) -> Experiment {
+        guard let context = getContext() else {
+            return .emptyExperiment(name, .uninitialized())
+        }
+
+        guard let userInternal = getInternalizedUser(context, user) else {
+            return .emptyExperiment(name, .userError(context.store.sourceInfo))
+        }
+
+        let (evaluation, details) = getConfigImpl(context, userInternal, name)
 
         return Experiment(
             name: name,
@@ -156,11 +178,18 @@ extension Statsig {
     }
 
     @objc(getLayer:forUser:)
-    public func getLayer(_ name: String, _ user: StatsigUser) -> Layer {
-        let userInternal = user.toInternal(options)
-        let (evaluation, details) = evaluator.getLayer(name, userInternal)
+    public func getLayer(_ name: String, _ user: StatsigUser? = nil) -> Layer {
+        guard let context = getContext() else {
+            return .empty(name, .uninitialized())
+        }
 
-        let logExposure: ParameterExposureFunc = { [weak self] layer, parameter in
+        guard let userInternal = getInternalizedUser(context, user) else {
+            return .empty(name, .userError(context.store.sourceInfo))
+        }
+
+        let (evaluation, details) = context.evaluator.getLayer(name, userInternal)
+
+        let logExposure: ParameterExposureFunc = { [weak context] layer, parameter in
             let exposure = createLayerExposure(
                 user: userInternal,
                 layerName: name,
@@ -169,7 +198,7 @@ extension Statsig {
                 details: details
             )
 
-            self?.logger.enqueue { exposure }
+            context?.logger.enqueue { exposure }
         }
 
         return Layer(
@@ -183,11 +212,38 @@ extension Statsig {
 }
 
 
+// MARK: Logging
+
+extension Statsig {
+    @objc(logEvent:forUser:)
+    public func logEvent(
+        _ event: StatsigEvent,
+        _ user: StatsigUser? = nil
+    ) {
+        guard let context = getContext() else {
+            return
+        }
+
+        if let userInternal = getInternalizedUser(context, user) {
+            context.logger.enqueue { event.toInternal(userInternal, nil) }
+        }
+    }
+
+    @objc
+    public func flushEvents() {
+        getContext()?.logger.flush()
+    }
+}
+
+
 // MARK: Private
 extension Statsig {
-    private func setValuesFromNetwork(_ sdkKey: String, completion: InitCompletion? = nil) {
-        network.get(.downloadConfigSpecs) {
-            [weak self] (result: DecodedResult<DownloadConfigSpecsResponse>?, error) in
+    private func setValuesFromNetwork(
+        _ context: StatsigContext,
+        completion: InitCompletion? = nil
+    ) {
+        context.network.get(.downloadConfigSpecs) {
+            [weak context] (result: DecodedResult<DownloadConfigSpecsResponse>?, error) in
 
             if let error = error {
                 completion?(error)
@@ -199,10 +255,14 @@ extension Statsig {
                 return
             }
 
-            self?.store.setAndCacheValues(
+            guard let context = context else {
+                return
+            }
+
+            context.store.setAndCacheValues(
                 response: result.decoded,
                 responseData: result.data,
-                sdkKey: sdkKey,
+                sdkKey: context.sdkKey,
                 source: .network
             )
 
@@ -210,7 +270,10 @@ extension Statsig {
         }
     }
 
-    private func setValuesFromInitialSpecs(_ sdkKey: String, _ initialValues: SynchronousSpecsValue) -> Error? {
+    private func setValuesFromInitialSpecs(
+        _ context: StatsigContext,
+        _ initialValues: SynchronousSpecsValue
+    ) -> Error? {
         var data: Data?
 
         if let initialValues = initialValues as? Data {
@@ -228,10 +291,10 @@ extension Statsig {
             let decoded = try JSONDecoder()
                 .decode(DownloadConfigSpecsResponse.self, from: data)
 
-            store.setAndCacheValues(
+            context.store.setAndCacheValues(
                 response: decoded,
                 responseData: data,
-                sdkKey: sdkKey,
+                sdkKey: context.sdkKey,
                 source: .bootstrap
             )
 
@@ -241,12 +304,15 @@ extension Statsig {
         }
     }
 
-    private func getConfigImpl(_ name: String, _ user: StatsigUser) -> DetailedEvaluation {
-        let userInternal = user.toInternal(options)
-        let detailedEval = evaluator.getConfig(name, userInternal)
+    private func getConfigImpl(
+        _ context: StatsigContext,
+        _ userInternal: StatsigUserInternal,
+        _ name: String
+    ) -> DetailedEvaluation {
+        let detailedEval = context.evaluator.getConfig(name, userInternal)
         let (evaluation, details) = detailedEval
 
-        logger.enqueue {
+        context.logger.enqueue {
             createConfigExposure(
                 user: userInternal,
                 configName: name,
@@ -257,4 +323,30 @@ extension Statsig {
 
         return detailedEval
     }
+
+    private func getContext(_ caller: String = #function) -> StatsigContext? {
+        if context == nil {
+            emitter.emitError("\(caller) called before Statsig.initialize.")
+        }
+
+        return context
+    }
+
+    private func getInternalizedUser(
+        _ context: StatsigContext,
+        _ user: StatsigUser?,
+        _ caller: String = #function
+    ) -> StatsigUserInternal? {
+        guard let user = user ?? context.globalUser else {
+            emitter.emitError("No user given when calling \(caller)."
+                              + " Please provide a StatsigUser or call setGlobalUser.")
+            return nil
+        }
+
+        return StatsigUserInternal(
+            user: user,
+            environment: context.options?.environment
+        )
+    }
+
 }

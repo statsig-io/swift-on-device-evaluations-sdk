@@ -23,10 +23,23 @@ extension Int: StatsigEventValue {}
 
     @objc public static func event(
         withName eventName: String,
+        metadata: [String: String]
+    ) -> StatsigEvent {
+        StatsigEvent(eventName: eventName, value: nil, metadata: metadata)
+    }
+
+    @objc public static func event(
+        withName eventName: String
+    ) -> StatsigEvent {
+        StatsigEvent(eventName: eventName, value: nil, metadata: nil)
+    }
+
+    @objc public static func event(
+        withName eventName: String,
         stringValue value: String?,
         metadata: [String: String]?
     ) -> StatsigEvent {
-        return StatsigEvent(eventName: eventName, value: value, metadata: metadata)
+        StatsigEvent(eventName: eventName, value: value, metadata: metadata)
     }
 
     @objc public static func event(
@@ -34,7 +47,7 @@ extension Int: StatsigEventValue {}
         doubleValue value: Double,
         metadata: [String: String]?
     ) -> StatsigEvent {
-        return StatsigEvent(eventName: eventName, value: value, metadata: metadata)
+        StatsigEvent(eventName: eventName, value: value, metadata: metadata)
     }
 
     @objc public static func event(
@@ -42,6 +55,6 @@ extension Int: StatsigEventValue {}
         intValue value: Int,
         metadata: [String: String]?
     ) -> StatsigEvent {
-        return StatsigEvent(eventName: eventName, value: value, metadata: metadata)
+        StatsigEvent(eventName: eventName, value: value, metadata: metadata)
     }
 }

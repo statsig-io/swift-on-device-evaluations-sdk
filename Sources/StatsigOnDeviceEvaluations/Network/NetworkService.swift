@@ -23,13 +23,10 @@ struct DiagnosticsMarkers {
 }
 
 public class NetworkService {
-    private var sdkKey: String? = nil
-    private var options: StatsigOptions? = nil
+    let sdkKey: String
+    let options: StatsigOptions?
 
-    func setRequiredFields(
-        _ sdkKey: String,
-        _ options: StatsigOptions?
-    ) {
+    init(_ sdkKey: String, _ options: StatsigOptions?) {
         self.sdkKey = sdkKey
         self.options = options
     }
@@ -59,6 +56,7 @@ public class NetworkService {
         _ endpoint: Endpoint,
         payload: [String: Any],
         retries: UInt? = nil,
+        headers: [String: String]? = nil,
         completion: @escaping NetworkCompletion<T>
     ) {
         let result = getRequestForEndpoint(endpoint, sdkKey)
@@ -78,6 +76,10 @@ public class NetworkService {
             request.httpMethod = "POST"
             request.httpBody = data
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+            headers?.forEach { (key: String, value: String) in
+                request.setValue(value, forHTTPHeaderField: key)
+            }
 
             send(
                 request,

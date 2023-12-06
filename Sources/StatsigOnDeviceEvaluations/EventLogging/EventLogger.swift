@@ -5,8 +5,7 @@ fileprivate let LOGGER_LABEL = "com.statsig.event_logger"
 typealias EventFlushCompletion = (_ error: Error?) -> Void
 
 class EventLogger {
-
-    var options: StatsigOptions?
+    let options: StatsigOptions?
 
     private let queue = DispatchQueue(label: LOGGER_LABEL)
     private let network: NetworkService
@@ -15,8 +14,10 @@ class EventLogger {
     private var events: [StatsigEventInternal] = []
     private var flushTimer: Timer?
 
-    init(_ network: NetworkService,
+    init(_ options: StatsigOptions?,
+         _ network: NetworkService,
          _ emitter: StatsigClientEventEmitter) {
+        self.options = options
         self.network = network
         self.emitter = emitter
 
@@ -57,7 +58,8 @@ class EventLogger {
                 "events": loggable,
                 "statsigMetadata": StatsigMetadata.get().toLoggable()
             ],
-            retries: 3
+            retries: 3,
+            headers: ["STATSIG-EVENT-COUNT": String(loggable.count)]
         ) { [weak emitter] (result: DecodedResult<LogEventResponse>?, error) in
 
             completion?(error)
