@@ -20,17 +20,14 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Get KONG
-        run: git clone https://oauth2:$repo_pat@github.com/statsig-io/kong.git kong
+        run: git clone https://oauth2:$repo_pat@github.com/statsig-io/kong.git .
 
       - name: Install Deps
-        working-directory: kong
         run: |
           npm install
 
       - name: Setup Swift SDK
-        working-directory: kong
         run: npm run kong -- setup swift-on-device-eval --verbose
 
       - name: Run Tests
-        working-directory: kong
         run: npm run kong -- test swift-on-device-eval --allow-retries --verbose
