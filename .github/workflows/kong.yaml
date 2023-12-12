@@ -17,7 +17,7 @@ env:
 jobs:
   KONG:
     timeout-minutes: 15
-    runs-on: macos-latest
+    runs-on: self-hosted
     steps:
       - name: Get KONG
         run: git clone https://oauth2:$repo_pat@github.com/statsig-io/kong.git .
@@ -25,13 +25,9 @@ jobs:
       - name: Install Deps
         run: |
           npm install
-          brew install coreutils
 
-      - name: Setup iOS SDK
+      - name: Setup Swift SDK
         run: npm run kong -- setup swift-on-device-eval --verbose
-
-      - name: Pull Cached BridgeApps
-        run: npm run kong -- cache_apple_bridges swift-on-device-eval --verbose --direction down
 
       - name: Run Tests
         run: npm run kong -- test swift-on-device-eval --allow-retries --verbose
