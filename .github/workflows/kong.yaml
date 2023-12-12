@@ -29,7 +29,7 @@ jobs:
 
       - name: Setup Swift SDK
         working-directory: kong
-        run: npm --prefix run kong -- setup swift-on-device-eval --verbose
+        run: npm run kong -- setup swift-on-device-eval --verbose
 
       - name: Run Tests
         working-directory: kong
