@@ -23,6 +23,7 @@ jobs:
         run: git clone https://oauth2:$repo_pat@github.com/statsig-io/kong.git kong
 
       - name: Install Deps
+        working-directory: kong
         run: |
           npm install
 
