@@ -36,16 +36,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@main
 
-      - name: Install XCBeautify
-        run: brew install xcbeautify
-
-      - name: Configure cache
-        uses: actions/cache@v3
-        with:
-          path: ~/Library/Developer/Xcode/DerivedData/*
-          key: ios-cache-
-          restore-keys: ios-cache-
-
       - name: Run Build ${{ matrix.platform }}
         run: |
           cd .swiftpm/xcode
@@ -61,16 +51,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@main
-
-      - name: Install XCBeautify
-        run: brew install xcbeautify
-
-      - name: Configure cache
-        uses: actions/cache@v3
-        with:
-          path: ~/Library/Developer/Xcode/DerivedData/*
-          key: ios-cache-
-          restore-keys: ios-cache-
 
       - name: Lint Podspec
         run: pod lib lint StatsigOnDeviceEvaluations.podspec --skip-tests
