@@ -4,16 +4,8 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths:
-      - Sources/**
-      - Tests/**
-      - .github/workflows/tests.yaml
   pull_request:
     branches: [main]
-    paths:
-      - Sources/**
-      - Tests/**
-      - .github/workflows/tests.yaml
 
 env:
   CODE_SIGNING_REQUIRED: NO
