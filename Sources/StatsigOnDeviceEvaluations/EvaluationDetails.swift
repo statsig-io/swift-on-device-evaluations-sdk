@@ -31,6 +31,14 @@ public class EvaluationDetails: NSObject {
         )
     }
 
+    static func sticky(_ lcut: Int64) -> EvaluationDetails {
+        EvaluationDetails(
+            reason: "Persisted",
+            lcut: 0,
+            receivedAt: Time.now()
+        )
+    }
+
     internal init(reason: String, lcut: Int64, receivedAt: Int64) {
         self.reason = reason
         self.lcut = lcut

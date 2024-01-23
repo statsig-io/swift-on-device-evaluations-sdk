@@ -21,7 +21,7 @@ class StatsigContext {
 
     init(_ emitter: StatsigClientEventEmitter, _ sdkKey: String, _ options: StatsigOptions?) {
         store = SpecStore(emitter)
-        evaluator = Evaluator(store, emitter)
+        evaluator = Evaluator(store, emitter, userPersistentStorageProvider: options?.userPersistentStorage)
         network = NetworkService(sdkKey, options)
         logger = EventLogger(options, network, emitter)
 
@@ -138,7 +138,10 @@ extension Statsig {
     }
 
     @objc(getDynamicConfig:forUser:)
-    public func getDynamicConfig(_ name: String, _ user: StatsigUser? = nil) -> DynamicConfig {
+    public func getDynamicConfig(
+        _ name: String,
+        _ user: StatsigUser? = nil
+    ) -> DynamicConfig {
         guard let context = getContext() else {
             return .empty(name, .uninitialized())
         }
@@ -147,7 +150,12 @@ extension Statsig {
             return .empty(name, .userError(context.store.sourceInfo))
         }
 
-        let (evaluation, details) = getConfigImpl(context, userInternal, name)
+        let (evaluation, details) = getConfigImpl(
+            context,
+            userInternal,
+            name,
+            options: nil
+        )
 
         return DynamicConfig(
             name: name,
@@ -157,8 +165,12 @@ extension Statsig {
         )
     }
 
-    @objc(getExperiment:forUser:)
-    public func getExperiment(_ name: String, _ user: StatsigUser? = nil) -> Experiment {
+    @objc(getExperiment:forUser:options:)
+    public func getExperiment(
+        _ name: String,
+        _ user: StatsigUser? = nil,
+        _ options: GetExperimentOptions? = nil
+    ) -> Experiment {
         guard let context = getContext() else {
             return .emptyExperiment(name, .uninitialized())
         }
@@ -167,7 +179,12 @@ extension Statsig {
             return .emptyExperiment(name, .userError(context.store.sourceInfo))
         }
 
-        let (evaluation, details) = getConfigImpl(context, userInternal, name)
+        let (evaluation, details) = getConfigImpl(
+            context,
+            userInternal,
+            name,
+            options: options
+        )
 
         return Experiment(
             name: name,
@@ -232,6 +249,48 @@ extension Statsig {
     @objc
     public func flushEvents() {
         getContext()?.logger.flush()
+    }
+}
+
+// MARK: User Persistent Values
+
+extension Statsig {
+    @objc(loadUserPersistedValuesAsync:forUser:completion:)
+    public func loadUserPersistedValuesAsync(
+        _ idType: String,
+        _ user: StatsigUser? = nil,
+        _ completion: @escaping (UserPersistedValues?) -> Void
+    ) {
+        guard
+            let context = getContext(),
+            let storage = context.options?.userPersistentStorage,
+            let userInternal = getInternalizedUser(context, user)
+        else {
+            completion(nil)
+            return
+        }
+
+        let key = getStorageKey(user: userInternal, idType: idType)
+        storage.loadAsync(key, completion)
+    }
+
+    @objc(loadUserPersistedValues:forUser:)
+    public func loadUserPersistedValues(
+        _ idType: String,
+        _ user: StatsigUser? = nil
+    ) -> UserPersistedValues? {
+        guard
+            let context = getContext(),
+            let userInternal = getInternalizedUser(context, user)
+        else {
+            return nil
+        }
+
+        let key = getStorageKey(user: userInternal, idType: idType)
+        return context
+            .options?
+            .userPersistentStorage?
+            .load(key)
     }
 }
 
@@ -307,9 +366,10 @@ extension Statsig {
     private func getConfigImpl(
         _ context: StatsigContext,
         _ userInternal: StatsigUserInternal,
-        _ name: String
+        _ name: String,
+        options: GetExperimentOptions?
     ) -> DetailedEvaluation {
-        let detailedEval = context.evaluator.getConfig(name, userInternal)
+        let detailedEval = context.evaluator.getConfig(name, userInternal, options: options)
         let (evaluation, details) = detailedEval
 
         context.logger.enqueue {

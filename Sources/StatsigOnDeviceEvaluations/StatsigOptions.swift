@@ -42,6 +42,11 @@ import Foundation
      */
     @objc public var environment: StatsigEnvironment
 
+    /**
+     If you want to ensure that a user's variant stays consistent while an experiment is running, regardless of changes to allocation or targeting, you can provided a class that implements the UserPersistentStorageProvider.
+     */
+    @objc public var userPersistentStorage: UserPersistentStorageProvider?
+
     public override init() {
         environment = StatsigEnvironment()
     }
