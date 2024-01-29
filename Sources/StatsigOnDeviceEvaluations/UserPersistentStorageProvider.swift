@@ -55,10 +55,9 @@ extension UserPersistentStorageProvider {
 
         if spec.isActive != true || userPersistedValues == nil {
             let key = getStorageKey(user: user, idType: spec.idType)
-            let latest = load(key)
-            if latest[spec.name] != nil {
-                delete(key, spec.name)
-            }
+            var latest = load(key)
+            latest.removeValue(forKey: spec.name)
+            delete(key, spec.name)
             return nil
         }
 
