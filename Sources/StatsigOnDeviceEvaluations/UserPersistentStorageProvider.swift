@@ -66,7 +66,7 @@ extension UserPersistentStorageProvider {
            let evaluation = EvaluationResult.sticky(value) {
             return (
                 evaluation: evaluation,
-                details: .sticky(value["time"] as? Int ?? 0)
+                details: .sticky(value["time"] as? Int64 ?? 0)
             )
         }
 

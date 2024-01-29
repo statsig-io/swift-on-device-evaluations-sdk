@@ -34,7 +34,7 @@ public class EvaluationDetails: NSObject {
     static func sticky(_ lcut: Int64) -> EvaluationDetails {
         EvaluationDetails(
             reason: "Persisted",
-            lcut: 0,
+            lcut: lcut,
             receivedAt: Time.now()
         )
     }
