@@ -9,10 +9,17 @@ typealias DetailedEvaluation = (
 class Evaluator {
     private let store: SpecStore
     private let emitter: StatsigClientEventEmitter
+    private let userPersistentStorageProvider: UserPersistentStorageProvider?
 
-    init(_ store: SpecStore, _ emitter: StatsigClientEventEmitter) {
+
+    init(
+        _ store: SpecStore,
+        _ emitter: StatsigClientEventEmitter,
+        userPersistentStorageProvider: UserPersistentStorageProvider?
+    ) {
         self.store = store
         self.emitter = emitter
+        self.userPersistentStorageProvider = userPersistentStorageProvider
     }
 
     public func checkGate(_ name: String, _ user: StatsigUserInternal) -> DetailedEvaluation {
@@ -23,12 +30,33 @@ class Evaluator {
         )
     }
 
-    public func getConfig(_ name: String, _ user: StatsigUserInternal) -> DetailedEvaluation {
-        evaluateWithDetails(
+    public func getConfig(
+        _ name: String,
+        _ user: StatsigUserInternal,
+        options: GetExperimentOptions?
+    ) -> DetailedEvaluation {
+        let specAndSource = store.getSpecAndSourceInfo(.config, name)
+
+        if let sticky = userPersistentStorageProvider?
+            .getStickyValue(user, specAndSource, options?.userPersistedValues) {
+            return sticky
+        }
+
+        let detailedEvaluation = evaluateWithDetails(
             name,
-            store.getSpecAndSourceInfo(.config, name),
+            specAndSource,
             user
         )
+
+        if options?.userPersistedValues != nil {
+            userPersistentStorageProvider?.saveStickyValueIfNeeded(
+                user,
+                specAndSource,
+                detailedEvaluation
+            )
+        }
+
+        return detailedEvaluation
     }
 
     public func getLayer(_ name: String, _ user: StatsigUserInternal) -> DetailedEvaluation {
@@ -39,6 +67,7 @@ class Evaluator {
         )
     }
 }
+
 
 // MARK: Private
 extension Evaluator {
@@ -93,7 +122,8 @@ extension Evaluator {
                 boolValue: pass,
                 jsonValue: pass ? result.jsonValue : spec.defaultValue,
                 secondaryExposures: exposures,
-                isExperimentGroup: result.isExperimentGroup
+                isExperimentGroup: result.isExperimentGroup,
+                groupName: result.groupName
             )
         }
 
@@ -358,6 +388,8 @@ extension Evaluator {
 
         return uint64Value
     }
+
+
 }
 
 

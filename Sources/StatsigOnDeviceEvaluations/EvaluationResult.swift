@@ -57,7 +57,8 @@ struct EvaluationResult {
         boolValue: Bool,
         jsonValue: JsonValue?,
         secondaryExposures: [[String: String]],
-        isExperimentGroup: Bool
+        isExperimentGroup: Bool,
+        groupName: String?
     ) -> EvaluationResult {
         EvaluationResult(
             ruleID: ruleID,
@@ -65,7 +66,8 @@ struct EvaluationResult {
             jsonValue: jsonValue,
             secondaryExposures: secondaryExposures,
             undelegatedSecondaryExposures: secondaryExposures,
-            isExperimentGroup: isExperimentGroup
+            isExperimentGroup: isExperimentGroup,
+            groupName: groupName
         )
     }
 
@@ -83,7 +85,8 @@ struct EvaluationResult {
             jsonValue: jsonValue,
             secondaryExposures: secondaryExposures,
             undelegatedSecondaryExposures: secondaryExposures,
-            isExperimentGroup: isExperimentGroup
+            isExperimentGroup: isExperimentGroup,
+            groupName: groupName
         )
     }
 
@@ -126,10 +129,12 @@ struct EvaluationResult {
     }
 
     static func unsupported(_ reason: String) -> EvaluationResult {
-        return EvaluationResult(
+        EvaluationResult(
             ruleID: "default",
             unsupported: true
         )
     }
+
+
 }
 

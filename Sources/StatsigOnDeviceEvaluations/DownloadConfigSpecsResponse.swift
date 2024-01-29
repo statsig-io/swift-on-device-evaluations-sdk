@@ -25,6 +25,7 @@ struct Spec: Decodable {
     let idType: String
     let explicitParameters: [String]?
     let rules: [SpecRule]
+    let isActive: Bool?
 }
 
 struct SpecRule: Decodable {
