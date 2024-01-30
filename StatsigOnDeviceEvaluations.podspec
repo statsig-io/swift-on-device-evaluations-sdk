@@ -23,7 +23,7 @@ Pod::Spec.new do |spec|
   spec.osx.deployment_target = "10.13"
   spec.tvos.deployment_target = "10.0"
 
-  spec.source       = { :git => "https://github.com/statsig-io/swift-on-device-evaluations-sdk.git", :tag => "v#{spec.version}" }
+  spec.source       = { :git => "https://github.com/statsig-io/swift-on-device-evaluations-sdk.git", :tag => "#{spec.version}" }
   spec.source_files  = "Sources/StatsigOnDeviceEvaluations/**/*.swift"
 
   spec.swift_version = '5.0'
