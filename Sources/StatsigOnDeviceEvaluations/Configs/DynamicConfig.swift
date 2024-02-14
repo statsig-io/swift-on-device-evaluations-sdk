@@ -3,14 +3,17 @@ import Foundation
 @objc
 public class DynamicConfig: ConfigBase {
     @objc public let value: [String: Any]
+    @objc public let groupName: String?
 
     internal init(
         name: String,
         ruleID: String,
         evaluationDetails: EvaluationDetails,
-        value: [String: Any]?
+        value: [String: Any]?,
+        groupName: String?
     ) {
         self.value = value ?? [:]
+        self.groupName = groupName
         super.init(
             name,
             ruleID,
@@ -26,7 +29,8 @@ public class DynamicConfig: ConfigBase {
             name: name,
             ruleID: "",
             evaluationDetails: evalDetails,
-            value: nil
+            value: nil,
+            groupName: nil
         )
     }
 }

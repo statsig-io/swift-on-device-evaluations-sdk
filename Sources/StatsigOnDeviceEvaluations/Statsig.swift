@@ -161,7 +161,8 @@ extension Statsig {
             name: name,
             ruleID: evaluation.ruleID,
             evaluationDetails: details,
-            value: evaluation.jsonValue?.serializeToDictionary()
+            value: evaluation.jsonValue?.serializeToDictionary(),
+            groupName: evaluation.groupName
         )
     }
 
@@ -190,7 +191,8 @@ extension Statsig {
             name: name,
             ruleID: evaluation.ruleID,
             evaluationDetails: details,
-            value: evaluation.jsonValue?.serializeToDictionary()
+            value: evaluation.jsonValue?.serializeToDictionary(),
+            groupName: evaluation.groupName
         )
     }
 
