@@ -10,7 +10,8 @@ public class Experiment: DynamicConfig {
             name: name,
             ruleID: "",
             evaluationDetails: evalDetails,
-            value: nil
+            value: nil,
+            groupName: nil
         )
     }
 }
