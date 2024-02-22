@@ -218,7 +218,7 @@ extension Evaluator {
 
             return evaluateNestedGates(gates, type, user)
 
-        case "user_field":
+        case "user_field", "ip_based", "ua_based":
             value = user.getUserValue(field)
             break
 
@@ -240,9 +240,6 @@ extension Evaluator {
                 value = .string(unitID)
             }
             break
-
-        case "ip_based", "ua_based":
-            return getUnsupportedResult(type)
 
         default:
             return getUnsupportedResult(condition.type.lowercased())

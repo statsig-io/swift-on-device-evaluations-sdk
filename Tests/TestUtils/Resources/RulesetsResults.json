@@ -424,10 +424,9 @@
             ]
         },
         "test_many_rules": {
-            "__meta": "Unsupported",
             "name": "test_many_rules",
-            "value": false,
-            "rule_id": "default",
+            "value": true,
+            "rule_id": "6p3sVuRytVeSGuCweaGB5B",
             "secondary_exposures": []
         },
         "test_targeting_gate_with_no_rules": {
