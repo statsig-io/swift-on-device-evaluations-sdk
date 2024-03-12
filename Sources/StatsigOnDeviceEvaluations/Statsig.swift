@@ -225,7 +225,9 @@ extension Statsig {
             ruleID: evaluation.ruleID,
             evaluationDetails: details,
             logParameterExposure: logExposure,
-            value: evaluation.jsonValue?.serializeToDictionary()
+            value: evaluation.jsonValue?.serializeToDictionary(),
+            allocatedExperimentName: evaluation.configDelegate,
+            groupName: evaluation.groupName
         )
     }
 }
