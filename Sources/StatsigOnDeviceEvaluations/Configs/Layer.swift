@@ -6,16 +6,22 @@ typealias ParameterExposureFunc = (_ layer: Layer, _ parameter: String) -> Void
 public class Layer: ConfigBase {
     let value: [String: Any]
     let logParameterExposure: ParameterExposureFunc?
+    let allocatedExperimentName: String?
+    let groupName: String?
 
     internal init(
         name: String,
         ruleID: String,
         evaluationDetails: EvaluationDetails,
         logParameterExposure: ParameterExposureFunc?,
-        value: [String: Any]?
+        value: [String: Any]?,
+        allocatedExperimentName: String? = nil,
+        groupName: String? = nil
     ) {
         self.value = value ?? [:]
         self.logParameterExposure = logParameterExposure
+        self.allocatedExperimentName = allocatedExperimentName
+        self.groupName = groupName
 
         super.init(
             name,
