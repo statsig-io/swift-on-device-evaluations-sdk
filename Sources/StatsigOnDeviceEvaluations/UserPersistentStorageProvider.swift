@@ -29,7 +29,6 @@ extension EvaluationResult {
         }
 
         let secondaryExposures = value["secondary_exposures"] as? [[String: String]] ?? []
-        let isExperimentGroup = value["is_experiment_group"] as? Bool == true
         let groupName = value["group_name"] as? String
 
         return .specResult(
@@ -37,7 +36,7 @@ extension EvaluationResult {
             boolValue: boolValue,
             jsonValue: jsonValue,
             secondaryExposures: secondaryExposures,
-            isExperimentGroup: isExperimentGroup,
+            isExperimentGroup: true,
             groupName: groupName
         )
     }
@@ -92,7 +91,6 @@ extension UserPersistentStorageProvider {
             "rule_id": evaluation.ruleID,
             "json_value": evaluation.jsonValue?.serializeToDictionary(),
             "secondary_exposures": evaluation.secondaryExposures,
-            "is_experiment_group": evaluation.isExperimentGroup,
             "group_name": evaluation.groupName,
             "time": detailedEvaluation.details.lcut,
         ]
