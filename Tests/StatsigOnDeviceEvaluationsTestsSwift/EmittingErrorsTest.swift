@@ -43,7 +43,7 @@ final class EmittingErrorsTest: QuickSpec{
                     ({ _ = client.getFeatureGate("a_gate") }, "getFeatureGate(_:_:)"),
                     ({ _ = client.getDynamicConfig("a_dynamic_config") }, "getDynamicConfig(_:_:)"),
                     ({ _ = client.getExperiment("an_experiment") }, "getExperiment(_:_:_:)"),
-                    ({ _ = client.getLayer("a_layer") }, "getLayer(_:_:)"),
+                    ({ _ = client.getLayer("a_layer") }, "getLayer(_:_:_:)"),
                 ]
 
                 cases.forEach { (action, expected) in
@@ -69,7 +69,7 @@ final class EmittingErrorsTest: QuickSpec{
                     ({ _ = client.getFeatureGate("a_gate") }, "getFeatureGate(_:_:)"),
                     ({ _ = client.getDynamicConfig("a_dynamic_config") }, "getDynamicConfig(_:_:)"),
                     ({ _ = client.getExperiment("an_experiment") }, "getExperiment(_:_:_:)"),
-                    ({ _ = client.getLayer("a_layer") }, "getLayer(_:_:)"),
+                    ({ _ = client.getLayer("a_layer") }, "getLayer(_:_:_:)"),
                 ]
 
                 cases.forEach { (action, expected) in

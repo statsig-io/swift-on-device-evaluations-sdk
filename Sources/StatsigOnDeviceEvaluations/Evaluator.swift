@@ -23,11 +23,21 @@ class Evaluator {
     }
 
     public func checkGate(_ name: String, _ user: StatsigUserInternal) -> DetailedEvaluation {
-        evaluateWithDetails(
+        let (spec, info) = store.getSpecAndSourceInfo(.gate, name)
+        guard let spec: Spec = spec else {
+            return (
+                evaluation: .empty(),
+                details: .unrecognized(info)
+            )
+        }
+
+        return evaluateWithDetails((
             name,
-            store.getSpecAndSourceInfo(.gate, name),
-            user
-        )
+            spec,
+            info,
+            user,
+            nil
+        ))
     }
 
     public func getConfig(
@@ -35,58 +45,122 @@ class Evaluator {
         _ user: StatsigUserInternal,
         options: GetExperimentOptions?
     ) -> DetailedEvaluation {
-        let specAndSource = store.getSpecAndSourceInfo(.config, name)
-
-        if let sticky = userPersistentStorageProvider?
-            .getStickyValue(user, specAndSource, options?.userPersistedValues) {
-            return sticky
-        }
-
-        let detailedEvaluation = evaluateWithDetails(
-            name,
-            specAndSource,
-            user
-        )
-
-        if options?.userPersistedValues != nil {
-            userPersistentStorageProvider?.saveStickyValueIfNeeded(
-                user,
-                specAndSource,
-                detailedEvaluation
-            )
-        }
-
-        return detailedEvaluation
-    }
-
-    public func getLayer(_ name: String, _ user: StatsigUserInternal) -> DetailedEvaluation {
-        evaluateWithDetails(
-            name,
-            store.getSpecAndSourceInfo(.layer, name),
-            user
-        )
-    }
-}
-
-
-// MARK: Private
-extension Evaluator {
-    private func evaluateWithDetails(
-        _ unhashedName: String,
-        _ specAndSourceInfo: SpecAndSourceInfo,
-        _ user: StatsigUserInternal)
-    -> DetailedEvaluation {
-        let (spec, info) = specAndSourceInfo
-        guard let spec = spec else {
+        let (spec, info) = store.getSpecAndSourceInfo(.config, name)
+        guard let spec: Spec = spec else {
             return (
                 evaluation: .empty(),
                 details: .unrecognized(info)
             )
         }
 
+        return evaluateConfigWithPersistedValues((
+            name,
+            spec,
+            info,
+            user,
+            options?.userPersistedValues
+        ))
+    }
+
+    public func getLayer(
+        _ name: String,
+        _ user: StatsigUserInternal,
+        options: GetLayerOptions?
+    ) -> DetailedEvaluation {
+        let (spec, info) = store.getSpecAndSourceInfo(.layer, name)
+        guard let spec: Spec = spec else {
+            return (
+                evaluation: .empty(),
+                details: .unrecognized(info)
+            )
+        }
+
+        return evaluateLayerWithPersistedValues((
+            name,
+            spec,
+            info,
+            user,
+            options?.userPersistedValues
+        ))
+    }
+}
+
+typealias EvaluationArgs = (
+    unhashedName: String,
+    spec: Spec,
+    sourceInfo: SpecStoreSourceInfo,
+    user: StatsigUserInternal,
+    persistedValues: UserPersistedValues?
+)
+
+// MARK: Private
+extension Evaluator {
+    private func evaluateConfigWithPersistedValues(_ args: EvaluationArgs) -> DetailedEvaluation {
+        guard
+            let persistedValues: UserPersistedValues = args.persistedValues,
+            args.spec.isActive == true
+        else {
+            return evaluateAndDeleteFromPersistentStorage(args)
+        }
+
+        guard
+            let stickyEval: DetailedEvaluation = userPersistentStorageProvider?.getStickyValue(args.user, args.spec, persistedValues)
+        else {
+            return evaluateAndSaveToPersistentStorage(args)
+        }
+
+        return stickyEval
+    }
+
+    private func evaluateLayerWithPersistedValues(_ args: EvaluationArgs) -> DetailedEvaluation {
+        guard let persistedValues: UserPersistedValues = args.persistedValues else {
+            return evaluateAndDeleteFromPersistentStorage(args)
+        }
+
+        guard
+            let stickyEvaluation: DetailedEvaluation = userPersistentStorageProvider?.getStickyValue(args.user, args.spec, persistedValues)
+        else {
+            let detailedEvaluation: DetailedEvaluation = evaluateWithDetails(args)
+            if (allocatedExperimentExistsAndIsActive(detailedEvaluation)) {
+                userPersistentStorageProvider?.saveStickyValue(args.user, args.spec, detailedEvaluation)
+            } else {
+                userPersistentStorageProvider?.deleteStickyValue(args.user, args.spec)
+            }
+            return detailedEvaluation
+        }
+
+        if (allocatedExperimentExistsAndIsActive(stickyEvaluation)) {
+            return stickyEvaluation
+        } else {
+            return evaluateAndDeleteFromPersistentStorage(args)
+        }
+    }
+
+    private func allocatedExperimentExistsAndIsActive(_ detailedEvaluation: DetailedEvaluation) -> Bool {
+        guard 
+            let delegateName = detailedEvaluation.evaluation.configDelegate,
+            let delegate = store.getSpecAndSourceInfo(.config, delegateName).spec
+        else {
+            return false
+        }
+        return delegate.isActive == true
+    }
+
+    private func evaluateAndSaveToPersistentStorage(_ args: EvaluationArgs) -> DetailedEvaluation {
+        let detailedEvaluation = evaluateWithDetails(args)
+        userPersistentStorageProvider?.saveStickyValue(args.user, args.spec, detailedEvaluation)
+        return detailedEvaluation
+    }
+
+    private func evaluateAndDeleteFromPersistentStorage(_ args: EvaluationArgs) -> DetailedEvaluation {
+        userPersistentStorageProvider?.deleteStickyValue(args.user, args.spec)
+        return evaluateWithDetails(args)
+    }
+
+    private func evaluateWithDetails(_ args: EvaluationArgs) -> DetailedEvaluation {
         return (
-            evaluation: evaluateSpec(spec, user),
-            details: EvaluationDetails(sourceInfo: info)
+            evaluation: evaluateSpec(args.spec, args.user),
+            details: EvaluationDetails(sourceInfo: args.sourceInfo)
         )
     }
 

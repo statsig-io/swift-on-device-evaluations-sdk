@@ -196,8 +196,12 @@ extension Statsig {
         )
     }
 
-    @objc(getLayer:forUser:)
-    public func getLayer(_ name: String, _ user: StatsigUser? = nil) -> Layer {
+    @objc(getLayer:forUser:options:)
+    public func getLayer(
+        _ name: String,
+        _ user: StatsigUser? = nil,
+        _ options: GetLayerOptions? = nil
+    ) -> Layer {
         guard let context = getContext() else {
             return .empty(name, .uninitialized())
         }
@@ -206,7 +210,7 @@ extension Statsig {
             return .empty(name, .userError(context.store.sourceInfo))
         }
 
-        let (evaluation, details) = context.evaluator.getLayer(name, userInternal)
+        let (evaluation, details) = context.evaluator.getLayer(name, userInternal, options: options)
 
         let logExposure: ParameterExposureFunc = { [weak context] layer, parameter in
             let exposure = createLayerExposure(
