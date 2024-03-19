@@ -12,7 +12,7 @@ struct EvaluationResult {
     let explicitParameters: [String]?
     let configDelegate: String?
 
-    private init(
+    public init(
         ruleID: String? = nil,
         boolValue: Bool = false,
         jsonValue: JsonValue? = nil,

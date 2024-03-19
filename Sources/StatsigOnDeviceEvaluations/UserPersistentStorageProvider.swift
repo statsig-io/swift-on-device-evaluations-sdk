@@ -30,14 +30,20 @@ extension EvaluationResult {
 
         let secondaryExposures = value["secondary_exposures"] as? [[String: String]] ?? []
         let groupName = value["group_name"] as? String
+        let explicitParameters: [String]? = value["explicit_parameters"] as? [String]
+        let configDelegate: String? = value["config_delegate"] as? String
+        let undelegatedSecondaryExposures: [[String: String]]? = value["undelegated_secondary_exposures"] as? [[String: String]]
 
-        return .specResult(
+        return EvaluationResult(
             ruleID: ruleID,
             boolValue: boolValue,
             jsonValue: jsonValue,
             secondaryExposures: secondaryExposures,
+            undelegatedSecondaryExposures: undelegatedSecondaryExposures,
             isExperimentGroup: true,
-            groupName: groupName
+            groupName: groupName,
+            explicitParameters: explicitParameters,
+            configDelegate: configDelegate
         )
     }
 }
@@ -45,22 +51,10 @@ extension EvaluationResult {
 extension UserPersistentStorageProvider {
     func getStickyValue(
         _ user: StatsigUserInternal,
-        _ specAndSourceInfo: SpecAndSourceInfo,
-        _ userPersistedValues: UserPersistedValues?
+        _ spec: Spec,
+        _ userPersistedValues: UserPersistedValues
     ) -> DetailedEvaluation? {
-        guard let spec = specAndSourceInfo.spec else {
-            return nil
-        }
-
-        if spec.isActive != true || userPersistedValues == nil {
-            let key = getStorageKey(user: user, idType: spec.idType)
-            var latest = load(key)
-            latest.removeValue(forKey: spec.name)
-            delete(key, spec.name)
-            return nil
-        }
-
-        if let value = userPersistedValues?[spec.name],
+        if let value = userPersistedValues[spec.name],
            let evaluation = EvaluationResult.sticky(value) {
             return (
                 evaluation: evaluation,
@@ -71,16 +65,12 @@ extension UserPersistentStorageProvider {
         return nil
     }
 
-    func saveStickyValueIfNeeded(
+    func saveStickyValue(
         _ user: StatsigUserInternal,
-        _ specAndSourceInfo: SpecAndSourceInfo,
+        _ spec: Spec,
         _ detailedEvaluation: DetailedEvaluation
     ) {
-        guard
-            let spec = specAndSourceInfo.spec,
-            spec.isActive == true,
-            detailedEvaluation.evaluation.isExperimentGroup
-        else {
+        if (!detailedEvaluation.evaluation.isExperimentGroup) {
             return
         }
 
@@ -91,6 +81,9 @@ extension UserPersistentStorageProvider {
             "rule_id": evaluation.ruleID,
             "json_value": evaluation.jsonValue?.serializeToDictionary(),
             "secondary_exposures": evaluation.secondaryExposures,
+            "explicit_parameters": evaluation.explicitParameters,
+            "config_delegate": evaluation.configDelegate,
+            "undelegated_secondary_exposures": evaluation.undelegatedSecondaryExposures,
             "group_name": evaluation.groupName,
             "time": detailedEvaluation.details.lcut,
         ]
@@ -100,5 +93,15 @@ extension UserPersistentStorageProvider {
         }
 
         save(key, spec.name, json)
+    }
+
+    func deleteStickyValue(
+        _ user: StatsigUserInternal,
+        _ spec: Spec
+    ) {
+        let key = getStorageKey(user: user, idType: spec.idType)
+        var latest = load(key)
+        latest.removeValue(forKey: spec.name)
+        delete(key, spec.name)
     }
 }
