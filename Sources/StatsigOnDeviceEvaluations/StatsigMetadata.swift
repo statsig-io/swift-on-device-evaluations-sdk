@@ -5,7 +5,7 @@ class StatsigMetadata {
         StatsigMetadata()
     }()
     // SDK Info
-    let sdkVersion = "1.2.0"
+    let sdkVersion = "1.3.0"
     let sdkType = "swift-on-device-eval"
     let sessionID: String
 
