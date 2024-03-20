@@ -31,12 +31,12 @@ class Evaluator {
             )
         }
 
-        return evaluateWithDetails((
-            name,
-            spec,
-            info,
-            user,
-            nil
+        return evaluateWithDetails(EvaluationArgs(
+            unhashedName: name,
+            spec: spec,
+            sourceInfo: info,
+            user: user,
+            persistedValues: nil
         ))
     }
 
@@ -53,12 +53,12 @@ class Evaluator {
             )
         }
 
-        return evaluateConfigWithPersistedValues((
-            name,
-            spec,
-            info,
-            user,
-            options?.userPersistedValues
+        return evaluateConfigWithPersistedValues(EvaluationArgs(
+            unhashedName: name,
+            spec: spec,
+            sourceInfo: info,
+            user: user,
+            persistedValues: options?.userPersistedValues
         ))
     }
 
@@ -75,23 +75,23 @@ class Evaluator {
             )
         }
 
-        return evaluateLayerWithPersistedValues((
-            name,
-            spec,
-            info,
-            user,
-            options?.userPersistedValues
+        return evaluateLayerWithPersistedValues(EvaluationArgs(
+            unhashedName: name,
+            spec: spec,
+            sourceInfo: info,
+            user: user,
+            persistedValues: options?.userPersistedValues
         ))
     }
 }
 
-typealias EvaluationArgs = (
-    unhashedName: String,
-    spec: Spec,
-    sourceInfo: SpecStoreSourceInfo,
-    user: StatsigUserInternal,
-    persistedValues: UserPersistedValues?
-)
+struct EvaluationArgs {
+    let unhashedName: String;
+    let spec: Spec;
+    let sourceInfo: SpecStoreSourceInfo;
+    let user: StatsigUserInternal;
+    let persistedValues: UserPersistedValues?;
+}
 
 // MARK: Private
 extension Evaluator {
