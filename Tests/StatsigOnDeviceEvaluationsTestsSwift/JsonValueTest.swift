@@ -12,7 +12,7 @@ final class JsonValueTest: QuickSpec {
                     let value = getDecoded("\"1.2\"")
                     expect(value).to(equal(.string("1.2")))
                     expect(value).to(convertInto(
-                        dictionary: nil, array: nil, string: "1.2", double: nil
+                        dictionary: nil, array: nil, string: "1.2", double: 1.2
                     ))
                 }
 
