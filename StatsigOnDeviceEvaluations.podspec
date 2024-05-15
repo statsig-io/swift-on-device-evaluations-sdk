@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "StatsigOnDeviceEvaluations"
-  spec.version      = "1.3.2"
+  spec.version      = "1.3.3"
   spec.summary      = "Statsig enables developers to ship code faster and more safely."
   spec.description  = <<-DESC
                    Statsig enables developers to ship code faster and more safely by providing:
