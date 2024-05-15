@@ -168,6 +168,9 @@ extension JsonValue {
 
         case .double(let value):
             return value
+            
+        case .string(let value):
+            return Double(value)
 
         default:
             return nil
