@@ -39,9 +39,9 @@ final class EmittingErrorsTest: QuickSpec{
                 }
 
                 let cases = [
-                    ({ _ = client.checkGate("a_gate") }, "getFeatureGate(_:_:)"),
-                    ({ _ = client.getFeatureGate("a_gate") }, "getFeatureGate(_:_:)"),
-                    ({ _ = client.getDynamicConfig("a_dynamic_config") }, "getDynamicConfig(_:_:)"),
+                    ({ _ = client.checkGate("a_gate") }, "getFeatureGate(_:_:_:)"),
+                    ({ _ = client.getFeatureGate("a_gate") }, "getFeatureGate(_:_:_:)"),
+                    ({ _ = client.getDynamicConfig("a_dynamic_config") }, "getDynamicConfig(_:_:_:)"),
                     ({ _ = client.getExperiment("an_experiment") }, "getExperiment(_:_:_:)"),
                     ({ _ = client.getLayer("a_layer") }, "getLayer(_:_:_:)"),
                 ]
@@ -65,9 +65,9 @@ final class EmittingErrorsTest: QuickSpec{
                 }
 
                 let cases = [
-                    ({ _ = client.checkGate("a_gate") }, "getFeatureGate(_:_:)"),
-                    ({ _ = client.getFeatureGate("a_gate") }, "getFeatureGate(_:_:)"),
-                    ({ _ = client.getDynamicConfig("a_dynamic_config") }, "getDynamicConfig(_:_:)"),
+                    ({ _ = client.checkGate("a_gate") }, "getFeatureGate(_:_:_:)"),
+                    ({ _ = client.getFeatureGate("a_gate") }, "getFeatureGate(_:_:_:)"),
+                    ({ _ = client.getDynamicConfig("a_dynamic_config") }, "getDynamicConfig(_:_:_:)"),
                     ({ _ = client.getExperiment("an_experiment") }, "getExperiment(_:_:_:)"),
                     ({ _ = client.getLayer("a_layer") }, "getLayer(_:_:_:)"),
                 ]

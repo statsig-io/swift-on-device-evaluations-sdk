@@ -43,7 +43,7 @@ class Evaluator {
     public func getConfig(
         _ name: String,
         _ user: StatsigUserInternal,
-        options: GetExperimentOptions?
+        _ options: GetExperimentOptions? = nil
     ) -> DetailedEvaluation {
         let (spec, info) = store.getSpecAndSourceInfo(.config, name)
         guard let spec: Spec = spec else {
@@ -52,13 +52,15 @@ class Evaluator {
                 details: .unrecognized(info)
             )
         }
+        
+        let persistedValues = options?.userPersistedValues
 
         return evaluateConfigWithPersistedValues(EvaluationArgs(
             unhashedName: name,
             spec: spec,
             sourceInfo: info,
             user: user,
-            persistedValues: options?.userPersistedValues
+            persistedValues: persistedValues
         ))
     }
 

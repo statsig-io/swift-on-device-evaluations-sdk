@@ -11,6 +11,7 @@
 
 @implementation StatsigSharedTest {
     StatsigUser *_user;
+    GetFeatureGateOptions *_options;
 }
 
 - (void)setUp {
@@ -36,7 +37,7 @@
 - (void)testGetFeatureGate {
     FeatureGate *gate =
     [[Statsig sharedInstance]
-     getFeatureGate:@"test_public" forUser:_user];
+     getFeatureGate:@"test_public" forUser:_user options:_options];
     expect(gate.value).to(beTrue());
 }
 

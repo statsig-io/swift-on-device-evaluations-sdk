@@ -12,6 +12,7 @@
 @implementation StatsigClientTest {
     Statsig *_client;
     StatsigUser *_user;
+    GetFeatureGateOptions *_options;
 }
 
 - (void)setUp {
@@ -37,7 +38,7 @@
 }
 
 - (void)testGetFeatureGate {
-    FeatureGate *gate = [_client getFeatureGate:@"test_public" forUser:_user];
+    FeatureGate *gate = [_client getFeatureGate:@"test_public" forUser:_user options:_options];
     expect(gate.value).to(beTrue());
 }
 
