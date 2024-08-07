@@ -103,13 +103,21 @@ public final class Statsig: NSObject {
 
 // MARK: Check APIs
 extension Statsig {
-    @objc(checkGate:forUser:)
-    public func checkGate(_ name: String, _ user: StatsigUser? = nil) -> Bool {
-        return getFeatureGate(name, user).value
+    @objc(checkGate:forUser:options:)
+    public func checkGate(
+        _ name: String,
+        _ user: StatsigUser? = nil,
+        _ options: GetFeatureGateOptions? = nil
+    ) -> Bool {
+        return getFeatureGate(name, user, options).value
     }
 
-    @objc(getFeatureGate:forUser:)
-    public func getFeatureGate(_ name: String, _ user: StatsigUser? = nil) -> FeatureGate {
+    @objc(getFeatureGate:forUser:options:)
+    public func getFeatureGate(
+        _ name: String,
+        _ user: StatsigUser? = nil,
+        _ options: GetFeatureGateOptions? = nil
+    ) -> FeatureGate {
         guard let context = getContext() else {
             return .empty(name, .uninitialized())
         }
@@ -120,13 +128,15 @@ extension Statsig {
 
         let (evaluation, details) = context.evaluator.checkGate(name, userInternal)
 
-        context.logger.enqueue{
-            createGateExposure(
-                user: userInternal,
-                gateName: name,
-                evaluation: evaluation,
-                details: details
-            )
+        if (options?.disableExposureLogging != true) {
+            context.logger.enqueue{
+                createGateExposure(
+                    user: userInternal,
+                    gateName: name,
+                    evaluation: evaluation,
+                    details: details
+                )
+            }
         }
 
         return FeatureGate(
@@ -137,10 +147,11 @@ extension Statsig {
         )
     }
 
-    @objc(getDynamicConfig:forUser:)
+    @objc(getDynamicConfig:forUser:options:)
     public func getDynamicConfig(
         _ name: String,
-        _ user: StatsigUser? = nil
+        _ user: StatsigUser? = nil,
+        _ options: GetDynamicConfigOptions? = nil
     ) -> DynamicConfig {
         guard let context = getContext() else {
             return .empty(name, .uninitialized())
@@ -150,12 +161,19 @@ extension Statsig {
             return .empty(name, .userError(context.store.sourceInfo))
         }
 
-        let (evaluation, details) = getConfigImpl(
-            context,
-            userInternal,
-            name,
-            options: nil
-        )
+        let detailedEval = context.evaluator.getConfig(name, userInternal)
+        let (evaluation, details) = detailedEval
+        
+        if (options?.disableExposureLogging != true) {
+            context.logger.enqueue {
+                createConfigExposure(
+                    user: userInternal,
+                    configName: name,
+                    evaluation: evaluation,
+                    details: details
+                )
+            }
+        }
 
         return DynamicConfig(
             name: name,
@@ -180,12 +198,19 @@ extension Statsig {
             return .emptyExperiment(name, .userError(context.store.sourceInfo))
         }
 
-        let (evaluation, details) = getConfigImpl(
-            context,
-            userInternal,
-            name,
-            options: options
-        )
+        let detailedEval = context.evaluator.getConfig(name, userInternal, options)
+        let (evaluation, details) = detailedEval
+        
+        if (options?.disableExposureLogging != true) {
+            context.logger.enqueue {
+                createConfigExposure(
+                    user: userInternal,
+                    configName: name,
+                    evaluation: evaluation,
+                    details: details
+                )
+            }
+        }
 
         return Experiment(
             name: name,
@@ -212,7 +237,8 @@ extension Statsig {
 
         let (evaluation, details) = context.evaluator.getLayer(name, userInternal, options: options)
 
-        let logExposure: ParameterExposureFunc = { [weak context] layer, parameter in
+        let logExposure: ParameterExposureFunc? = options?.disableExposureLogging != true
+        ? { [weak context] layer, parameter in
             let exposure = createLayerExposure(
                 user: userInternal,
                 layerName: name,
@@ -222,7 +248,7 @@ extension Statsig {
             )
 
             context?.logger.enqueue { exposure }
-        }
+        } : nil
 
         return Layer(
             name: name,
@@ -369,27 +395,6 @@ extension Statsig {
         } catch {
             return error
         }
-    }
-
-    private func getConfigImpl(
-        _ context: StatsigContext,
-        _ userInternal: StatsigUserInternal,
-        _ name: String,
-        options: GetExperimentOptions?
-    ) -> DetailedEvaluation {
-        let detailedEval = context.evaluator.getConfig(name, userInternal, options: options)
-        let (evaluation, details) = detailedEval
-
-        context.logger.enqueue {
-            createConfigExposure(
-                user: userInternal,
-                configName: name,
-                evaluation: evaluation,
-                details: details
-            )
-        }
-
-        return detailedEval
     }
 
     private func getContext(_ caller: String = #function) -> StatsigContext? {
