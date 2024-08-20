@@ -405,25 +405,21 @@ extension Evaluator {
         _ user: StatsigUserInternal
     ) -> EvaluationResult {
         var exposures = [[String: String]]()
-        var passing = false
-
+        var gateResult: EvaluationResult? = nil
+        
         if let gateSpec = store.getSpecAndSourceInfo(.gate, gateName).spec {
-            let gateResult = evaluateSpec(gateSpec, user)
-            if gateResult.unsupported {
-                return gateResult
-            }
-
-            passing = gateResult.boolValue
-            exposures.append(contentsOf: gateResult.secondaryExposures ?? [])
-            exposures.append([
-                "gate": gateName,
-                "gateValue": String(passing),
-                "ruleID": gateResult.ruleID
-            ])
+            gateResult = evaluateSpec(gateSpec, user)
         }
-
+        
+        exposures.append(contentsOf: gateResult?.secondaryExposures ?? [])
+        exposures.append([
+            "gate": gateName,
+            "gateValue": String(gateResult?.boolValue ?? false),
+            "ruleID": gateResult?.ruleID ?? ""
+        ])
+        
         return .boolean(
-            passing,
+            gateResult?.boolValue ?? false,
             exposures
         )
     }
