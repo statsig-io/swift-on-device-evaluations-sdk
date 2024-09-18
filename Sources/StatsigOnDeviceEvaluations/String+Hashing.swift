@@ -33,4 +33,8 @@ extension String {
         return String(format: "%u", UInt32(bitPattern: hash))
 
     }
+    
+    func toJson() -> JsonValue? {
+        return try? JSONDecoder().decode(JsonValue.self, from: self.data(using: .utf8)!)
+    }
 }

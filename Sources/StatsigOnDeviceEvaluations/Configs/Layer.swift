@@ -42,6 +42,19 @@ public class Layer: ConfigBase {
             value: nil
         )
     }
+    
+    public static func create(
+        _ name: String,
+        _ value: [String: Any]?
+    ) -> Layer {
+        Layer(
+            name: name,
+            ruleID: "",
+            evaluationDetails: EvaluationDetails.empty(),
+            logParameterExposure: nil,
+            value: value
+        )
+    }
 
     @objc
     public func getValue(param: String, fallback: Any) -> Any {

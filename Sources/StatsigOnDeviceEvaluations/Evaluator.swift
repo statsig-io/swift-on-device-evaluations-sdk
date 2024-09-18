@@ -10,19 +10,29 @@ class Evaluator {
     private let store: SpecStore
     private let emitter: StatsigClientEventEmitter
     private let userPersistentStorageProvider: UserPersistentStorageProvider?
+    private let overrideAdapter: OverrideAdapter?
 
 
     init(
         _ store: SpecStore,
         _ emitter: StatsigClientEventEmitter,
-        userPersistentStorageProvider: UserPersistentStorageProvider?
+        _ userPersistentStorageProvider: UserPersistentStorageProvider?,
+        _ overrideAdapter: OverrideAdapter?
     ) {
         self.store = store
         self.emitter = emitter
         self.userPersistentStorageProvider = userPersistentStorageProvider
+        self.overrideAdapter = overrideAdapter
     }
 
-    public func checkGate(_ name: String, _ user: StatsigUserInternal) -> DetailedEvaluation {
+    public func checkGate(_ name: String, _ user: StatsigUserInternal, _ options: GetFeatureGateOptions?) -> DetailedEvaluation {
+        if let gate = overrideAdapter?.getGate(user.user, name, options) {
+            return (
+                evaluation: .gateOverride(gate),
+                details: .localOverride(store.sourceInfo.lcut)
+            )
+        }
+        
         let (spec, info) = store.getSpecAndSourceInfo(.gate, name)
         guard let spec: Spec = spec else {
             return (
@@ -39,8 +49,38 @@ class Evaluator {
             persistedValues: nil
         ))
     }
-
+    
     public func getConfig(
+        _ name: String,
+        _ user: StatsigUserInternal,
+        _ options: GetDynamicConfigOptions? = nil
+    ) -> DetailedEvaluation {
+        if let config = overrideAdapter?.getConfig(user.user, name, options) {
+            return (
+                evaluation: .configOverride(config),
+                details: .localOverride(store.sourceInfo.lcut)
+            )
+        }
+
+        return getConfigImpl(name, user)
+    }
+    
+    public func getExperiment(
+        _ name: String,
+        _ user: StatsigUserInternal,
+        _ options: GetExperimentOptions? = nil
+    ) -> DetailedEvaluation {
+        if let experiment = overrideAdapter?.getExperiment(user.user, name, options) {
+            return (
+                evaluation: .experimentOverride(experiment),
+                details: .localOverride(store.sourceInfo.lcut)
+            )
+        }
+        
+        return getConfigImpl(name, user, options)
+    }
+
+    public func getConfigImpl(
         _ name: String,
         _ user: StatsigUserInternal,
         _ options: GetExperimentOptions? = nil
@@ -69,6 +109,13 @@ class Evaluator {
         _ user: StatsigUserInternal,
         options: GetLayerOptions?
     ) -> DetailedEvaluation {
+        if let layer = overrideAdapter?.getLayer(user.user, name, options) {
+            return (
+                evaluation: .layerOverride(layer),
+                details: .localOverride(store.sourceInfo.lcut)
+            )
+        }
+
         let (spec, info) = store.getSpecAndSourceInfo(.layer, name)
         guard let spec: Spec = spec else {
             return (
@@ -412,11 +459,13 @@ extension Evaluator {
         }
         
         exposures.append(contentsOf: gateResult?.secondaryExposures ?? [])
-        exposures.append([
-            "gate": gateName,
-            "gateValue": String(gateResult?.boolValue ?? false),
-            "ruleID": gateResult?.ruleID ?? ""
-        ])
+        if !gateName.hasPrefix("segment:") {
+            exposures.append([
+                "gate": gateName,
+                "gateValue": String(gateResult?.boolValue ?? false),
+                "ruleID": gateResult?.ruleID ?? ""
+            ])
+        }
         
         return .boolean(
             gateResult?.boolValue ?? false,

@@ -25,4 +25,16 @@ public class FeatureGate: ConfigBase {
             value: false
         )
     }
+    
+    public static func create(
+        _ name: String,
+        _ value: Bool
+    ) -> FeatureGate {
+        FeatureGate(
+            name: name,
+            ruleID: "",
+            evaluationDetails: EvaluationDetails.empty(),
+            value: value
+        )
+    }
 }
