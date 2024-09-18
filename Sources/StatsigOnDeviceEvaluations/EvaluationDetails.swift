@@ -38,6 +38,22 @@ public class EvaluationDetails: NSObject {
             receivedAt: Time.now()
         )
     }
+    
+    static func localOverride(_ lcut: Int64) -> EvaluationDetails {
+        EvaluationDetails(
+            reason: "LocalOverride",
+            lcut: lcut,
+            receivedAt: Time.now()
+        )
+    }
+    
+    static func empty() -> EvaluationDetails {
+        EvaluationDetails(
+            reason: "",
+            lcut: 0,
+            receivedAt: 0
+        )
+    }
 
     internal init(reason: String, lcut: Int64, receivedAt: Int64) {
         self.reason = reason

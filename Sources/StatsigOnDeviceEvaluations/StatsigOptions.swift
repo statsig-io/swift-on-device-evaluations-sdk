@@ -47,6 +47,11 @@ import Foundation
      */
     @objc public var userPersistentStorage: UserPersistentStorageProvider?
 
+    /**
+     * Plugin to override SDK evaluations
+     */
+    @objc public var overrideAdapter: OverrideAdapter?
+
     public override init() {
         environment = StatsigEnvironment()
     }

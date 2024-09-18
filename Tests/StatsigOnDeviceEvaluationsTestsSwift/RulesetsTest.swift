@@ -18,6 +18,7 @@ final class RulesetsTest: QuickSpec {
             let gates = results["feature_gates"] as! [String: [String: Any]]
             let configs = results["dynamic_configs"] as! [String: [String: Any]]
             let layers = results["layer_configs"] as! [String: [String: Any]]
+            let statsig = Statsig.init()
 
             beforeSuite {
                 NetworkStubs.stubEndpoint(
@@ -27,7 +28,7 @@ final class RulesetsTest: QuickSpec {
                 )
 
                 waitUntil { done in
-                    Statsig.shared.initialize("client-key") { err in
+                    statsig.initialize("client-key") { err in
                         done()
                     }
                 }
@@ -35,7 +36,7 @@ final class RulesetsTest: QuickSpec {
 
             for (key, value) in gates {
                 it("is correct for gate \(key)") {
-                    let gate = Statsig.shared.getFeatureGate(key, user)
+                    let gate = statsig.getFeatureGate(key, user)
 
                     expect(gate.name).to(equal(key))
                     expect(gate.ruleID).to(equal(value["rule_id"] as? String))
@@ -46,7 +47,7 @@ final class RulesetsTest: QuickSpec {
 
             for (key, value) in configs {
                 it("is correct for config \(key)") {
-                    let config = Statsig.shared.getDynamicConfig(key, user)
+                    let config = statsig.getDynamicConfig(key, user)
 
                     expect(config.name).to(equal(key))
                     expect(config.ruleID).to(equal(value["rule_id"] as? String))
@@ -57,7 +58,7 @@ final class RulesetsTest: QuickSpec {
 
             for (key, value) in layers {
                 it("is correct for layer \(key)") {
-                    let layer = Statsig.shared.getLayer(key, user)
+                    let layer = statsig.getLayer(key, user)
 
                     expect(layer.name).to(equal(key))
                     expect(layer.ruleID).to(equal(value["rule_id"] as? String))

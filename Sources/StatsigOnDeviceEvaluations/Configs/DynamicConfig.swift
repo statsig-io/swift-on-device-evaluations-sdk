@@ -33,4 +33,17 @@ public class DynamicConfig: ConfigBase {
             groupName: nil
         )
     }
+    
+    public static func create(
+        _ name: String,
+        _ value: [String: Any]?
+    ) -> DynamicConfig {
+        DynamicConfig(
+            name: name,
+            ruleID: "",
+            evaluationDetails: EvaluationDetails.empty(),
+            value: value,
+            groupName: nil
+        )
+    }
 }

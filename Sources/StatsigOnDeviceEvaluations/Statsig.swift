@@ -21,7 +21,12 @@ class StatsigContext {
 
     init(_ emitter: StatsigClientEventEmitter, _ sdkKey: String, _ options: StatsigOptions?) {
         store = SpecStore(emitter)
-        evaluator = Evaluator(store, emitter, userPersistentStorageProvider: options?.userPersistentStorage)
+        evaluator = Evaluator(
+            store,
+            emitter,
+            options?.userPersistentStorage,
+            options?.overrideAdapter
+        )
         network = NetworkService(sdkKey, options)
         logger = EventLogger(options, network, emitter)
 
@@ -126,7 +131,7 @@ extension Statsig {
             return .empty(name, .userError(context.store.sourceInfo))
         }
 
-        let (evaluation, details) = context.evaluator.checkGate(name, userInternal)
+        let (evaluation, details) = context.evaluator.checkGate(name, userInternal, options)
 
         if (options?.disableExposureLogging != true) {
             context.logger.enqueue{
@@ -191,14 +196,14 @@ extension Statsig {
         _ options: GetExperimentOptions? = nil
     ) -> Experiment {
         guard let context = getContext() else {
-            return .emptyExperiment(name, .uninitialized())
+            return .empty(name, .uninitialized())
         }
 
         guard let userInternal = getInternalizedUser(context, user) else {
-            return .emptyExperiment(name, .userError(context.store.sourceInfo))
+            return .empty(name, .userError(context.store.sourceInfo))
         }
 
-        let detailedEval = context.evaluator.getConfig(name, userInternal, options)
+        let detailedEval = context.evaluator.getExperiment(name, userInternal, options)
         let (evaluation, details) = detailedEval
         
         if (options?.disableExposureLogging != true) {

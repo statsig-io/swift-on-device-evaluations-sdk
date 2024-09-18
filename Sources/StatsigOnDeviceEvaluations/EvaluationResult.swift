@@ -135,6 +135,35 @@ struct EvaluationResult {
         )
     }
 
-
+    static func gateOverride(_ gate: FeatureGate) -> EvaluationResult {
+        EvaluationResult(
+            ruleID: gate.ruleID,
+            boolValue: gate.value
+        )
+    }
+    
+    static func configOverride(_ config: DynamicConfig) -> EvaluationResult {
+        EvaluationResult(
+            ruleID: config.ruleID,
+            jsonValue: config.value.toJsonString()?.toJson(),
+            groupName: config.groupName
+        )
+    }
+    
+    static func experimentOverride(_ experiment: Experiment) -> EvaluationResult {
+        EvaluationResult(
+            ruleID: experiment.ruleID,
+            jsonValue: experiment.value.toJsonString()?.toJson(),
+            groupName: experiment.groupName
+        )
+    }
+    
+    static func layerOverride(_ layer: Layer) -> EvaluationResult {
+        EvaluationResult(
+            ruleID: layer.ruleID,
+            jsonValue: layer.value.toJsonString()?.toJson(),
+            groupName: layer.groupName
+        )
+    }
 }
 

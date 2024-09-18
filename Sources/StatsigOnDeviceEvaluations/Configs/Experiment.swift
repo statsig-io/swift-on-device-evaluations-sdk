@@ -1,8 +1,27 @@
 import Foundation
 
 @objc
-public class Experiment: DynamicConfig {
-    internal static func emptyExperiment(
+public class Experiment: ConfigBase {
+    @objc public let value: [String: Any]
+    @objc public let groupName: String?
+    
+    internal init(
+        name: String,
+        ruleID: String,
+        evaluationDetails: EvaluationDetails,
+        value: [String: Any]?,
+        groupName: String?
+    ) {
+        self.value = value ?? [:]
+        self.groupName = groupName
+        super.init(
+            name,
+            ruleID,
+            evaluationDetails
+        )
+    }
+
+    internal static func empty(
         _ name: String,
         _ evalDetails: EvaluationDetails
     ) -> Experiment {
@@ -11,6 +30,19 @@ public class Experiment: DynamicConfig {
             ruleID: "",
             evaluationDetails: evalDetails,
             value: nil,
+            groupName: nil
+        )
+    }
+    
+    public static func create(
+        _ name: String,
+        _ value: [String: Any]?
+    ) -> Experiment {
+        Experiment(
+            name: name,
+            ruleID: "",
+            evaluationDetails: EvaluationDetails.empty(),
+            value: value,
             groupName: nil
         )
     }
