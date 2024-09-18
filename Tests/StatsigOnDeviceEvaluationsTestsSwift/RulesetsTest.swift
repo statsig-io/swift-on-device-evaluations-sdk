@@ -18,7 +18,7 @@ final class RulesetsTest: QuickSpec {
             let gates = results["feature_gates"] as! [String: [String: Any]]
             let configs = results["dynamic_configs"] as! [String: [String: Any]]
             let layers = results["layer_configs"] as! [String: [String: Any]]
-            let statsig = Statsig.init()
+            let statsig = Statsig()
 
             beforeSuite {
                 NetworkStubs.stubEndpoint(

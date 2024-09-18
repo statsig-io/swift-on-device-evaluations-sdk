@@ -459,11 +459,13 @@ extension Evaluator {
         }
         
         exposures.append(contentsOf: gateResult?.secondaryExposures ?? [])
-        exposures.append([
-            "gate": gateName,
-            "gateValue": String(gateResult?.boolValue ?? false),
-            "ruleID": gateResult?.ruleID ?? ""
-        ])
+        if !gateName.hasPrefix("segment:") {
+            exposures.append([
+                "gate": gateName,
+                "gateValue": String(gateResult?.boolValue ?? false),
+                "ruleID": gateResult?.ruleID ?? ""
+            ])
+        }
         
         return .boolean(
             gateResult?.boolValue ?? false,

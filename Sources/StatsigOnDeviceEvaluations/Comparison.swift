@@ -105,7 +105,7 @@ enum Comparison {
                 case "any", "none", "any_case_sensitive", "none_case_sensitive":
                     return left == right
                 case "str_starts_with_any":
-                    return left.starts(with: right)
+                    return left.hasPrefix(right)
                 case "str_ends_with_any":
                     return left.hasSuffix(right)
                 case "str_contains_any", "str_contains_none":
