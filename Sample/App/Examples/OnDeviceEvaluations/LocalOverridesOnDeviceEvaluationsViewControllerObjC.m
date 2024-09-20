@@ -1,9 +1,9 @@
-#import "BasicOnDeviceEvaluationsViewControllerObjC.h"
+#import "LocalOverridesOnDeviceEvaluationsViewControllerObjC.h"
 #import "StatsigSamples-Swift.h"
 
 @import StatsigOnDeviceEvaluations;
 
-@implementation BasicOnDeviceEvaluationsViewControllerObjC
+@implementation LocalOverridesOnDeviceEvaluationsViewControllerObjC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -22,9 +22,18 @@
 
     Statsig *client = [Statsig sharedInstance];
 
+    LocalOverrideAdapter *overrides = [LocalOverrideAdapter new];
+    [overrides 
+     setGateForUser:user
+     name:@"local_override_gate" 
+     gate:[FeatureGate createWithName:@"local_override_gate" andValue:true]];
+    
+    StatsigOptions *options = [StatsigOptions new];
+    options.overrideAdapter = overrides;
+
     [client
      initializeWithSDKKey:Constants.CLIENT_SDK_KEY
-     options:nil
+     options:options
      completion:^(NSError * _Nullable error) {
         if (error != nil) {
             NSLog(@"Error %@", error);
@@ -33,7 +42,7 @@
 
         FeatureGate *gate =
         [client
-         getFeatureGate:@"a_gate"
+         getFeatureGate:@"local_override_gate"
          forUser:user
          options: nil];
 

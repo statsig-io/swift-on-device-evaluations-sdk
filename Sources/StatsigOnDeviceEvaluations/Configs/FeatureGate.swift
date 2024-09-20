@@ -26,6 +26,7 @@ public class FeatureGate: ConfigBase {
         )
     }
     
+    @objc(createWithName:andValue:)
     public static func create(
         _ name: String,
         _ value: Bool

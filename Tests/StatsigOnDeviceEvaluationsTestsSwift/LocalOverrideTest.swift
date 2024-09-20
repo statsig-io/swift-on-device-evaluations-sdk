@@ -33,8 +33,8 @@ final class LocalOverrideTest: QuickSpec {
                 expect(gate).to(equal(true))
             }
             
-            it("Config Overrides") {
-                overrides.setConfig(user, "overridden_config", DynamicConfig.create("overridden_config", ["key": "val"]))
+            it("DynamicConfig Overrides") {
+                overrides.setDynamicConfig(user, "overridden_config", DynamicConfig.create("overridden_config", ["key": "val"]))
                 let config = statsig.getDynamicConfig("overridden_config", user)
                 expect(config.value["key"] as? String).to(equal("val"))
             }
