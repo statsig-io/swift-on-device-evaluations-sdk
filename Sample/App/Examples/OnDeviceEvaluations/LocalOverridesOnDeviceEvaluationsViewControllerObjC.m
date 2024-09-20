@@ -8,9 +8,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    StatsigUser *user =
-    [StatsigUser
-     userWithUserID:@"a-user"];
+    StatsigUser *user = [StatsigUser userWithUserID:@"a-user"];
 
     StatsigUserValueMap *custom = [StatsigUserValueMap new];
     [custom setString:@"jkw" forKey:@"name"];
@@ -25,7 +23,6 @@
     LocalOverrideAdapter *overrides = [LocalOverrideAdapter new];
     [overrides 
      setGateForUser:user
-     name:@"local_override_gate" 
      gate:[FeatureGate createWithName:@"local_override_gate" andValue:true]];
     
     StatsigOptions *options = [StatsigOptions new];

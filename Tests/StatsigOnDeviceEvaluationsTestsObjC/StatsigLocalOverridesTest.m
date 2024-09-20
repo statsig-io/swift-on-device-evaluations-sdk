@@ -47,7 +47,6 @@
     
     [_overrides
      setGateForUser:_user
-     name:gateName
      gate:[FeatureGate
            createWithName:gateName
            andValue:true]];
@@ -66,8 +65,7 @@
     NSString *configName = @"local_override_config";
     
     [_overrides
-     setConfigForUser:_user
-     name:configName
+     setDynamicConfigForUser:_user
      config:[DynamicConfig
              createWithName:configName
              andValue:@{@"foo": @"bar"}]];
@@ -87,7 +85,6 @@
     
     [_overrides
      setExperimentForUser:_user
-     name:experimentName
      experiment:[Experiment
                  createWithName:experimentName
                  andValue:@{@"foo": @"bar"}]];
@@ -107,7 +104,6 @@
     
     [_overrides
      setLayer:_user
-     name:layerName
      layer:[Layer createWithName:layerName andValue:@{@"foo": @"bar"}]];
     
     Layer *layer = [_client getLayer:layerName forUser:_user options:nil];
@@ -127,7 +123,6 @@
     
     [_overrides
      setGateForUser:otherUser
-     name:gateName
      gate:[FeatureGate
            createWithName:gateName
            andValue:true]];

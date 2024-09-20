@@ -27,12 +27,12 @@ import Foundation
         return store[getUserKey(user)]?.gates[name]
     }
     
-    @objc(setGateForUser:name:gate:)
-    public func setGate(_ user: StatsigUser, _ name: String, _ gate: FeatureGate) {
+    @objc(setGateForUser:gate:)
+    public func setGate(_ user: StatsigUser, _ gate: FeatureGate) {
         if (store[getUserKey(user)] == nil) {
             store[getUserKey(user)] = OverrideStore()
         }
-        store[getUserKey(user)]?.gates[name] = gate
+        store[getUserKey(user)]?.gates[gate.name] = gate
     }
     
     @objc(removeGateForUser:name:)
@@ -46,12 +46,12 @@ import Foundation
         return store[getUserKey(user)]?.configs[name]
     }
     
-    @objc(setConfigForUser:name:config:)
-    public func setDynamicConfig(_ user: StatsigUser, _ name: String, _ config: DynamicConfig) {
+    @objc(setDynamicConfigForUser:config:)
+    public func setDynamicConfig(_ user: StatsigUser, _ config: DynamicConfig) {
         if (store[getUserKey(user)] == nil) {
             store[getUserKey(user)] = OverrideStore()
         }
-        store[getUserKey(user)]?.configs[name] = config
+        store[getUserKey(user)]?.configs[config.name] = config
     }
     
     @objc(removeDynamicConfigForUser:name:)
@@ -65,12 +65,12 @@ import Foundation
         return store[getUserKey(user)]?.experiments[name]
     }
     
-    @objc(setExperimentForUser:name:experiment:)
-    public func setExperiment(_ user: StatsigUser, _ name: String, _ experiment: Experiment) {
+    @objc(setExperimentForUser:experiment:)
+    public func setExperiment(_ user: StatsigUser, _ experiment: Experiment) {
         if (store[getUserKey(user)] == nil) {
             store[getUserKey(user)] = OverrideStore()
         }
-        store[getUserKey(user)]?.experiments[name] = experiment
+        store[getUserKey(user)]?.experiments[experiment.name] = experiment
     }
     
     @objc(removeExperimentForUser:name:)
@@ -84,12 +84,12 @@ import Foundation
         return store[getUserKey(user)]?.layers[name]
     }
     
-    @objc(setLayer:name:layer:)
-    public func setLayer(_ user: StatsigUser, _ name: String, _ layer: Layer) {
+    @objc(setLayer:layer:)
+    public func setLayer(_ user: StatsigUser, _ layer: Layer) {
         if (store[getUserKey(user)] == nil) {
             store[getUserKey(user)] = OverrideStore()
         }
-        store[getUserKey(user)]?.layers[name] = layer
+        store[getUserKey(user)]?.layers[layer.name] = layer
     }
 
     @objc(removeLayerForUser:name:)
