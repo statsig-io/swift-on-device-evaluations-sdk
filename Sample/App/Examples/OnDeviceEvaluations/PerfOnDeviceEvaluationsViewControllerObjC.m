@@ -67,7 +67,7 @@ StatsigListening
     [StatsigUser
      userWithUserID:userID];
 
-    BOOL gate = [_statsig checkGate:@"partial_gate" forUser:user];
+    BOOL gate = [_statsig checkGate:@"partial_gate" forUser:user options:nil];
 
     if (gate) {
         cell.backgroundColor = [UIColor systemGreenColor];

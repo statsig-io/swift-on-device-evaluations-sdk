@@ -55,7 +55,7 @@ class Evaluator {
         _ user: StatsigUserInternal,
         _ options: GetDynamicConfigOptions? = nil
     ) -> DetailedEvaluation {
-        if let config = overrideAdapter?.getConfig(user.user, name, options) {
+        if let config = overrideAdapter?.getDynamicConfig(user.user, name, options) {
             return (
                 evaluation: .configOverride(config),
                 details: .localOverride(store.sourceInfo.lcut)

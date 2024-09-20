@@ -34,6 +34,7 @@ public class Experiment: ConfigBase {
         )
     }
     
+    @objc(createWithName:andValue:)
     public static func create(
         _ name: String,
         _ value: [String: Any]?

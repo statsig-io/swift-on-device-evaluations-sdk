@@ -25,7 +25,7 @@ const BOOL SHOULD_DEMO_ERROR_EVENTS = false;
     if (SHOULD_DEMO_ERROR_EVENTS) {
         BOOL res __unused =
         [[Statsig sharedInstance]
-         checkGate:@"a_gate" forUser:nil]; // Fires "Uninitialized" error
+         checkGate:@"a_gate" forUser:nil options:nil]; // Fires "Uninitialized" error
     }
 
     __weak ClientEventsViewControllerObjC *weakSelf = self;
@@ -52,7 +52,8 @@ const BOOL SHOULD_DEMO_ERROR_EVENTS = false;
     FeatureGate *gate =
     [[Statsig sharedInstance]
      getFeatureGate:@"a_gate"
-     forUser:user];
+     forUser:user
+     options:nil];
 
     NSLog(@"Result: %@", gate.value ? @"Pass" : @"Fail");
     NSLog(@"Details: %@", gate.evaluationDetails.reason);
