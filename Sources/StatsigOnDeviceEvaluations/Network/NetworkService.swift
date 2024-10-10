@@ -33,9 +33,10 @@ public class NetworkService {
 
     func get<T>(
         _ endpoint: Endpoint,
+        _ params: [String: String]? = nil,
         completion: @escaping NetworkCompletion<T>
     ) {
-        let result = getRequestForEndpoint(endpoint, sdkKey)
+        let result = createRequestForEndpoint(endpoint, sdkKey, params)
 
         switch result {
         case .error(let err):
@@ -59,7 +60,7 @@ public class NetworkService {
         headers: [String: String]? = nil,
         completion: @escaping NetworkCompletion<T>
     ) {
-        let result = getRequestForEndpoint(endpoint, sdkKey)
+        let result = createRequestForEndpoint(endpoint, sdkKey)
 
         switch result {
         case .error(let err):
@@ -144,6 +145,7 @@ public class NetworkService {
             }
 
             let wasDecodingSuccessful = decodeError == nil && decoded != nil
+            
             markers?.process.end(success: wasDecodingSuccessful)
 
             if wasDecodingSuccessful, let decoded = decoded {
@@ -165,9 +167,10 @@ public class NetworkService {
         }
     }
 
-    private func getRequestForEndpoint(
+    private func createRequestForEndpoint(
         _ endpoint: Endpoint,
-        _ sdkKey: String?
+        _ sdkKey: String?,
+        _ params: [String: String]? = nil
     ) -> Result<URLRequest> {
         guard let sdkKey = sdkKey else {
             return .error(StatsigError.invalidSDKKey)
@@ -191,6 +194,14 @@ public class NetworkService {
                options.eventLoggingAPI != StatsigOptions.Defaults.eventLoggingAPI {
                 url = URL(string: options.eventLoggingAPI)
             }
+        }
+        
+        if let localUrl = url, let params = params {
+            var urlComponents = URLComponents(url: localUrl, resolvingAgainstBaseURL: true)
+            urlComponents?.queryItems = params.map { key, value in
+                URLQueryItem(name: key, value: value)
+            }
+            url = urlComponents?.url
         }
 
         guard let url = url else {

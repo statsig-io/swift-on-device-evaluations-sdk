@@ -1,13 +1,8 @@
 import Foundation
 
-public typealias InitCompletion = (_ error: Error?) -> Void
+public typealias UpdateCompletion = (_ error: Error?) -> Void
+public typealias InitCompletion = UpdateCompletion
 public typealias ShutdownCompletion = (_ error: Error?) -> Void
-
-@objc
-public protocol SynchronousSpecsValue {}
-
-extension NSData: SynchronousSpecsValue {}
-extension NSString: SynchronousSpecsValue {}
 
 class StatsigContext {
     let store: SpecStore
@@ -16,9 +11,10 @@ class StatsigContext {
     let logger: EventLogger
     let sdkKey: String
     let options: StatsigOptions?
-
+    
     var globalUser: StatsigUser?
-
+    var bgUpdatesHandle: StatsigUpdatesHandle?
+    
     init(_ emitter: StatsigClientEventEmitter, _ sdkKey: String, _ options: StatsigOptions?) {
         store = SpecStore(emitter)
         evaluator = Evaluator(
@@ -29,7 +25,7 @@ class StatsigContext {
         )
         network = NetworkService(sdkKey, options)
         logger = EventLogger(options, network, emitter)
-
+        
         self.sdkKey = sdkKey
         self.options = options
     }
@@ -37,19 +33,19 @@ class StatsigContext {
 
 public final class Statsig: NSObject {
     let emitter = StatsigClientEventEmitter()
-
+    
     var context: StatsigContext?
-
+    
     @objc(sharedInstance)
     public static var shared: Statsig = {
         return Statsig()
     }()
-
+    
     @objc public override init() {
         super.init()
         subscribeToApplicationLifecycle()
     }
-
+    
     @objc(initializeWithSDKKey:options:completion:)
     public func initialize(
         _ sdkKey: String,
@@ -57,17 +53,17 @@ public final class Statsig: NSObject {
         completion: InitCompletion? = nil
     ) {
         let markEnd = Diagnostics.trackInit()
-
+        
         let context = StatsigContext(emitter, sdkKey, options)
         context.store.loadFromCache(sdkKey)
         self.context = context
-
+        
         setValuesFromNetwork(context) { [weak context] error in
-            markEnd(context?.logger, context?.store.sourceInfo, error)
+            markEnd(context?.logger, context?.store.getSourceInfo(), error)
             completion?(error)
         }
     }
-
+    
     @objc(initializeSyncWithSDKKey:initialSpecs:options:)
     public func initializeSync(
         _ sdkKey: String,
@@ -76,37 +72,86 @@ public final class Statsig: NSObject {
     ) -> Error? {
         let markEnd = Diagnostics.trackInit()
         let context = StatsigContext(emitter, sdkKey, options)
-
-        let error = setValuesFromInitialSpecs(context, initialSpecs)
-        markEnd(context.logger, context.store.sourceInfo, error)
+        
+        let error = setValuesFromBootstrap(context, initialSpecs)
+        markEnd(context.logger, context.store.getSourceInfo(), error)
         self.context = context
         return error
     }
-
+    
     @objc
     public func shutdown(completion: ShutdownCompletion? = nil) {
-        getContext()?.logger.shutdown { err in completion?(err) }
+        if let context = getContext() {
+            context.bgUpdatesHandle?.cancel()
+            context.logger.shutdown { err in completion?(err) }
+        }
         unsubscribeFromApplicationLifecycle()
     }
-
+    
     @objc
     public func setGlobalUser(_ user: StatsigUser) {
         getContext()?.globalUser = user
     }
-
+    
     @objc
     public func addListener(_ listener: StatsigListening) {
         emitter.addListener(listener)
     }
-
+    
     @objc
     public func removeListener(_ listener: StatsigListening) {
         emitter.removeListener(listener)
     }
 }
 
+// MARK: Post-Init Syncing
+
+extension Statsig {
+    @objc public func update(completion: UpdateCompletion? = nil) {
+        guard let context = getContext() else {
+            completion?(StatsigError.notYetInitialized)
+            return
+        }
+        
+        setValuesFromNetwork(context, completion: completion)
+    }
+    
+    @objc public func updateSync(updatedSpecs: SynchronousSpecsValue) -> Error? {
+        guard let context = getContext() else {
+            return StatsigError.notYetInitialized
+        }
+        
+        return setValuesFromBootstrap(context, updatedSpecs)
+    }
+    
+    @objc
+    public func scheduleBackgroundUpdates(intervalSeconds: TimeInterval = Constants.ONE_HOUR_IN_SECONDS) -> StatsigUpdatesHandle? {
+        guard let context = getContext() else {
+            emitter.emitError("Cannot schedule background updates before Statsig is initialized.")
+            return nil
+        }
+        
+        let timer = DispatchSource.makeTimerSource(queue: DispatchQueue.global(qos: .background))
+        timer.schedule(deadline: .now() + intervalSeconds, repeating: intervalSeconds)
+        
+        timer.setEventHandler { [weak self] in
+            self?.update { error in
+                if let error = error {
+                    self?.emitter.emitError("Background update failed: \(error.localizedDescription)")
+                }
+            }
+        }
+        
+        timer.resume()
+        
+        context.bgUpdatesHandle?.cancel()
+        context.bgUpdatesHandle = StatsigUpdatesHandle(timer)
+        return context.bgUpdatesHandle
+    }
+}
 
 // MARK: Check APIs
+
 extension Statsig {
     @objc(checkGate:forUser:options:)
     public func checkGate(
@@ -116,7 +161,7 @@ extension Statsig {
     ) -> Bool {
         return getFeatureGate(name, user, options).value
     }
-
+    
     @objc(getFeatureGate:forUser:options:)
     public func getFeatureGate(
         _ name: String,
@@ -126,13 +171,13 @@ extension Statsig {
         guard let context = getContext() else {
             return .empty(name, .uninitialized())
         }
-
+        
         guard let userInternal = getInternalizedUser(context, user) else {
-            return .empty(name, .userError(context.store.sourceInfo))
+            return .empty(name, .userError(context.store.getSourceInfo()))
         }
-
+        
         let (evaluation, details) = context.evaluator.checkGate(name, userInternal, options)
-
+        
         if (options?.disableExposureLogging != true) {
             context.logger.enqueue{
                 createGateExposure(
@@ -143,7 +188,7 @@ extension Statsig {
                 )
             }
         }
-
+        
         return FeatureGate(
             name: name,
             ruleID: evaluation.ruleID,
@@ -151,7 +196,7 @@ extension Statsig {
             value: evaluation.boolValue
         )
     }
-
+    
     @objc(getDynamicConfig:forUser:options:)
     public func getDynamicConfig(
         _ name: String,
@@ -161,11 +206,11 @@ extension Statsig {
         guard let context = getContext() else {
             return .empty(name, .uninitialized())
         }
-
+        
         guard let userInternal = getInternalizedUser(context, user) else {
-            return .empty(name, .userError(context.store.sourceInfo))
+            return .empty(name, .userError(context.store.getSourceInfo()))
         }
-
+        
         let detailedEval = context.evaluator.getConfig(name, userInternal)
         let (evaluation, details) = detailedEval
         
@@ -179,7 +224,7 @@ extension Statsig {
                 )
             }
         }
-
+        
         return DynamicConfig(
             name: name,
             ruleID: evaluation.ruleID,
@@ -188,7 +233,7 @@ extension Statsig {
             groupName: evaluation.groupName
         )
     }
-
+    
     @objc(getExperiment:forUser:options:)
     public func getExperiment(
         _ name: String,
@@ -198,11 +243,11 @@ extension Statsig {
         guard let context = getContext() else {
             return .empty(name, .uninitialized())
         }
-
+        
         guard let userInternal = getInternalizedUser(context, user) else {
-            return .empty(name, .userError(context.store.sourceInfo))
+            return .empty(name, .userError(context.store.getSourceInfo()))
         }
-
+        
         let detailedEval = context.evaluator.getExperiment(name, userInternal, options)
         let (evaluation, details) = detailedEval
         
@@ -216,7 +261,7 @@ extension Statsig {
                 )
             }
         }
-
+        
         return Experiment(
             name: name,
             ruleID: evaluation.ruleID,
@@ -225,7 +270,7 @@ extension Statsig {
             groupName: evaluation.groupName
         )
     }
-
+    
     @objc(getLayer:forUser:options:)
     public func getLayer(
         _ name: String,
@@ -235,13 +280,13 @@ extension Statsig {
         guard let context = getContext() else {
             return .empty(name, .uninitialized())
         }
-
+        
         guard let userInternal = getInternalizedUser(context, user) else {
-            return .empty(name, .userError(context.store.sourceInfo))
+            return .empty(name, .userError(context.store.getSourceInfo()))
         }
-
+        
         let (evaluation, details) = context.evaluator.getLayer(name, userInternal, options: options)
-
+        
         let logExposure: ParameterExposureFunc? = options?.disableExposureLogging != true
         ? { [weak context] layer, parameter in
             let exposure = createLayerExposure(
@@ -251,10 +296,10 @@ extension Statsig {
                 evaluation: evaluation,
                 details: details
             )
-
+            
             context?.logger.enqueue { exposure }
         } : nil
-
+        
         return Layer(
             name: name,
             ruleID: evaluation.ruleID,
@@ -279,12 +324,12 @@ extension Statsig {
         guard let context = getContext() else {
             return
         }
-
+        
         if let userInternal = getInternalizedUser(context, user) {
             context.logger.enqueue { event.toInternal(userInternal, nil) }
         }
     }
-
+    
     @objc
     public func flushEvents() {
         getContext()?.logger.flush()
@@ -308,11 +353,11 @@ extension Statsig {
             completion(nil)
             return
         }
-
+        
         let key = getStorageKey(user: userInternal, idType: idType)
         storage.loadAsync(key, completion)
     }
-
+    
     @objc(loadUserPersistedValues:forUser:)
     public func loadUserPersistedValues(
         _ idType: String,
@@ -324,7 +369,7 @@ extension Statsig {
         else {
             return nil
         }
-
+        
         let key = getStorageKey(user: userInternal, idType: idType)
         return context
             .options?
@@ -338,78 +383,83 @@ extension Statsig {
 extension Statsig {
     private func setValuesFromNetwork(
         _ context: StatsigContext,
-        completion: InitCompletion? = nil
+        completion: UpdateCompletion? = nil
     ) {
-        context.network.get(.downloadConfigSpecs) {
-            [weak context] (result: DecodedResult<DownloadConfigSpecsResponse>?, error) in
-
+        var params: [String: String]? = nil
+        let lcut = context.store.getSourceInfo().lcut
+        if lcut > 0 {
+            params = ["sinceTime": String(lcut)]
+        }
+        
+        context.network.get(.downloadConfigSpecs, params) {
+            [weak context] (result: DecodedResult<SpecsResponse>?, error) in
+            
+            if completion == nil {
+                print("!!!!!!!!Err")
+            }
+            
             if let error = error {
                 completion?(error)
                 return
             }
-
+            
             guard let result = result else {
                 completion?(StatsigError.downloadConfigSpecsFailure)
                 return
             }
-
-            guard let context = context else {
+            
+            switch result.decoded {
+            case .full(let response):
+                guard let context = context else {
+                    completion?(StatsigError.lostStatsigContext)
+                    return
+                }
+                
+                context.store.setAndCacheValues(
+                    response: response,
+                    responseData: result.data,
+                    sdkKey: context.sdkKey,
+                    source: .network
+                )
+                
+                completion?(nil)
+                return
+                
+            case .noUpdates:
+                completion?(nil)
                 return
             }
-
-            context.store.setAndCacheValues(
-                response: result.decoded,
-                responseData: result.data,
-                sdkKey: context.sdkKey,
-                source: .network
-            )
-
-            completion?(nil)
         }
     }
-
-    private func setValuesFromInitialSpecs(
+    
+    private func setValuesFromBootstrap(
         _ context: StatsigContext,
-        _ initialValues: SynchronousSpecsValue
+        _ value: SynchronousSpecsValue
     ) -> Error? {
-        var data: Data?
-
-        if let initialValues = initialValues as? Data {
-            data = initialValues
+        let (result, error) = parseSpecsValue(value)
+        
+        guard error == nil, let result = result else {
+            return error ?? StatsigError.invalidSynchronousSpecs
         }
-        else if let initalValues = initialValues as? String {
-            data = Data(initalValues.utf8)
-        }
-
-        guard let data = data else {
-            return StatsigError.invalidSynchronousSpecs
-        }
-
-        do {
-            let decoded = try JSONDecoder()
-                .decode(DownloadConfigSpecsResponse.self, from: data)
-
-            context.store.setAndCacheValues(
-                response: decoded,
-                responseData: data,
-                sdkKey: context.sdkKey,
-                source: .bootstrap
-            )
-
-            return nil
-        } catch {
-            return error
-        }
+        
+        context.store.setAndCacheValues(
+            response: result.response,
+            responseData: result.raw,
+            sdkKey: context.sdkKey,
+            source: .bootstrap
+        )
+        
+        return nil
     }
-
+    
     private func getContext(_ caller: String = #function) -> StatsigContext? {
         if context == nil {
             emitter.emitError("\(caller) called before Statsig.initialize.")
         }
-
+        
         return context
     }
-
+    
     private func getInternalizedUser(
         _ context: StatsigContext,
         _ user: StatsigUser?,
@@ -420,11 +470,11 @@ extension Statsig {
                               + " Please provide a StatsigUser or call setGlobalUser.")
             return nil
         }
-
+        
         return StatsigUserInternal(
             user: user,
             environment: context.options?.environment
         )
     }
-
+    
 }

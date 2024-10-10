@@ -14,6 +14,7 @@ let Examples: [(String, UIViewController)] = [
     ( "Perf (ObjC)", PerfOnDeviceEvaluationsViewControllerObjC() ),
     ( "Statsig Client Events (ObjC)", ClientEventsViewControllerObjC() ),
     ( "Local Overrides (ObjC)", LocalOverridesOnDeviceEvaluationsViewControllerObjC() ),
+    ( "Spec Updates (ObjC)", SpecUpdatesViewControllerObjC() ),
 ]
 
 

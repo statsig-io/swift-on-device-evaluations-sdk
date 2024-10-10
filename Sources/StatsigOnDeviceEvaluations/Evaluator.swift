@@ -29,7 +29,7 @@ class Evaluator {
         if let gate = overrideAdapter?.getGate(user.user, name, options) {
             return (
                 evaluation: .gateOverride(gate),
-                details: .localOverride(store.sourceInfo.lcut)
+                details: .localOverride(store.getSourceInfo().lcut)
             )
         }
         
@@ -58,7 +58,7 @@ class Evaluator {
         if let config = overrideAdapter?.getDynamicConfig(user.user, name, options) {
             return (
                 evaluation: .configOverride(config),
-                details: .localOverride(store.sourceInfo.lcut)
+                details: .localOverride(store.getSourceInfo().lcut)
             )
         }
 
@@ -73,7 +73,7 @@ class Evaluator {
         if let experiment = overrideAdapter?.getExperiment(user.user, name, options) {
             return (
                 evaluation: .experimentOverride(experiment),
-                details: .localOverride(store.sourceInfo.lcut)
+                details: .localOverride(store.getSourceInfo().lcut)
             )
         }
         
@@ -112,7 +112,7 @@ class Evaluator {
         if let layer = overrideAdapter?.getLayer(user.user, name, options) {
             return (
                 evaluation: .layerOverride(layer),
-                details: .localOverride(store.sourceInfo.lcut)
+                details: .localOverride(store.getSourceInfo().lcut)
             )
         }
 

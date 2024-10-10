@@ -16,6 +16,7 @@
 		5CAE022E2B0ECF44008C0888 /* GlobalUserOnDeviceEvaluationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CAE022D2B0ECF44008C0888 /* GlobalUserOnDeviceEvaluationsViewController.swift */; };
 		5CAE02312B0EEA95008C0888 /* ClientEventsViewControllerObjC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CAE02302B0EEA95008C0888 /* ClientEventsViewControllerObjC.m */; };
 		5CAFD04F2ADAEEDD00ACAF79 /* PerfOnDeviceEvaluationsViewControllerObjC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CAFD04E2ADAEEDD00ACAF79 /* PerfOnDeviceEvaluationsViewControllerObjC.m */; };
+		5CC577412CB8579700D2CC7F /* SpecUpdatesViewControllerObjC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5CC577402CB8579700D2CC7F /* SpecUpdatesViewControllerObjC.m */; };
 		5CD93AB02AF953C2009A5898 /* StatsigSamplesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD93AAF2AF953C2009A5898 /* StatsigSamplesTests.swift */; };
 		5CDBFC9A2AD4EFE0002E6E60 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDBFC992AD4EFE0002E6E60 /* AppDelegate.swift */; };
 		5CDBFC9E2AD4EFE0002E6E60 /* BasicOnDeviceEvaluationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDBFC9D2AD4EFE0002E6E60 /* BasicOnDeviceEvaluationsViewController.swift */; };
@@ -48,6 +49,8 @@
 		5CAE02302B0EEA95008C0888 /* ClientEventsViewControllerObjC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClientEventsViewControllerObjC.m; sourceTree = "<group>"; };
 		5CAFD04D2ADAEEDD00ACAF79 /* PerfOnDeviceEvaluationsViewControllerObjC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PerfOnDeviceEvaluationsViewControllerObjC.h; sourceTree = "<group>"; };
 		5CAFD04E2ADAEEDD00ACAF79 /* PerfOnDeviceEvaluationsViewControllerObjC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PerfOnDeviceEvaluationsViewControllerObjC.m; sourceTree = "<group>"; };
+		5CC5773F2CB8579700D2CC7F /* SpecUpdatesViewControllerObjC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpecUpdatesViewControllerObjC.h; sourceTree = "<group>"; };
+		5CC577402CB8579700D2CC7F /* SpecUpdatesViewControllerObjC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpecUpdatesViewControllerObjC.m; sourceTree = "<group>"; };
 		5CD93AAD2AF953C2009A5898 /* StatsigSamplesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StatsigSamplesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5CD93AAF2AF953C2009A5898 /* StatsigSamplesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsigSamplesTests.swift; sourceTree = "<group>"; };
 		5CDBFC962AD4EFE0002E6E60 /* StatsigSamples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StatsigSamples.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -110,6 +113,8 @@
 				5CDBFC9D2AD4EFE0002E6E60 /* BasicOnDeviceEvaluationsViewController.swift */,
 				5CAE022F2B0EEA95008C0888 /* ClientEventsViewControllerObjC.h */,
 				5CAE02302B0EEA95008C0888 /* ClientEventsViewControllerObjC.m */,
+				5CC5773F2CB8579700D2CC7F /* SpecUpdatesViewControllerObjC.h */,
+				5CC577402CB8579700D2CC7F /* SpecUpdatesViewControllerObjC.m */,
 			);
 			path = OnDeviceEvaluations;
 			sourceTree = "<group>";
@@ -280,6 +285,7 @@
 				5CAE022E2B0ECF44008C0888 /* GlobalUserOnDeviceEvaluationsViewController.swift in Sources */,
 				5C68BFBE2AFAE1FE006FD9B5 /* ClientEventsViewController.swift in Sources */,
 				5CDBFC9A2AD4EFE0002E6E60 /* AppDelegate.swift in Sources */,
+				5CC577412CB8579700D2CC7F /* SpecUpdatesViewControllerObjC.m in Sources */,
 				5C68BFBC2AFAD3D6006FD9B5 /* ExampleDirectoryViewController.swift in Sources */,
 				5CAE02312B0EEA95008C0888 /* ClientEventsViewControllerObjC.m in Sources */,
 				5C8094602ADF17F2001AF600 /* Constants.swift in Sources */,

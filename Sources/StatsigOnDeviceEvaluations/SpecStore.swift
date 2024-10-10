@@ -24,15 +24,14 @@ struct SpecStoreSourceInfo {
 }
 
 class SpecStore {
-    public private(set) var sourceInfo = SpecStoreSourceInfo(
+    private let queue = DispatchQueue(label: STORE_LABEL, attributes: .concurrent)
+    private let emitter: StatsigClientEventEmitter
+
+    private var sourceInfo = SpecStoreSourceInfo(
         source: .uninitialized,
         receivedAt: 0,
         lcut: 0
     )
-
-    private let queue = DispatchQueue(label: STORE_LABEL, attributes: .concurrent)
-    private let emitter: StatsigClientEventEmitter
-
     private var specs: [SpecType: [String: Spec]] = [:]
 
     init(_ emitter: StatsigClientEventEmitter) {
@@ -41,7 +40,7 @@ class SpecStore {
     }
 
     public func setAndCacheValues(
-        response: DownloadConfigSpecsResponse,
+        response: SpecsResponseFull,
         responseData: Data,
         sdkKey: String,
         source: ValueSource
@@ -71,14 +70,19 @@ class SpecStore {
 
         do {
             let decoded = try JSONDecoder()
-                .decode(DownloadConfigSpecsResponse.self, from: data)
+                .decode(SpecsResponse.self, from: data)
+            
+            guard case .full(let decoded) = decoded else {
+                return
+            }
+            
             setValues(decoded, responseData: data, source: .cache)
         } catch {
             return
         }
     }
 
-    private func setValues(_ response: DownloadConfigSpecsResponse, responseData: Data, source: ValueSource) {
+    private func setValues(_ response: SpecsResponseFull, responseData: Data, source: ValueSource) {
         let newSpecs = [
             (SpecType.gate, response.featureGates),
             (SpecType.config, response.dynamicConfigs),

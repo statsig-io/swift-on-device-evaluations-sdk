@@ -6,3 +6,4 @@
 #import "PerfOnDeviceEvaluationsViewControllerObjC.h"
 #import "ClientEventsViewControllerObjC.h"
 #import "LocalOverridesOnDeviceEvaluationsViewControllerObjC.h"
+#import "SpecUpdatesViewControllerObjC.h"
