@@ -7,6 +7,10 @@ import Foundation
     @objc public var tier: String?
 
     public override init() {}
+    
+    public init(tier: String) {
+        self.tier = tier
+    }
 }
 
 @objc public class StatsigOptions: NSObject {
