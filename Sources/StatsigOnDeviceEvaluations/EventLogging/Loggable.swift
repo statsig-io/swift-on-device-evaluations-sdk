@@ -31,7 +31,7 @@ extension StatsigUserInternal: Loggable {
             result["customIDs"] = user.customIDs
         }
 
-        if let env = user.environment, let tier = env.tier {
+        if let env = user.environment ?? environment, let tier = env.tier {
             result["statsigEnvironment"] = ["tier": tier]
         }
 
