@@ -47,6 +47,8 @@ final class SpecUpdatesTest: QuickSpec {
             }
             
             it("bg updates makes requests to dcs") {
+                client.minBackgroundSyncInterval = 0.000001
+            
                 let _ = client.scheduleBackgroundUpdates(intervalSeconds: 0.01)
                 expect(requests.count).toEventually(beGreaterThan(2), timeout: .milliseconds(500))
             }

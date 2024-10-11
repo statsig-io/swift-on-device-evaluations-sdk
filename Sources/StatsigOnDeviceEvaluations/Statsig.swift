@@ -4,6 +4,7 @@ public typealias UpdateCompletion = (_ error: Error?) -> Void
 public typealias InitCompletion = UpdateCompletion
 public typealias ShutdownCompletion = (_ error: Error?) -> Void
 
+
 class StatsigContext {
     let store: SpecStore
     let evaluator: Evaluator
@@ -35,7 +36,8 @@ public final class Statsig: NSObject {
     let emitter = StatsigClientEventEmitter()
     
     var context: StatsigContext?
-    
+    internal var minBackgroundSyncInterval = Constants.MIN_BG_SYNC_INTERVAL_SECONDS
+
     @objc(sharedInstance)
     public static var shared: Statsig = {
         return Statsig()
@@ -125,14 +127,23 @@ extension Statsig {
     }
     
     @objc
-    public func scheduleBackgroundUpdates(intervalSeconds: TimeInterval = Constants.ONE_HOUR_IN_SECONDS) -> StatsigUpdatesHandle? {
+    public func scheduleBackgroundUpdates(
+        intervalSeconds: TimeInterval = Constants.SECONDS_IN_ONE_HOUR
+    ) -> StatsigUpdatesHandle? {
+        
         guard let context = getContext() else {
             emitter.emitError("Cannot schedule background updates before Statsig is initialized.")
             return nil
         }
         
+        var interval = intervalSeconds
+        if interval < minBackgroundSyncInterval {
+            interval = minBackgroundSyncInterval
+            emitter.emitError("Background sync interval cannot be less than \(minBackgroundSyncInterval) seconds")
+        }
+        
         let timer = DispatchSource.makeTimerSource(queue: DispatchQueue.global(qos: .background))
-        timer.schedule(deadline: .now() + intervalSeconds, repeating: intervalSeconds)
+        timer.schedule(deadline: .now() + interval, repeating: interval)
         
         timer.setEventHandler { [weak self] in
             self?.update { error in
@@ -393,10 +404,6 @@ extension Statsig {
         
         context.network.get(.downloadConfigSpecs, params) {
             [weak context] (result: DecodedResult<SpecsResponse>?, error) in
-            
-            if completion == nil {
-                print("!!!!!!!!Err")
-            }
             
             if let error = error {
                 completion?(error)

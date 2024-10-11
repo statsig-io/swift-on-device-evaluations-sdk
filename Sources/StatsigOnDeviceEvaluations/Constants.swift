@@ -1,5 +1,6 @@
 import Foundation
 
 public class Constants {
-    public static let ONE_HOUR_IN_SECONDS: TimeInterval = 3600
+    public static let SECONDS_IN_ONE_HOUR: TimeInterval = 3600
+    public static let MIN_BG_SYNC_INTERVAL_SECONDS = 60.0
 }
