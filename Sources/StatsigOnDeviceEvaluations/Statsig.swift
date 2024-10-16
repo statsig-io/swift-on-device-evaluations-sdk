@@ -33,8 +33,10 @@ class StatsigContext {
 }
 
 public final class Statsig: NSObject {
+    @objc
+    public private(set) var typed = TypedStatsigProvider()
+
     let emitter = StatsigClientEventEmitter()
-    
     var context: StatsigContext?
     internal var minBackgroundSyncInterval = Constants.MIN_BG_SYNC_INTERVAL_SECONDS
 
@@ -59,6 +61,7 @@ public final class Statsig: NSObject {
         let context = StatsigContext(emitter, sdkKey, options)
         context.store.loadFromCache(sdkKey)
         self.context = context
+        self.bindTypedStatsigProvider()
         
         setValuesFromNetwork(context) { [weak context] error in
             markEnd(context?.logger, context?.store.getSourceInfo(), error)
@@ -73,11 +76,14 @@ public final class Statsig: NSObject {
         options: StatsigOptions? = nil
     ) -> Error? {
         let markEnd = Diagnostics.trackInit()
+
         let context = StatsigContext(emitter, sdkKey, options)
+        self.context = context
+        self.bindTypedStatsigProvider()
         
         let error = setValuesFromBootstrap(context, initialSpecs)
         markEnd(context.logger, context.store.getSourceInfo(), error)
-        self.context = context
+
         return error
     }
     
@@ -236,11 +242,13 @@ extension Statsig {
             }
         }
         
+        let result = evaluation.jsonValue?.getSerializedDictionaryResult()
         return DynamicConfig(
             name: name,
             ruleID: evaluation.ruleID,
             evaluationDetails: details,
-            value: evaluation.jsonValue?.serializeToDictionary(),
+            value: result?.dictionary,
+            rawValue: result?.raw,
             groupName: evaluation.groupName
         )
     }
@@ -273,11 +281,13 @@ extension Statsig {
             }
         }
         
+        let result = evaluation.jsonValue?.getSerializedDictionaryResult()
         return Experiment(
             name: name,
             ruleID: evaluation.ruleID,
             evaluationDetails: details,
-            value: evaluation.jsonValue?.serializeToDictionary(),
+            value: result?.dictionary,
+            rawValue: result?.raw,
             groupName: evaluation.groupName
         )
     }
@@ -311,12 +321,14 @@ extension Statsig {
             context?.logger.enqueue { exposure }
         } : nil
         
+        let result = evaluation.jsonValue?.getSerializedDictionaryResult()
         return Layer(
             name: name,
             ruleID: evaluation.ruleID,
             evaluationDetails: details,
             logParameterExposure: logExposure,
-            value: evaluation.jsonValue?.serializeToDictionary(),
+            value: result?.dictionary,
+            rawValue: result?.raw,
             allocatedExperimentName: evaluation.configDelegate,
             groupName: evaluation.groupName
         )
@@ -392,6 +404,10 @@ extension Statsig {
 
 // MARK: Private
 extension Statsig {
+    private func bindTypedStatsigProvider() {
+        self.typed.bind(self, self.context?.options)
+    }
+    
     private func setValuesFromNetwork(
         _ context: StatsigContext,
         completion: UpdateCompletion? = nil
