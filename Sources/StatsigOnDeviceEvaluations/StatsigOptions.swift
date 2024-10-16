@@ -55,7 +55,12 @@ import Foundation
      * Plugin to override SDK evaluations
      */
     @objc public var overrideAdapter: OverrideAdapter?
-
+    
+    /**
+     * When bootstrapping (initializeSync or updateSync), set this flag if you would like to use cache values if they are "fresher" then the bootstrap values
+     */
+    @objc public var useNewerCacheValuesOverProvidedValues: Bool = false
+    
     public override init() {
         environment = StatsigEnvironment()
     }

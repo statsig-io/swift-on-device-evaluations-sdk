@@ -1,0 +1,20 @@
+{
+    "dynamic_configs": [],
+    "feature_gates": [],
+    "layer_configs": [],
+    "id_lists": {},
+    "layers": {},
+    "has_updates": true,
+    "time": 1697131166636,
+    "company_id": "5NprLGRxV3W28hreG51Z7n",
+    "diagnostics": {
+        "initialize": 1000,
+        "dcs": 1000,
+        "download_config_specs": 1000,
+        "idlist": 100,
+        "get_id_list": 100,
+        "get_id_list_sources": 100,
+        "log": 100,
+        "log_event": 100
+    }
+}

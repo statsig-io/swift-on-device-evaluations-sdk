@@ -443,15 +443,23 @@ extension Statsig {
         _ context: StatsigContext,
         _ value: SynchronousSpecsValue
     ) -> Error? {
-        let (result, error) = parseSpecsValue(value)
+        let (bootstrap, error) = parseSpecsValue(value)
         
-        guard error == nil, let result = result else {
+        guard error == nil, let bootstrap = bootstrap else {
             return error ?? StatsigError.invalidSynchronousSpecs
         }
-        
+
+        if context.options?.useNewerCacheValuesOverProvidedValues == true {
+            context.store.loadFromCache(context.sdkKey)
+
+            if bootstrap.response.time < context.store.getSourceInfo().lcut {
+                return nil
+            }
+        }
+
         context.store.setAndCacheValues(
-            response: result.response,
-            responseData: result.raw,
+            response: bootstrap.response,
+            responseData: bootstrap.raw,
             sdkKey: context.sdkKey,
             source: .bootstrap
         )
