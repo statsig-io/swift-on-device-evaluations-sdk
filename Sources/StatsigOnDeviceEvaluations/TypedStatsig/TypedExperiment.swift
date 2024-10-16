@@ -25,6 +25,10 @@ extension TypedExperiment {
         get { nil }
         set { }
     }
+    
+    public var name: String {
+        Self.name
+    }
 
     public init() {
         self.init(groupName: nil, value: nil)
