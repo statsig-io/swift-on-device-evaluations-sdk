@@ -1,17 +1,6 @@
 import Foundation
 import StatsigOnDeviceEvaluations
 
-public enum SdkDemoExperimentName: String {
-    case empty = ""
-    case anExperiment = "an_experiment"
-    case anotherExperiment = "another_experiment"
-}
-
-public enum SdkDemoDynamicConfigName: String {
-    case empty = ""
-    case aDynamicConfig = "a_dynamic_config"
-}
-
 @objc class SdkDemoGates: NSObject {
     @objc static let aGate = TypedGateName("a_gate")
     @objc static let partialGate = TypedGateName("partial_gate")
@@ -24,6 +13,8 @@ class SdkDemoExperiments {
 
 struct SdkDemoTypedAnExperiment: TypedExperiment {
     static var name = "an_experiment"
+    static var isMemoizable = true
+    static var memoUnitIdType = "userID"
     
     var groupName: SdkDemoTypedAnExperimentGroup?
     enum SdkDemoTypedAnExperimentGroup: String, TypedGroupName {

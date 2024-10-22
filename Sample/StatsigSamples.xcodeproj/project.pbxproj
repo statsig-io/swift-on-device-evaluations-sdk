@@ -20,6 +20,7 @@
 		5CD93AB02AF953C2009A5898 /* StatsigSamplesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD93AAF2AF953C2009A5898 /* StatsigSamplesTests.swift */; };
 		5CDBFC9A2AD4EFE0002E6E60 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDBFC992AD4EFE0002E6E60 /* AppDelegate.swift */; };
 		5CDBFC9E2AD4EFE0002E6E60 /* BasicOnDeviceEvaluationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDBFC9D2AD4EFE0002E6E60 /* BasicOnDeviceEvaluationsViewController.swift */; };
+		5CE7C4682CC8289500FD64F2 /* EmptySynchronousSpecs.json in Resources */ = {isa = PBXBuildFile; fileRef = 5CE7C4672CC8289500FD64F2 /* EmptySynchronousSpecs.json */; };
 		5CE8F8B02ADB772C0075CA71 /* SynchronousInitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CE8F8AF2ADB772C0075CA71 /* SynchronousInitViewController.swift */; };
 		5CE8F8B22ADB9C130075CA71 /* SynchronousSpecs.json in Resources */ = {isa = PBXBuildFile; fileRef = 5CE8F8B12ADB9C130075CA71 /* SynchronousSpecs.json */; };
 		5CFB0C932CC055DA00F1B1FF /* TypedStatsigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CFB0C922CC055DA00F1B1FF /* TypedStatsigViewController.swift */; };
@@ -59,6 +60,7 @@
 		5CDBFC992AD4EFE0002E6E60 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5CDBFC9D2AD4EFE0002E6E60 /* BasicOnDeviceEvaluationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicOnDeviceEvaluationsViewController.swift; sourceTree = "<group>"; };
 		5CDBFCA72AD4EFE1002E6E60 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5CE7C4672CC8289500FD64F2 /* EmptySynchronousSpecs.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = EmptySynchronousSpecs.json; sourceTree = "<group>"; };
 		5CE8F8AF2ADB772C0075CA71 /* SynchronousInitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynchronousInitViewController.swift; sourceTree = "<group>"; };
 		5CE8F8B12ADB9C130075CA71 /* SynchronousSpecs.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SynchronousSpecs.json; sourceTree = "<group>"; };
 		5CFB0C922CC055DA00F1B1FF /* TypedStatsigViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypedStatsigViewController.swift; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 		5C8094622ADF19D1001AF600 /* Examples */ = {
 			isa = PBXGroup;
 			children = (
+				5CE7C4672CC8289500FD64F2 /* EmptySynchronousSpecs.json */,
 				5CE8F8B12ADB9C130075CA71 /* SynchronousSpecs.json */,
 				5C8094632ADF19DA001AF600 /* OnDeviceEvaluations */,
 				5C68BFBB2AFAD3D6006FD9B5 /* ExampleDirectoryViewController.swift */,
@@ -264,6 +267,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5CE7C4682CC8289500FD64F2 /* EmptySynchronousSpecs.json in Resources */,
 				5CE8F8B22ADB9C130075CA71 /* SynchronousSpecs.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

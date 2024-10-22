@@ -36,8 +36,8 @@ public final class Statsig: NSObject {
     @objc
     public private(set) var typed = TypedStatsigProvider()
 
-    let emitter = StatsigClientEventEmitter()
-    var context: StatsigContext?
+    internal let emitter = StatsigClientEventEmitter()
+    internal var context: StatsigContext?
     internal var minBackgroundSyncInterval = Constants.MIN_BG_SYNC_INTERVAL_SECONDS
 
     @objc(sharedInstance)

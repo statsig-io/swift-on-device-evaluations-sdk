@@ -26,7 +26,36 @@ class TypedStatsigViewController: UIViewController {
     
     func render() {
         var texts = ["- Strict Typing -"]
+
+        evalAndAppendResults(texts: &texts)
+
+        texts.append("- After Empty Specs Update -")
         
+        // Update specs to be entirely empty
+        let path = Bundle.main.path(forResource: "EmptySynchronousSpecs", ofType: "json")!
+        let url = URL(fileURLWithPath: path)
+        let data = NSData(contentsOf: url)!
+        
+        _ = statsig.updateSync(updatedSpecs: data)
+
+        evalAndAppendResults(texts: &texts)
+
+        // Render labels
+        let labels = texts.map { createLabel(text: $0) }
+        labels.forEach { view.addSubview($0) }
+        setupConstraints(for: labels)
+    }
+    
+    private func evalAndAppendResults(texts: inout [String]) {
+        // Get a Feature Gate using strict typing
+        let aGate = statsig.typed.getFeatureGate(SdkDemoGates.aGate, user)
+        texts.append("\(aGate.name): \(aGate.value ? "Pass": "Fail")")
+        
+        // Get an Experiment (with params) using strict typing
+        let anotherExperiment = statsig.typed.getExperiment(SdkDemoExperiments.AnotherExperiment, user)
+        let value = anotherExperiment.value
+        texts.append("\(anotherExperiment.name): \(value?.aString ?? "Not Found") - \(value?.aBool == true ? "Pass" : "Fail")")
+
         // Get an Experiment using strict typing
         let anExperiment = statsig.typed.getExperiment(SdkDemoExperiments.AnExperiment, user)
         switch anExperiment.groupName {
@@ -40,20 +69,6 @@ class TypedStatsigViewController: UIViewController {
             texts.append("\(anExperiment.name): Control Group")
             break
         }
-        
-        // Get an Experiment (with params) using strict typing
-        let anotherExperiment = statsig.typed.getExperiment(SdkDemoExperiments.AnotherExperiment, user)
-        let value = anotherExperiment.value
-        texts.append("\(anotherExperiment.name): \(value?.aString ?? "Err") - \(value?.aBool == true ? "Pass" : "Fail")")
-        
-        // Get a Feature Gate using strict typing
-        let aGate = statsig.typed.getFeatureGate(SdkDemoGates.aGate, user)
-        texts.append("\(aGate.name): \(aGate.value ? "Pass": "Fail")")
-
-        // Render labels
-        let labels = texts.map { createLabel(text: $0) }
-        labels.forEach { view.addSubview($0) }
-        setupConstraints(for: labels)
     }
     
     private func createLabel(text: String) -> UILabel {
