@@ -5,15 +5,19 @@ public class Experiment: ConfigBase {
     @objc public let value: [String: Any]
     @objc public let groupName: String?
     
+    let rawValue: Data?
+    
     internal init(
         name: String,
         ruleID: String,
         evaluationDetails: EvaluationDetails,
         value: [String: Any]?,
+        rawValue: Data?,
         groupName: String?
     ) {
         self.value = value ?? [:]
         self.groupName = groupName
+        self.rawValue = rawValue
         super.init(
             name,
             ruleID,
@@ -30,6 +34,7 @@ public class Experiment: ConfigBase {
             ruleID: "",
             evaluationDetails: evalDetails,
             value: nil,
+            rawValue: nil,
             groupName: nil
         )
     }
@@ -44,6 +49,7 @@ public class Experiment: ConfigBase {
             ruleID: "",
             evaluationDetails: EvaluationDetails.empty(),
             value: value,
+            rawValue: nil,
             groupName: nil
         )
     }

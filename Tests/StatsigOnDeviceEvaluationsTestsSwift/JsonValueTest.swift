@@ -123,11 +123,11 @@ fileprivate func convertInto(
 ) -> Matcher<JsonValue> {
     Matcher.define(matcher: { actualExpression, msg in
         let actual = try! actualExpression.evaluate()
-        if actual?.serializeToDictionary() as NSDictionary? != dictionary {
+        if actual?.getSerializedDictionaryResult()?.dictionary as NSDictionary? != dictionary {
             return MatcherResult(
                 status: .fail,
                 message: .fail(
-                    "Invalid Dictionary. Expected \(String(describing: dictionary)), got \(String(describing: actual?.serializeToDictionary()))"
+                    "Invalid Dictionary. Expected \(String(describing: dictionary)), got \(String(describing: actual?.getSerializedDictionaryResult()?.dictionary))"
                 )
             )
         }

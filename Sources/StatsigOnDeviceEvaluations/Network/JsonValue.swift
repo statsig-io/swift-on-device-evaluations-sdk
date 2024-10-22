@@ -109,24 +109,30 @@ extension JsonValue: Encodable {
 
 }
 
+public struct SerializedDictionaryResult {
+    let dictionary: [String: Any]?
+    let raw: Data
+}
 
 // MARK: Out Conversion
 extension JsonValue {
-    public func serializeToDictionary() -> [String: Any]? {
+    public func getSerializedDictionaryResult() -> SerializedDictionaryResult? {
         guard case .dictionary(let dictionary) = self else {
             return nil
         }
 
-        do {
-            let encoder = JSONEncoder()
-            let data = try! encoder.encode(dictionary)
-            return try JSONSerialization.jsonObject(
-                with: data,
-                options: []
-            ) as? [String: Any]
-        } catch {
+        let encoder = JSONEncoder()
+        
+        guard let data = try? encoder.encode(dictionary) else {
             return nil
         }
+
+        let json = try? JSONSerialization.jsonObject(
+            with: data,
+            options: []
+        ) as? [String: Any]
+        
+        return SerializedDictionaryResult(dictionary: json, raw: data)
     }
 
     public func asJsonArray() -> [JsonValue]? {
