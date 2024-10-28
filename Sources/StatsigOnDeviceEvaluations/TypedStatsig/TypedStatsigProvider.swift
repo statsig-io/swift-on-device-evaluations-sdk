@@ -9,7 +9,7 @@ class MemoStore {
 open class TypedStatsigProvider: NSObject {
     var client: Statsig?
     var memo = MemoStore()
-
+    
     @objc(checkGate:forUser:)
     open func checkGate(_ name: TypedGateName, _ user: StatsigUser? = nil) -> Bool {
         return getFeatureGate(name, user).value
@@ -17,14 +17,7 @@ open class TypedStatsigProvider: NSObject {
     
     @objc(getFeatureGate:forUser:)
     open func getFeatureGate(_ name: TypedGateName, _ user: StatsigUser? = nil) -> FeatureGate {
-        guard let client = client, let context = client.context else {
-            self.client?.emitter.emitError("Must initialize Statsig first")
-            return FeatureGate.empty(name.value, .empty())
-        }
-        
-        guard let user = user ?? context.globalUser else {
-            client.emitter.emitError("No user given when calling Statsig.typed.getFeatureGate(::)."
-                              + " Please provide a StatsigUser or call setGlobalUser.")
+        guard let (client, user) = validate(user, name.value) else {
             return FeatureGate.empty(name.value, .empty())
         }
 
@@ -40,21 +33,14 @@ open class TypedStatsigProvider: NSObject {
         _ type: T.Type,
         _ user: StatsigUser? = nil
     ) -> T {
-        guard let client = client, let context = client.context else {
-            self.client?.emitter.emitError("Must initialize Statsig first")
+        guard let (client, user) = validate(user, type.name) else {
             return T.init()
         }
-        
-        guard let user = user ?? context.globalUser else {
-            client.emitter.emitError("No user given when calling Statsig.typed.getExperiment(::)."
-                              + " Please provide a StatsigUser or call setGlobalUser.")
-            return T.init()
-        }
-        
+
         if let found = tryGetMemoExperiment(type, user) {
             return found
         }
-
+        
         let experiment = client.getExperiment(type.name, user)
         guard let groupName = experiment.groupName else {
             return tryMemoizeExperiment(T.init(), user)
@@ -70,7 +56,7 @@ open class TypedStatsigProvider: NSObject {
             let decoder = JSONDecoder()
             value = try? decoder.decode(T.ValueType.self, from: raw)
         }
-        
+
         return tryMemoizeExperiment(
             T.init(groupName: group, value: value),
             user
@@ -80,6 +66,33 @@ open class TypedStatsigProvider: NSObject {
     open func bind(_ client: Statsig, _ options: StatsigOptions?) -> Void {
         self.client = client
         self.memo = MemoStore()
+    }
+    
+    private func validate(
+        _ user: StatsigUser?,
+        _ name: String,
+        caller: String = #function
+    ) -> (Statsig, StatsigUser)? {
+        guard let client = client, let context = client.context else {
+            let message = "Must initialize Statsig first"
+            
+            if client == nil {
+                print("[Statsig]: \(message)")
+            } else {
+                self.client?.emitter.emitError("Must initialize Statsig first")
+            }
+            return nil
+        }
+        
+        guard let user = user ?? context.globalUser else {
+            client.emitter.emitError(
+                "No user given when calling Statsig.typed.\(caller) for `\(name)`."
+                + " Please provide a StatsigUser or call setGlobalUser."
+            )
+            return nil
+        }
+        
+        return (client, user)
     }
 }
 
@@ -105,7 +118,7 @@ extension TypedStatsigProvider {
         if !experiment.isMemoizable {
             return experiment
         }
-
+        
         let key = getMemoKey(user, experiment.memoUnitIdType, experiment.name)
         memo.experiments[key] = experiment
         return experiment
@@ -122,7 +135,7 @@ extension TypedStatsigProvider {
         let key = getMemoKey(user, name.memoUnitIdType, name.value)
         return memo.gates[key]
     }
-    
+
     private func tryMemoizeFeatureGate(
         _ name: TypedGateName,
         _ gate: FeatureGate,
@@ -131,7 +144,7 @@ extension TypedStatsigProvider {
         if !name.isMemoizable {
             return gate
         }
-
+        
         let key = getMemoKey(user, name.memoUnitIdType, name.value)
         memo.gates[key] = gate
         return gate
