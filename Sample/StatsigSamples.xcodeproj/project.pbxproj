@@ -20,8 +20,11 @@
 		5CD93AB02AF953C2009A5898 /* StatsigSamplesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD93AAF2AF953C2009A5898 /* StatsigSamplesTests.swift */; };
 		5CDBFC9A2AD4EFE0002E6E60 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDBFC992AD4EFE0002E6E60 /* AppDelegate.swift */; };
 		5CDBFC9E2AD4EFE0002E6E60 /* BasicOnDeviceEvaluationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDBFC9D2AD4EFE0002E6E60 /* BasicOnDeviceEvaluationsViewController.swift */; };
+		5CE7C4682CC8289500FD64F2 /* EmptySynchronousSpecs.json in Resources */ = {isa = PBXBuildFile; fileRef = 5CE7C4672CC8289500FD64F2 /* EmptySynchronousSpecs.json */; };
 		5CE8F8B02ADB772C0075CA71 /* SynchronousInitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CE8F8AF2ADB772C0075CA71 /* SynchronousInitViewController.swift */; };
 		5CE8F8B22ADB9C130075CA71 /* SynchronousSpecs.json in Resources */ = {isa = PBXBuildFile; fileRef = 5CE8F8B12ADB9C130075CA71 /* SynchronousSpecs.json */; };
+		5CFB0C932CC055DA00F1B1FF /* TypedStatsigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CFB0C922CC055DA00F1B1FF /* TypedStatsigViewController.swift */; };
+		5CFB0C952CC0583000F1B1FF /* SdkDemoTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CFB0C942CC0583000F1B1FF /* SdkDemoTypes.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,8 +60,11 @@
 		5CDBFC992AD4EFE0002E6E60 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5CDBFC9D2AD4EFE0002E6E60 /* BasicOnDeviceEvaluationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicOnDeviceEvaluationsViewController.swift; sourceTree = "<group>"; };
 		5CDBFCA72AD4EFE1002E6E60 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5CE7C4672CC8289500FD64F2 /* EmptySynchronousSpecs.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = EmptySynchronousSpecs.json; sourceTree = "<group>"; };
 		5CE8F8AF2ADB772C0075CA71 /* SynchronousInitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynchronousInitViewController.swift; sourceTree = "<group>"; };
 		5CE8F8B12ADB9C130075CA71 /* SynchronousSpecs.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SynchronousSpecs.json; sourceTree = "<group>"; };
+		5CFB0C922CC055DA00F1B1FF /* TypedStatsigViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypedStatsigViewController.swift; sourceTree = "<group>"; };
+		5CFB0C942CC0583000F1B1FF /* SdkDemoTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SdkDemoTypes.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +97,7 @@
 		5C8094622ADF19D1001AF600 /* Examples */ = {
 			isa = PBXGroup;
 			children = (
+				5CE7C4672CC8289500FD64F2 /* EmptySynchronousSpecs.json */,
 				5CE8F8B12ADB9C130075CA71 /* SynchronousSpecs.json */,
 				5C8094632ADF19DA001AF600 /* OnDeviceEvaluations */,
 				5C68BFBB2AFAD3D6006FD9B5 /* ExampleDirectoryViewController.swift */,
@@ -110,11 +117,13 @@
 				5CAFD04D2ADAEEDD00ACAF79 /* PerfOnDeviceEvaluationsViewControllerObjC.h */,
 				5CAFD04E2ADAEEDD00ACAF79 /* PerfOnDeviceEvaluationsViewControllerObjC.m */,
 				5CE8F8AF2ADB772C0075CA71 /* SynchronousInitViewController.swift */,
+				5CFB0C922CC055DA00F1B1FF /* TypedStatsigViewController.swift */,
 				5CDBFC9D2AD4EFE0002E6E60 /* BasicOnDeviceEvaluationsViewController.swift */,
 				5CAE022F2B0EEA95008C0888 /* ClientEventsViewControllerObjC.h */,
 				5CAE02302B0EEA95008C0888 /* ClientEventsViewControllerObjC.m */,
 				5CC5773F2CB8579700D2CC7F /* SpecUpdatesViewControllerObjC.h */,
 				5CC577402CB8579700D2CC7F /* SpecUpdatesViewControllerObjC.m */,
+				5CFB0C942CC0583000F1B1FF /* SdkDemoTypes.swift */,
 			);
 			path = OnDeviceEvaluations;
 			sourceTree = "<group>";
@@ -258,6 +267,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5CE7C4682CC8289500FD64F2 /* EmptySynchronousSpecs.json in Resources */,
 				5CE8F8B22ADB9C130075CA71 /* SynchronousSpecs.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -277,6 +287,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5CFB0C932CC055DA00F1B1FF /* TypedStatsigViewController.swift in Sources */,
 				5C10DDA92AD4FB60003C4CE1 /* BasicOnDeviceEvaluationsViewControllerObjC.m in Sources */,
 				5CE8F8B02ADB772C0075CA71 /* SynchronousInitViewController.swift in Sources */,
 				5CAFD04F2ADAEEDD00ACAF79 /* PerfOnDeviceEvaluationsViewControllerObjC.m in Sources */,
@@ -285,6 +296,7 @@
 				5CAE022E2B0ECF44008C0888 /* GlobalUserOnDeviceEvaluationsViewController.swift in Sources */,
 				5C68BFBE2AFAE1FE006FD9B5 /* ClientEventsViewController.swift in Sources */,
 				5CDBFC9A2AD4EFE0002E6E60 /* AppDelegate.swift in Sources */,
+				5CFB0C952CC0583000F1B1FF /* SdkDemoTypes.swift in Sources */,
 				5CC577412CB8579700D2CC7F /* SpecUpdatesViewControllerObjC.m in Sources */,
 				5C68BFBC2AFAD3D6006FD9B5 /* ExampleDirectoryViewController.swift in Sources */,
 				5CAE02312B0EEA95008C0888 /* ClientEventsViewControllerObjC.m in Sources */,

@@ -79,7 +79,7 @@ extension UserPersistentStorageProvider {
         let data: [String: Any?] = [
             "value": evaluation.boolValue,
             "rule_id": evaluation.ruleID,
-            "json_value": evaluation.jsonValue?.serializeToDictionary(),
+            "json_value": evaluation.jsonValue?.getSerializedDictionaryResult()?.dictionary,
             "secondary_exposures": evaluation.secondaryExposures,
             "explicit_parameters": evaluation.explicitParameters,
             "config_delegate": evaluation.configDelegate,

@@ -1,5 +1,17 @@
 import Foundation
 
+extension StatsigUser {
+    internal func getUnitID(_ type: String) -> String? {
+        let lowered = type.lowercased()
+
+        if lowered == "userid" {
+            return self.userID
+        }
+
+        return self.customIDs[type] ?? self.customIDs[lowered]
+    }
+}
+
 struct StatsigUserInternal {
     let user: StatsigUser
     let environment: StatsigEnvironment?
@@ -9,13 +21,7 @@ struct StatsigUserInternal {
     }
 
     internal func getUnitID(_ type: String) -> String? {
-        let lowered = type.lowercased()
-
-        if lowered == "userid" {
-            return user.userID
-        }
-
-        return user.customIDs[type] ?? user.customIDs[lowered]
+        return self.user.getUnitID(type)
     }
 
     internal func getFromEnvironment(_ field: String?) -> JsonValue? {
