@@ -57,3 +57,34 @@ extension TypedExperiment {
         self.init(groupName: groupName, value: value)
     }
 }
+
+
+// MARK: UserID + Memoization
+
+public protocol TypedExperimentMemoizedByUserID: TypedExperiment {}
+
+extension TypedExperimentMemoizedByUserID {
+    public static var isMemoizable: Bool {
+        return true
+    }
+    
+    public static var memoUnitIdType: String {
+        return "userID"
+    }
+}
+
+
+// MARK: StableID + Memoization
+
+public protocol TypedExperimentMemoizedByStableID: TypedExperiment {}
+
+extension TypedExperimentMemoizedByStableID {
+    public static var isMemoizable: Bool {
+        return true
+    }
+    
+    public static var memoUnitIdType: String {
+        return "stableID"
+    }
+}
+

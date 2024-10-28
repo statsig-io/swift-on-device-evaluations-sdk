@@ -11,17 +11,15 @@ class SdkDemoExperiments {
     static let AnotherExperiment = SdkDemoTypedAnotherExperiment.self
 }
 
-struct SdkDemoTypedAnExperiment: TypedExperiment {
+struct SdkDemoTypedAnExperiment: TypedExperimentMemoizedByUserID {
     static var name = "an_experiment"
-    static var isMemoizable = true
-    static var memoUnitIdType = "userID"
     
     var groupName: SdkDemoTypedAnExperimentGroup?
     enum SdkDemoTypedAnExperimentGroup: String, TypedGroupName {
         case control = "Control"
         case test = "Test"
     }
-    
+
     var value: TypedNoValue?
 }
 

@@ -19,7 +19,10 @@ open class TypedStatsigProvider: NSObject {
         return FeatureGate.empty(key.value, .empty())
     }
     
-    open func getExperiment<T: TypedExperiment>(_ type: T.Type, _ user: StatsigUser? = nil) -> T {
+    open func getExperiment<T: TypedExperiment>(
+        _ type: T.Type,
+        _ user: StatsigUser? = nil
+    ) -> T {
         guard let client = client, let context = client.context else {
             self.client?.emitter.emitError("Must initialize Statsig first")
             return T.init()
