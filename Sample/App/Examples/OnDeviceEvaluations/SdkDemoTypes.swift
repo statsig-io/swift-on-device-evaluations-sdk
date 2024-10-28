@@ -2,8 +2,13 @@ import Foundation
 import StatsigOnDeviceEvaluations
 
 @objc class SdkDemoGates: NSObject {
-    @objc static let aGate = TypedGateName("a_gate")
+    @objc static let aGate = TypedGateName("a_gate", isMemoizable: true)
     @objc static let partialGate = TypedGateName("partial_gate")
+}
+
+public enum SdkDemoSimpleGroupName: String, TypedGroupName {
+    case control = "Control"
+    case test = "Test"
 }
 
 class SdkDemoExperiments {
@@ -13,13 +18,8 @@ class SdkDemoExperiments {
 
 struct SdkDemoTypedAnExperiment: TypedExperimentMemoizedByUserID {
     static var name = "an_experiment"
-    
-    var groupName: SdkDemoTypedAnExperimentGroup?
-    enum SdkDemoTypedAnExperimentGroup: String, TypedGroupName {
-        case control = "Control"
-        case test = "Test"
-    }
 
+    var groupName: SdkDemoSimpleGroupName?
     var value: TypedNoValue?
 }
 

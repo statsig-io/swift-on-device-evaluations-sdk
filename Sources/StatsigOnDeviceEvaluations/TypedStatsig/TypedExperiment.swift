@@ -24,7 +24,7 @@ extension TypedExperiment {
     }
     
     public static var memoUnitIdType: String {
-        return ""
+        return "userID"
     }
     
     public var groupName: GroupNameType? {
