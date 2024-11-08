@@ -11,6 +11,7 @@ struct EvaluationResult {
     let groupName: String?
     let explicitParameters: [String]?
     let configDelegate: String?
+    let version: Int32?
 
     public init(
         ruleID: String? = nil,
@@ -22,7 +23,8 @@ struct EvaluationResult {
         isExperimentGroup: Bool = false,
         groupName: String? = nil,
         explicitParameters: [String]? = nil,
-        configDelegate: String? = nil
+        configDelegate: String? = nil,
+        version: Int32? = 1
     ) {
         self.ruleID = ruleID ?? ""
         self.boolValue = boolValue
@@ -34,6 +36,7 @@ struct EvaluationResult {
         self.groupName = groupName
         self.explicitParameters = explicitParameters
         self.configDelegate = configDelegate
+        self.version = version
     }
 
     static func empty() -> EvaluationResult {
@@ -42,13 +45,15 @@ struct EvaluationResult {
 
     static func specDefaultResult(
         jsonValue: JsonValue?,
-        secondaryExposures: [[String: String]]
+        secondaryExposures: [[String: String]],
+        version: Int32?
     ) -> EvaluationResult {
         EvaluationResult(
             ruleID: "default",
             jsonValue: jsonValue,
             secondaryExposures: secondaryExposures,
-            undelegatedSecondaryExposures: secondaryExposures
+            undelegatedSecondaryExposures: secondaryExposures,
+            version: version
         )
     }
 
@@ -58,7 +63,8 @@ struct EvaluationResult {
         jsonValue: JsonValue?,
         secondaryExposures: [[String: String]],
         isExperimentGroup: Bool,
-        groupName: String?
+        groupName: String?,
+        version: Int32?
     ) -> EvaluationResult {
         EvaluationResult(
             ruleID: ruleID,
@@ -67,7 +73,8 @@ struct EvaluationResult {
             secondaryExposures: secondaryExposures,
             undelegatedSecondaryExposures: secondaryExposures,
             isExperimentGroup: isExperimentGroup,
-            groupName: groupName
+            groupName: groupName,
+            version: version
         )
     }
 

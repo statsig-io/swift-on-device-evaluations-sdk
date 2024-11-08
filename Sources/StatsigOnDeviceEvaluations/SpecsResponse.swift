@@ -47,6 +47,7 @@ struct Spec: Decodable {
     let explicitParameters: [String]?
     let rules: [SpecRule]
     let isActive: Bool?
+    let version: Int32?
 }
 
 struct SpecRule: Decodable {
@@ -106,4 +107,3 @@ func parseSpecsValue(_ value: SynchronousSpecsValue) -> (ParsedDownloadConfigSpe
         return (nil, error)
     }
 }
-

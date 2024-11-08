@@ -246,13 +246,15 @@ extension Evaluator {
                 jsonValue: pass ? result.jsonValue : spec.defaultValue,
                 secondaryExposures: exposures,
                 isExperimentGroup: result.isExperimentGroup,
-                groupName: result.groupName
+                groupName: result.groupName,
+                version: spec.version
             )
         }
 
         return .specDefaultResult(
             jsonValue: spec.defaultValue,
-            secondaryExposures: exposures
+            secondaryExposures: exposures,
+            version: spec.version
         )
     }
 

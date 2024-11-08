@@ -93,6 +93,10 @@ internal func createExposureMetadata(
     for (key, value) in extra {
         result[key] = value
     }
+    
+    if let version = evaluation.version {
+        result["configVersion"] = String(version)
+    }
 
     return result
 }
