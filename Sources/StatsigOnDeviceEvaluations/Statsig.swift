@@ -138,14 +138,14 @@ extension Statsig {
     ) -> StatsigUpdatesHandle? {
         
         guard let context = getContext() else {
-            emitter.emitError("Cannot schedule background updates before Statsig is initialized.")
+            emitter.emitError("Cannot schedule background updates before Statsig is initialized.", .uninitialized)
             return nil
         }
         
         var interval = intervalSeconds
         if interval < minBackgroundSyncInterval {
             interval = minBackgroundSyncInterval
-            emitter.emitError("Background sync interval cannot be less than \(minBackgroundSyncInterval) seconds")
+            emitter.emitError("Background sync interval cannot be less than \(minBackgroundSyncInterval) seconds", .invalidSyncInterval)
         }
         
         let timer = DispatchSource.makeTimerSource(queue: DispatchQueue.global(qos: .background))
@@ -154,7 +154,7 @@ extension Statsig {
         timer.setEventHandler { [weak self] in
             self?.update { error in
                 if let error = error {
-                    self?.emitter.emitError("Background update failed: \(error.localizedDescription)")
+                    self?.emitter.emitError("Background update failed: \(error.localizedDescription)", .backgroundSyncFailure)
                 }
             }
         }
@@ -354,8 +354,8 @@ extension Statsig {
     }
     
     @objc
-    public func flushEvents() {
-        getContext()?.logger.flush()
+    public func flushEvents(_ completion: EventFlushCompletion? = nil) {
+        getContext()?.logger.flush(completion)
     }
 }
 
@@ -485,7 +485,7 @@ extension Statsig {
     
     private func getContext(_ caller: String = #function) -> StatsigContext? {
         if context == nil {
-            emitter.emitError("\(caller) called before Statsig.initialize.")
+            emitter.emitError("\(caller) called before Statsig.initialize.", .uninitialized)
         }
         
         return context
@@ -498,7 +498,7 @@ extension Statsig {
     ) -> StatsigUserInternal? {
         guard let user = user ?? context.globalUser else {
             emitter.emitError("No user given when calling \(caller)."
-                              + " Please provide a StatsigUser or call setGlobalUser.")
+                              + " Please provide a StatsigUser or call setGlobalUser.", .noUserProvided)
             return nil
         }
         

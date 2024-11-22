@@ -57,6 +57,13 @@ const BOOL SHOULD_DEMO_ERROR_EVENTS = false;
 
     NSLog(@"Result: %@", gate.value ? @"Pass" : @"Fail");
     NSLog(@"Details: %@", gate.evaluationDetails.reason);
+    
+    
+    // No User Error
+    id _ = [[Statsig sharedInstance]
+     getFeatureGate:@"a_gate"
+     forUser:nil
+     options:nil];
 }
 
 - (void)onStatsigClientEvent:(enum StatsigClientEvent)event
@@ -82,7 +89,7 @@ const BOOL SHOULD_DEMO_ERROR_EVENTS = false;
     [self.receivedEvents
      addObject:@{
         @"time": @(now),
-        @"event": [self stringFromEvent: event],
+        @"event": [self stringFromEvent: event data:data],
         @"data": data
     }];
 
@@ -115,14 +122,21 @@ const BOOL SHOULD_DEMO_ERROR_EVENTS = false;
     [[Statsig sharedInstance] logEvent:event forUser:user];
 }
 
-- (NSString *)stringFromEvent:(enum StatsigClientEvent)event {
+- (NSString *)stringFromEvent:(enum StatsigClientEvent)event data:(NSDictionary *)data {
     switch (event) {
         case StatsigClientEventValuesUpdated:
             return @"ValuesUpdated";
         case StatsigClientEventEventsFlushed:
             return @"EventsFlushed";
-        case StatsigClientEventError:
+        case StatsigClientEventError: {
+            StatsigErrorCode code = [data[@"rawErrorCode"] integerValue];
+            if (code == StatsigErrorCodeNoUserProvided) {
+                return @"NoUserError";
+            }
+
             return @"Error";
+        }
+            
     }
 }
 

@@ -2,7 +2,7 @@ import Foundation
 
 fileprivate let LOGGER_LABEL = "com.statsig.event_logger"
 
-typealias EventFlushCompletion = (_ error: Error?) -> Void
+public typealias EventFlushCompletion = (_ error: Error?) -> Void
 
 class EventLogger {
     let options: StatsigOptions?

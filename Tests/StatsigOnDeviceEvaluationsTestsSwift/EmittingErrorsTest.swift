@@ -7,6 +7,7 @@ import StatsigOnDeviceEvaluations
 
 class TestListener: StatsigListening {
     var lastErrorData: [String: Any] = [:]
+    var events: [(StatsigClientEvent, [String: Any])] = []
 
     func onStatsigClientEvent(
         _ event: StatsigClientEvent,
@@ -15,6 +16,7 @@ class TestListener: StatsigListening {
         if event == .error {
             lastErrorData = eventData
         }
+        events.append((event, eventData))
     }
 
     func lastErrorMessage() -> String? {

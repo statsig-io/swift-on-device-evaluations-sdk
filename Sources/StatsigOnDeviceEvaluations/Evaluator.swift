@@ -516,7 +516,7 @@ extension Evaluator {
 // MARK: Unsupported Eval
 extension Evaluator {
     func getUnsupportedResult(_ reason: String) -> EvaluationResult {
-        emitter.emitError("Unsupported condition or operator: \(reason)")
+        emitter.emitError("Unsupported condition or operator: \(reason)", .unsupportedConfiguration)
         return .unsupported(reason)
     }
 }

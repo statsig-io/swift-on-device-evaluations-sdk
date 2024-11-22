@@ -1,5 +1,15 @@
 import Foundation
 
+@objc public enum StatsigErrorCode: Int {
+    case uninitialized = 1
+    case noUserProvided
+    case invalidSyncInterval
+    case backgroundSyncFailure
+    case unsupportedConfiguration
+    case typedBadGroup
+    case typedBadValue
+}
+
 @objc public enum StatsigClientEvent: Int, CustomStringConvertible {
     case eventsFlushed
     case valuesUpdated
@@ -38,8 +48,8 @@ class StatsigClientEventEmitter {
         }
     }
 
-    public func emitError(_ message: String) {
-        emit(.error, ["message": message])
+    public func emitError(_ message: String, _ code: StatsigErrorCode) {
+        emit(.error, ["message": message, "errorCode": code, "rawErrorCode": code.rawValue])
         print("[Statsig]: \(message)")
     }
 }

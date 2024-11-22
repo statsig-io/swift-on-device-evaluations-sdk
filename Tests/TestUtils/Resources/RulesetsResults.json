@@ -1,1674 +1,2170 @@
 {
-    "user": {
-        "userID": "9",
-        "appVersion": "1.3",
-        "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/10.0 Mobile/14E304 Safari/602.1",
-        "ip": "1.0.0.0",
-        "locale": "en_US"
+    "user":{
+       "userID":"9",
+       "appVersion":"1.3",
+       "userAgent":"Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/10.0 Mobile/14E304 Safari/602.1",
+       "ip":"1.0.0.0",
+       "locale":"en_US"
     },
-    "feature_gates": {
-        "test_public": {
-            "name": "test_public",
-            "value": true,
-            "rule_id": "6X3qJgyfwA81IJ2dxI7lYp",
-            "secondary_exposures": []
-        },
-        "test_email": {
-            "name": "test_email",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": []
-        },
-        "test_country": {
-            "__meta": "Unsupported",
-            "name": "test_country",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": []
-        },
-        "test_ua": {
-            "__meta": "Unsupported",
-            "name": "test_ua",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": []
-        },
-        "test_country_partial": {
-            "name": "test_country_partial",
-            "value": false,
-            "rule_id": "disabled",
-            "secondary_exposures": []
-        },
-        "test_environment_tier": {
-            "name": "test_environment_tier",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": []
-        },
-        "test_version": {
-            "name": "test_version",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": []
-        },
-        "test_time_before": {
-            "name": "test_time_before",
-            "value": true,
-            "rule_id": "7D6TdBegTvqbRaX911ML2M",
-            "secondary_exposures": []
-        },
-        "test_time_after": {
-            "name": "test_time_after",
-            "value": true,
-            "rule_id": "7dLw42P46krCdgsoQ56Pmb",
-            "secondary_exposures": []
-        },
-        "test_small_pass_gate": {
-            "name": "test_small_pass_gate",
-            "value": false,
-            "rule_id": "z8TLPpo1vD3PEHQEGelqK",
-            "secondary_exposures": []
-        },
-        "test_time_before_string": {
-            "name": "test_time_before_string",
-            "value": true,
-            "rule_id": "szd83kcXtdcFnZE2PKtDM",
-            "secondary_exposures": []
-        },
-        "test_user_bucket": {
-            "name": "test_user_bucket",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": []
-        },
-        "test_ua_os": {
-            "name": "test_ua_os",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": []
-        },
-        "test_ip_field": {
-            "name": "test_ip_field",
-            "value": true,
-            "rule_id": "7eoXUdsOAIbMuWt3l4C61L:100.00:1",
-            "secondary_exposures": []
-        },
-        "test_nested_gate_condition": {
-            "name": "test_nested_gate_condition",
-            "value": true,
-            "rule_id": "6MlXHRavmo1ujM1NkZNjhQ",
-            "secondary_exposures": [
-                {
-                    "gate": "test_email",
-                    "gateValue": "false",
-                    "ruleID": "default"
-                },
-                {
-                    "gate": "test_environment_tier",
-                    "gateValue": "false",
-                    "ruleID": "default"
-                }
-            ]
-        },
-        "test_segment_condition": {
-            "name": "test_segment_condition",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": [
-                {
-                    "gate": "segment:best_engineers",
-                    "gateValue": "false",
-                    "ruleID": "default"
-                },
-                {
-                    "gate": "segment:prod",
-                    "gateValue": "false",
-                    "ruleID": "default"
-                }
-            ]
-        },
-        "test_custom": {
-            "name": "test_custom",
-            "value": true,
-            "rule_id": "2ZvouPSlQPnTLWWiDWUlnF",
-            "secondary_exposures": []
-        },
-        "test_custom_contains_none": {
-            "name": "test_custom_contains_none",
-            "value": true,
-            "rule_id": "5M0PlwDuhhb2X2OYwOH0IC",
-            "secondary_exposures": []
-        },
-        "test_any_with_number_value": {
-            "name": "test_any_with_number_value",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": []
-        },
-        "double_nested_gates": {
-            "name": "double_nested_gates",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": [
-                {
-                    "gate": "segment:best_engineers",
-                    "gateValue": "false",
-                    "ruleID": "default"
-                },
-                {
-                    "gate": "segment:prod",
-                    "gateValue": "false",
-                    "ruleID": "default"
-                },
-                {
-                    "gate": "test_segment_condition",
-                    "gateValue": "false",
-                    "ruleID": "default"
-                }
-            ]
-        },
-        "test_id_list": {
-            "name": "test_id_list",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": [
-                {
-                    "gate": "segment:user_id_list",
-                    "gateValue": "false",
-                    "ruleID": "default"
-                },
-                {
-                    "gate": "segment:company_id_list",
-                    "gateValue": "false",
-                    "ruleID": "default"
-                }
-            ]
-        },
-        "test_null_operator": {
-            "name": "test_null_operator",
-            "value": true,
-            "rule_id": "5kiqP6V3pTnL6GCbm5Vgtg",
-            "secondary_exposures": []
-        },
-        "test_unit_id": {
-            "name": "test_unit_id",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": []
-        },
-        "test_rule_unit_id": {
-            "name": "test_rule_unit_id",
-            "value": true,
-            "rule_id": "6iCAbcoqgssZDWNju3ph6j",
-            "secondary_exposures": []
-        },
-        "test_not_in_id_list": {
-            "name": "test_not_in_id_list",
-            "value": true,
-            "rule_id": "9GFfHZ3jf8EZa8yxn3Iva:100.00:1",
-            "secondary_exposures": [
-                {
-                    "gate": "segment:user_id_list",
-                    "gateValue": "false",
-                    "ruleID": "default"
-                }
-            ]
-        },
-        "test_time_before_failing": {
-            "name": "test_time_before_failing",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": []
-        },
-        "test_time_after_failing": {
-            "name": "test_time_after_failing",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": []
-        },
-        "test_version_gte": {
-            "name": "test_version_gte",
-            "value": true,
-            "rule_id": "2xkLCJRQnLAlvUH8tTbIE",
-            "secondary_exposures": []
-        },
-        "test_version_gte_failing": {
-            "name": "test_version_gte_failing",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": []
-        },
-        "test_version_lte": {
-            "name": "test_version_lte",
-            "value": true,
-            "rule_id": "1A9FNoBLb7PEsfRVLScevg",
-            "secondary_exposures": []
-        },
-        "test_version_lte_failing": {
-            "name": "test_version_lte_failing",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": []
-        },
-        "test_custom_gt": {
-            "name": "test_custom_gt",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": []
-        },
-        "test_custom_lt": {
-            "name": "test_custom_lt",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": []
-        },
-        "test_time_on": {
-            "name": "test_time_on",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": []
-        },
-        "test_email_regex": {
-            "name": "test_email_regex",
-            "value": false,
-            "rule_id": "3ZI6LR6wUI0dddvG2WePmZ",
-            "secondary_exposures": []
-        },
-        "test_numeric": {
-            "name": "test_numeric",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": []
-        },
-        "test_user_id_and_custom_field": {
-            "name": "test_user_id_and_custom_field",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ]
-        },
-        "test_custom_id_and_custom_field": {
-            "name": "test_custom_id_and_custom_field",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ]
-        },
-        "test_holdout_default_value_gate": {
-            "name": "test_holdout_default_value_gate",
-            "value": true,
-            "rule_id": "disabled",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                },
-                {
-                    "gate": "test_holdout",
-                    "gateValue": "false",
-                    "ruleID": "1SYnDQxZZtiWMfEHVZDcAC:10.00:1"
-                }
-            ]
-        },
-        "test_locale": {
-            "name": "test_locale",
-            "value": true,
-            "rule_id": "2DGlZ0nIDb4r3F526FqYcC",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ]
-        },
-        "test_50_50": {
-            "name": "test_50_50",
-            "value": false,
-            "rule_id": "6U5gYSQ2jRCDWvfPzKSQY9",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ]
-        },
-        "test_partial_rollout": {
-            "name": "test_partial_rollout",
-            "value": true,
-            "rule_id": "65iAiN8iwbmwGOiVNCeW9B",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ]
-        },
-        "test_stable_id": {
-            "name": "test_stable_id",
-            "value": false,
-            "rule_id": "1Vd874zYXhzzeBCKygFmNp:50.00:2",
-            "secondary_exposures": []
-        },
-        "test_big_int": {
-            "name": "test_big_int",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ]
-        },
-        "test_staging_rules": {
-            "name": "test_staging_rules",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ]
-        },
-        "test_windows_7": {
-            "name": "test_windows_7",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ]
-        },
-        "test_unit_id_is_null": {
-            "name": "test_unit_id_is_null",
-            "value": false,
-            "rule_id": "disabled",
-            "secondary_exposures": []
-        },
-        "test_numeric_custom_id": {
-            "name": "test_numeric_custom_id",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": []
-        },
-        "test_user_id_empty": {
-            "name": "test_user_id_empty",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ]
-        },
-        "test_many_rules": {
-            "name": "test_many_rules",
-            "value": true,
-            "rule_id": "6p3sVuRytVeSGuCweaGB5B",
-            "secondary_exposures": []
-        },
-        "test_targeting_gate_with_no_rules": {
-            "name": "test_targeting_gate_with_no_rules",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ]
-        },
-        "test_gate_with_targeting_gate": {
-            "name": "test_gate_with_targeting_gate",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                },
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                },
-                {
-                    "gate": "test_targeting_gate_with_no_rules",
-                    "gateValue": "false",
-                    "ruleID": "default"
-                }
-            ]
-        },
-        "test_heavy_nesting": {
-            "name": "test_heavy_nesting",
-            "value": true,
-            "rule_id": "7p2CZGJh5GdCro9MHblaTk",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                },
-                {
-                    "gate": "test_holdout",
-                    "gateValue": "false",
-                    "ruleID": "1SYnDQxZZtiWMfEHVZDcAC:10.00:1"
-                }
-            ]
-        },
-        "test_numeric_user_id": {
-            "name": "test_numeric_user_id",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ]
-        },
-        "test_disabled_gate": {
-            "name": "test_disabled_gate",
-            "value": false,
-            "rule_id": "disabled",
-            "secondary_exposures": []
-        },
-        "test_iso_timestamp": {
-            "name": "test_iso_timestamp",
-            "value": false,
-            "rule_id": "disabled",
-            "secondary_exposures": []
-        },
-        "test_null_fields": {
-            "name": "test_null_fields",
-            "value": false,
-            "rule_id": "disabled",
-            "secondary_exposures": []
-        },
-        "test_numeric_lte_gte": {
-            "name": "test_numeric_lte_gte",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ]
-        },
-        "test_string_comparisons": {
-            "name": "test_string_comparisons",
-            "value": true,
-            "rule_id": "2d4C57ae3MB5JKTcx3Lusb",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ]
-        },
-        "test_browser_version": {
-            "__meta": "Unsupported",
-            "name": "test_browser_version",
-            "value": false,
-            "rule_id": "default",
-            "secondary_exposures": []
-        }
+    "feature_gates":{
+      "test_country":{
+         "__meta": "Unsupported",
+         "name":"test_country",
+         "value": false,
+         "rule_id": "default",
+         "secondary_exposures": []
     },
-    "dynamic_configs": {
-        "operating_system_config": {
-            "name": "operating_system_config",
-            "value": {
-                "num": 13,
-                "bool": true,
-                "str": "hello",
-                "arr": [
-                    "hi",
-                    "there"
-                ]
-            },
-            "rule_id": "default",
-            "group": "default",
-            "secondary_exposures": [
-                {
-                    "gate": "test_email",
-                    "gateValue": "false",
-                    "ruleID": "default"
-                }
-            ],
-            "explicit_parameters": []
-        },
-        "test_environment_config": {
-            "name": "test_environment_config",
-            "value": {
-                "header_text": "production"
-            },
-            "rule_id": "default",
-            "group": "default",
-            "secondary_exposures": [],
-            "explicit_parameters": []
-        },
-        "test_email_config": {
-            "name": "test_email_config",
-            "value": {
-                "header_text": "everyone else"
-            },
-            "rule_id": "default",
-            "group": "default",
-            "secondary_exposures": [],
-            "explicit_parameters": []
-        },
-        "test_custom_config": {
-            "name": "test_custom_config",
-            "value": {
-                "header_text": "old user test"
-            },
-            "rule_id": "3ZCniK9rvnQyXDQlQ1tGD9",
-            "group": "3ZCniK9rvnQyXDQlQ1tGD9",
-            "secondary_exposures": [],
-            "explicit_parameters": []
-        },
-        "test_disabled_config": {
-            "name": "test_disabled_config",
-            "value": {
-                "default": "disabled but default!"
-            },
-            "rule_id": "disabled",
-            "group": "disabled",
-            "secondary_exposures": [],
-            "explicit_parameters": []
-        },
-        "big_number": {
-            "name": "big_number",
-            "value": {
-                "foo": 1e+21,
-                "bar": 1e+60,
-                "boo": 99,
-                "bbb": 1e+55,
-                "rar": 9999999999
-            },
-            "rule_id": "default",
-            "group": "default",
-            "secondary_exposures": [],
-            "explicit_parameters": []
-        },
-        "test_experiment_no_targeting": {
-            "name": "test_experiment_no_targeting",
-            "value": {
-                "value": "test_2"
-            },
-            "rule_id": "54QJzwYUMmgIKOIn9uPq28",
-            "group": "54QJzwYUMmgIKOIn9uPq28",
-            "secondary_exposures": [],
-            "explicit_parameters": []
-        },
-        "test_experiment_with_targeting": {
-            "name": "test_experiment_with_targeting",
-            "value": {},
-            "rule_id": "layerAssignment",
-            "group": "layerAssignment",
-            "secondary_exposures": [],
-            "explicit_parameters": []
-        },
-        "test_exp_random_id": {
-            "name": "test_exp_random_id",
-            "value": {},
-            "rule_id": "layerAssignment",
-            "group": "layerAssignment",
-            "secondary_exposures": [],
-            "explicit_parameters": []
-        },
-        "test_exp_random_id_allocated": {
-            "name": "test_exp_random_id_allocated",
-            "value": {
-                "bool": true,
-                "string": "test3"
-            },
-            "rule_id": "4qC3kJ5j58KwBAt2VLKL7M",
-            "group": "4qC3kJ5j58KwBAt2VLKL7M",
-            "secondary_exposures": [],
-            "explicit_parameters": []
-        },
-        "test_country_layer_2": {
-            "name": "test_country_layer_2",
-            "value": {},
-            "rule_id": "layerAssignment",
-            "group": "layerAssignment",
-            "secondary_exposures": [],
-            "explicit_parameters": []
-        },
-        "device_exp": {
-            "name": "device_exp",
-            "value": {
-                "sample_parameter": true
-            },
-            "rule_id": "5UXv4fzk8lK9fQXvhHLGgA",
-            "group": "5UXv4fzk8lK9fQXvhHLGgA",
-            "secondary_exposures": [],
-            "explicit_parameters": []
-        },
-        "test_exp_with_layers": {
-            "name": "test_exp_with_layers",
-            "value": {
-                "layer_param": "a",
-                "another_param": false
-            },
-            "rule_id": "layerAssignment",
-            "group": "layerAssignment",
-            "secondary_exposures": [],
-            "explicit_parameters": [
-                "another_param"
-            ]
-        },
-        "test_decision_made": {
-            "name": "test_decision_made",
-            "value": {
-                "test": "test"
-            },
-            "rule_id": "launchedGroup",
-            "group": "launchedGroup",
-            "secondary_exposures": [],
-            "explicit_parameters": []
-        },
-        "test_exp_with_layers_and_holdout": {
-            "name": "test_exp_with_layers_and_holdout",
-            "value": {
-                "layer_param": "control",
-                "another_param": false
-            },
-            "rule_id": "1TKp6duhoSeXlK1E38XG1F",
-            "group": "1TKp6duhoSeXlK1E38XG1F",
-            "secondary_exposures": [
-                {
-                    "gate": "layer_holdout",
-                    "gateValue": "false",
-                    "ruleID": "2bAVp6R3C85vCYrR6be36n:10.00:5"
-                }
-            ],
-            "explicit_parameters": [
-                "layer_param"
-            ]
-        },
-        "test_exp_with_layers_and_targeting": {
-            "name": "test_exp_with_layers_and_targeting",
-            "value": {
-                "layer_param": "a",
-                "another_param": false
-            },
-            "rule_id": "layerAssignment",
-            "group": "layerAssignment",
-            "secondary_exposures": [],
-            "explicit_parameters": [
-                "another_param",
-                "layer_param"
-            ]
-        },
-        "test_exp_with_layers_targeting_and_holdout": {
-            "name": "test_exp_with_layers_targeting_and_holdout",
-            "value": {
-                "shared_string_param": "test_string",
-                "shared_number_param": 420
-            },
-            "rule_id": "5mM61GxB5D9yEqx0Of8wah",
-            "group": "5mM61GxB5D9yEqx0Of8wah",
-            "secondary_exposures": [
-                {
-                    "gate": "layer_holdout",
-                    "gateValue": "false",
-                    "ruleID": "2bAVp6R3C85vCYrR6be36n:10.00:5"
-                },
-                {
-                    "gate": "test_public",
-                    "gateValue": "true",
-                    "ruleID": "6X3qJgyfwA81IJ2dxI7lYp"
-                }
-            ],
-            "explicit_parameters": [
-                "shared_string_param"
-            ]
-        },
-        "a_experiment": {
-            "name": "a_experiment",
-            "value": {},
-            "rule_id": "prestart",
-            "group": "prestart",
-            "secondary_exposures": [],
-            "explicit_parameters": []
-        },
-        "b_experiment": {
-            "name": "b_experiment",
-            "value": {},
-            "rule_id": "prestart",
-            "group": "prestart",
-            "secondary_exposures": [],
-            "explicit_parameters": []
-        },
-        "experiment_with_many_params": {
-            "name": "experiment_with_many_params",
-            "value": {
-                "a_string": "layer",
-                "another_string": "layer_default",
-                "a_number": 0,
-                "a_bool": false,
-                "an_object": {
-                    "value": "layer_default"
-                },
-                "an_array": [
-                    "layer_default"
-                ],
-                "another_bool": false,
-                "another_number": 0
-            },
-            "rule_id": "layerAssignment",
-            "group": "layerAssignment",
-            "secondary_exposures": [],
-            "explicit_parameters": [
-                "a_string",
-                "a_number",
-                "an_array",
-                "another_number",
-                "another_bool"
-            ]
-        },
-        "an_experiment": {
-            "name": "an_experiment",
-            "value": {},
-            "rule_id": "prestart",
-            "group": "prestart",
-            "secondary_exposures": [],
-            "explicit_parameters": []
-        },
-        "an_experiment1": {
-            "name": "an_experiment1",
-            "value": {},
-            "rule_id": "prestart",
-            "group": "prestart",
-            "secondary_exposures": [],
-            "explicit_parameters": []
-        },
-        "experiment_one": {
-            "name": "experiment_one",
-            "value": {
-                "shared_param": "layer_value"
-            },
-            "rule_id": "prestart",
-            "group": "prestart",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                },
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ],
-            "explicit_parameters": []
-        },
-        "experiment_two": {
-            "name": "experiment_two",
-            "value": {
-                "shared_param": "layer_value"
-            },
-            "rule_id": "prestart",
-            "group": "prestart",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                },
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ],
-            "explicit_parameters": []
-        },
-        "shipped_exp": {
-            "name": "shipped_exp",
-            "value": {
-                "a_string_param": "test_value"
-            },
-            "rule_id": "launchedGroup",
-            "group": "launchedGroup",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ],
-            "explicit_parameters": [
-                "a_string_param"
-            ]
-        },
-        "an-experiment": {
-            "name": "an-experiment",
-            "value": {},
-            "rule_id": "prestart",
-            "group": "prestart",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ],
-            "explicit_parameters": []
-        },
-        "an-experiment3": {
-            "name": "an-experiment3",
-            "value": {},
-            "rule_id": "prestart",
-            "group": "prestart",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ],
-            "explicit_parameters": []
-        },
-        "an-experiment4": {
-            "name": "an-experiment4",
-            "value": {},
-            "rule_id": "prestart",
-            "group": "prestart",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ],
-            "explicit_parameters": []
-        },
-        "an-experiment7": {
-            "name": "an-experiment7",
-            "value": {},
-            "rule_id": "prestart",
-            "group": "prestart",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ],
-            "explicit_parameters": []
-        },
-        "an-experiment8": {
-            "name": "an-experiment8",
-            "value": {},
-            "rule_id": "prestart",
-            "group": "prestart",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ],
-            "explicit_parameters": []
-        },
-        "an-experiment9": {
-            "name": "an-experiment9",
-            "value": {},
-            "rule_id": "prestart",
-            "group": "prestart",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ],
-            "explicit_parameters": []
-        },
-        "an-experiment11": {
-            "name": "an-experiment11",
-            "value": {},
-            "rule_id": "prestart",
-            "group": "prestart",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ],
-            "explicit_parameters": []
-        },
-        "an-experiment14": {
-            "name": "an-experiment14",
-            "value": {},
-            "rule_id": "prestart",
-            "group": "prestart",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ],
-            "explicit_parameters": []
-        },
-        "an-experiment15": {
-            "name": "an-experiment15",
-            "value": {},
-            "rule_id": "prestart",
-            "group": "prestart",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ],
-            "explicit_parameters": []
-        },
-        "an-experiment16": {
-            "name": "an-experiment16",
-            "value": {},
-            "rule_id": "prestart",
-            "group": "prestart",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ],
-            "explicit_parameters": []
-        },
-        "an-experiment18": {
-            "name": "an-experiment18",
-            "value": {},
-            "rule_id": "prestart",
-            "group": "prestart",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ],
-            "explicit_parameters": []
-        },
-        "an-experiment19": {
-            "name": "an-experiment19",
-            "value": {},
-            "rule_id": "prestart",
-            "group": "prestart",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ],
-            "explicit_parameters": []
-        },
-        "an-experimenta": {
-            "name": "an-experimenta",
-            "value": {},
-            "rule_id": "prestart",
-            "group": "prestart",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ],
-            "explicit_parameters": []
-        },
-        "an-experimentaa": {
-            "name": "an-experimentaa",
-            "value": {},
-            "rule_id": "prestart",
-            "group": "prestart",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ],
-            "explicit_parameters": []
-        },
-        "not_started_exp_in_layer_with_holdout": {
-            "name": "not_started_exp_in_layer_with_holdout",
-            "value": {
-                "exp_val": "shipped_test",
-                "layer_val": "layer_default"
-            },
-            "rule_id": "prestart",
-            "group": "prestart",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                },
-                {
-                    "gate": "layer_holdout",
-                    "gateValue": "false",
-                    "ruleID": "2bAVp6R3C85vCYrR6be36n:10.00:5"
-                }
-            ],
-            "explicit_parameters": [
-                "exp_val"
-            ]
-        },
-        "running_exp_in_layer_with_holdout": {
-            "name": "running_exp_in_layer_with_holdout",
-            "value": {
-                "exp_val": "shipped_test",
-                "layer_val": "layer_default"
-            },
-            "rule_id": "layerAssignment",
-            "group": "layerAssignment",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                },
-                {
-                    "gate": "layer_holdout",
-                    "gateValue": "false",
-                    "ruleID": "2bAVp6R3C85vCYrR6be36n:10.00:5"
-                }
-            ],
-            "explicit_parameters": [
-                "exp_val"
-            ]
-        },
-        "shipped_exp_in_layer_with_holdout": {
-            "name": "shipped_exp_in_layer_with_holdout",
-            "value": {
-                "exp_val": "shipped_test",
-                "layer_val": "layer_default"
-            },
-            "rule_id": "launchedGroup",
-            "group": "launchedGroup",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                },
-                {
-                    "gate": "layer_holdout",
-                    "gateValue": "false",
-                    "ruleID": "2bAVp6R3C85vCYrR6be36n:10.00:5"
-                }
-            ],
-            "explicit_parameters": [
-                "exp_val"
-            ]
-        },
-        "not_started_exp_in_layer_no_holdout": {
-            "name": "not_started_exp_in_layer_no_holdout",
-            "value": {
-                "exp_val": "shipped_test",
-                "layer_val": "layer_default"
-            },
-            "rule_id": "prestart",
-            "group": "prestart",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ],
-            "explicit_parameters": [
-                "exp_val"
-            ]
-        },
-        "running_exp_in_layer_no_holdout": {
-            "name": "running_exp_in_layer_no_holdout",
-            "value": {
-                "exp_val": "shipped_test",
-                "layer_val": "layer_default"
-            },
-            "rule_id": "layerAssignment",
-            "group": "layerAssignment",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ],
-            "explicit_parameters": [
-                "exp_val"
-            ]
-        },
-        "shipped_exp_in_layer_no_holdout": {
-            "name": "shipped_exp_in_layer_no_holdout",
-            "value": {
-                "exp_val": "shipped_test",
-                "layer_val": "layer_default"
-            },
-            "rule_id": "launchedGroup",
-            "group": "launchedGroup",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ],
-            "explicit_parameters": [
-                "exp_val"
-            ]
-        },
-        "abandoned_exp_in_layer_with_holdout": {
-            "name": "abandoned_exp_in_layer_with_holdout",
-            "value": {
-                "exp_val": "shipped_test",
-                "layer_val": "layer_default"
-            },
-            "rule_id": "abandoned",
-            "group": "abandoned",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                },
-                {
-                    "gate": "layer_holdout",
-                    "gateValue": "false",
-                    "ruleID": "2bAVp6R3C85vCYrR6be36n:10.00:5"
-                }
-            ],
-            "explicit_parameters": [
-                "exp_val"
-            ]
-        },
-        "targeted_exp_in_layer_with_holdout": {
-            "name": "targeted_exp_in_layer_with_holdout",
-            "value": {
-                "exp_val": "shipped_test",
-                "layer_val": "layer_default"
-            },
-            "rule_id": "layerAssignment",
-            "group": "layerAssignment",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                },
-                {
-                    "gate": "layer_holdout",
-                    "gateValue": "false",
-                    "ruleID": "2bAVp6R3C85vCYrR6be36n:10.00:5"
-                }
-            ],
-            "explicit_parameters": [
-                "exp_val"
-            ]
-        },
-        "not_started_exp_unlayered_with_holdout": {
-            "name": "not_started_exp_unlayered_with_holdout",
-            "value": {},
-            "rule_id": "prestart",
-            "group": "prestart",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                },
-                {
-                    "gate": "exp_holdout",
-                    "gateValue": "false",
-                    "ruleID": "1rEqLOpCROaRafv7ubGgax"
-                }
-            ],
-            "explicit_parameters": []
-        },
-        "running_exp_in_unlayered_with_holdout": {
-            "name": "running_exp_in_unlayered_with_holdout",
-            "value": {
-                "exp_val": "control"
-            },
-            "rule_id": "5suobctw6dpT6KUryHlnUG",
-            "group": "5suobctw6dpT6KUryHlnUG",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                },
-                {
-                    "gate": "exp_holdout",
-                    "gateValue": "false",
-                    "ruleID": "1rEqLOpCROaRafv7ubGgax"
-                }
-            ],
-            "explicit_parameters": []
-        },
-        "shipped_exp_in_unlayered_with_holdout": {
-            "name": "shipped_exp_in_unlayered_with_holdout",
-            "value": {
-                "exp_val": "shipped_test"
-            },
-            "rule_id": "launchedGroup",
-            "group": "launchedGroup",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                },
-                {
-                    "gate": "exp_holdout",
-                    "gateValue": "false",
-                    "ruleID": "1rEqLOpCROaRafv7ubGgax"
-                }
-            ],
-            "explicit_parameters": []
-        },
-        "targeted_exp_in_unlayered_with_holdout": {
-            "name": "targeted_exp_in_unlayered_with_holdout",
-            "value": {},
-            "rule_id": "targetingGate",
-            "group": "targetingGate",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                },
-                {
-                    "gate": "exp_holdout",
-                    "gateValue": "false",
-                    "ruleID": "1rEqLOpCROaRafv7ubGgax"
-                },
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                },
-                {
-                    "gate": "test_50_50",
-                    "gateValue": "false",
-                    "ruleID": "6U5gYSQ2jRCDWvfPzKSQY9"
-                }
-            ],
-            "explicit_parameters": []
-        },
-        "abandoned_exp_in_unlayered_with_holdout": {
-            "name": "abandoned_exp_in_unlayered_with_holdout",
-            "value": {},
-            "rule_id": "abandoned",
-            "group": "abandoned",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                },
-                {
-                    "gate": "exp_holdout",
-                    "gateValue": "false",
-                    "ruleID": "1rEqLOpCROaRafv7ubGgax"
-                }
-            ],
-            "explicit_parameters": []
-        },
-        "not_started_exp_unlayered_no_holdout": {
-            "name": "not_started_exp_unlayered_no_holdout",
-            "value": {},
-            "rule_id": "prestart",
-            "group": "prestart",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ],
-            "explicit_parameters": []
-        },
-        "test_exp_5050_targeting": {
-            "name": "test_exp_5050_targeting",
-            "value": {},
-            "rule_id": "targetingGate",
-            "group": "targetingGate",
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                },
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                },
-                {
-                    "gate": "test_50_50",
-                    "gateValue": "false",
-                    "ruleID": "6U5gYSQ2jRCDWvfPzKSQY9"
-                }
-            ],
-            "explicit_parameters": []
-        },
-        "test_autotune": {
-            "name": "test_autotune",
-            "value": {},
-            "rule_id": "5380HnrABE4p869fZhtUV9",
-            "group": "5380HnrABE4p869fZhtUV9",
-            "secondary_exposures": [],
-            "explicit_parameters": []
-        }
+    "test_ua":{
+         "__meta": "Unsupported",
+         "name":"test_ua",
+         "value": false,
+         "rule_id": "default",
+         "secondary_exposures": []
     },
-    "layer_configs": {
-        "Basic_test_layer": {
-            "name": "Basic_test_layer",
-            "value": {
-                "value": "test_2"
-            },
-            "rule_id": "54QJzwYUMmgIKOIn9uPq28",
-            "group": "54QJzwYUMmgIKOIn9uPq28",
-            "group_name": "Test2",
-            "allocated_experiment_name": "test_experiment_no_targeting",
-            "is_device_based": false,
-            "is_experiment_active": true,
-            "explicit_parameters": [],
-            "is_user_in_experiment": true,
-            "secondary_exposures": [],
-            "undelegated_secondary_exposures": []
-        },
-        "country_test_layer": {
-            "name": "country_test_layer",
-            "value": {},
-            "rule_id": "default",
-            "group": "default",
-            "group_name": "default",
-            "is_device_based": false,
-            "explicit_parameters": [],
-            "secondary_exposures": [],
-            "undelegated_secondary_exposures": []
-        },
-        "random_id_layer": {
-            "name": "random_id_layer",
-            "value": {},
-            "rule_id": "default",
-            "group": "default",
-            "group_name": "default",
-            "is_device_based": false,
-            "explicit_parameters": [],
-            "secondary_exposures": [],
-            "undelegated_secondary_exposures": []
-        },
-        "test_layer": {
-            "name": "test_layer",
-            "value": {
-                "layer_param": "control",
-                "another_param": false
-            },
-            "rule_id": "1TKp6duhoSeXlK1E38XG1F",
-            "group": "1TKp6duhoSeXlK1E38XG1F",
-            "group_name": "Control",
-            "allocated_experiment_name": "test_exp_with_layers_and_holdout",
-            "is_device_based": false,
-            "is_experiment_active": true,
-            "explicit_parameters": [
-                "layer_param"
-            ],
-            "is_user_in_experiment": true,
-            "secondary_exposures": [
-                {
-                    "gate": "layer_holdout",
-                    "gateValue": "false",
-                    "ruleID": "2bAVp6R3C85vCYrR6be36n:10.00:5"
-                }
-            ],
-            "undelegated_secondary_exposures": []
-        },
-        "test_layer_with_no_exp": {
-            "name": "test_layer_with_no_exp",
-            "value": {
-                "a_param": "foo"
-            },
-            "rule_id": "default",
-            "group": "default",
-            "group_name": "default",
-            "is_device_based": false,
-            "explicit_parameters": [],
-            "secondary_exposures": [],
-            "undelegated_secondary_exposures": []
-        },
-        "test_layer_with_holdout": {
-            "name": "test_layer_with_holdout",
-            "value": {
-                "shared_string_param": "test_string",
-                "shared_number_param": 420
-            },
-            "rule_id": "5mM61GxB5D9yEqx0Of8wah",
-            "group": "5mM61GxB5D9yEqx0Of8wah",
-            "group_name": "Test",
-            "allocated_experiment_name": "test_exp_with_layers_targeting_and_holdout",
-            "is_device_based": false,
-            "is_experiment_active": true,
-            "explicit_parameters": [
-                "shared_string_param"
-            ],
-            "is_user_in_experiment": true,
-            "secondary_exposures": [
-                {
-                    "gate": "layer_holdout",
-                    "gateValue": "false",
-                    "ruleID": "2bAVp6R3C85vCYrR6be36n:10.00:5"
-                },
-                {
-                    "gate": "layer_holdout",
-                    "gateValue": "false",
-                    "ruleID": "2bAVp6R3C85vCYrR6be36n:10.00:5"
-                },
-                {
-                    "gate": "test_public",
-                    "gateValue": "true",
-                    "ruleID": "6X3qJgyfwA81IJ2dxI7lYp"
-                }
-            ],
-            "undelegated_secondary_exposures": [
-                {
-                    "gate": "layer_holdout",
-                    "gateValue": "false",
-                    "ruleID": "2bAVp6R3C85vCYrR6be36n:10.00:5"
-                }
-            ]
-        },
-        "layer_with_many_params": {
-            "name": "layer_with_many_params",
-            "value": {
-                "a_string": "layer",
-                "another_string": "layer_default",
-                "a_number": 0,
-                "a_bool": false,
-                "an_object": {
-                    "value": "layer_default"
-                },
-                "an_array": [
-                    "layer_default"
-                ],
-                "another_bool": false,
-                "another_number": 0
-            },
-            "rule_id": "default",
-            "group": "default",
-            "group_name": "default",
-            "is_device_based": false,
-            "explicit_parameters": [],
-            "secondary_exposures": [],
-            "undelegated_secondary_exposures": []
-        },
-        "layer_in_global_holdout": {
-            "name": "layer_in_global_holdout",
-            "value": {
-                "shared_param": "layer_value"
-            },
-            "rule_id": "default",
-            "group": "default",
-            "group_name": "default",
-            "is_device_based": false,
-            "explicit_parameters": [],
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ],
-            "undelegated_secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ]
-        },
-        "layer_with_inactive_exp": {
-            "name": "layer_with_inactive_exp",
-            "value": {
-                "a_string_param": "test_value"
-            },
-            "rule_id": "default",
-            "group": "default",
-            "group_name": "default",
-            "is_device_based": false,
-            "explicit_parameters": [],
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ],
-            "undelegated_secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ]
-        },
-        "test_layer_in_holdout": {
-            "name": "test_layer_in_holdout",
-            "value": {
-                "exp_val": "shipped_test",
-                "layer_val": "layer_default"
-            },
-            "rule_id": "prestart",
-            "group": "prestart",
-            "allocated_experiment_name": "not_started_exp_in_layer_with_holdout",
-            "is_device_based": false,
-            "is_experiment_active": false,
-            "explicit_parameters": [
-                "exp_val"
-            ],
-            "is_user_in_experiment": false,
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                },
-                {
-                    "gate": "layer_holdout",
-                    "gateValue": "false",
-                    "ruleID": "2bAVp6R3C85vCYrR6be36n:10.00:5"
-                },
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                },
-                {
-                    "gate": "layer_holdout",
-                    "gateValue": "false",
-                    "ruleID": "2bAVp6R3C85vCYrR6be36n:10.00:5"
-                }
-            ],
-            "undelegated_secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                },
-                {
-                    "gate": "layer_holdout",
-                    "gateValue": "false",
-                    "ruleID": "2bAVp6R3C85vCYrR6be36n:10.00:5"
-                }
-            ]
-        },
-        "test_layer_not_in_holdout": {
-            "name": "test_layer_not_in_holdout",
-            "value": {
-                "exp_val": "shipped_test",
-                "layer_val": "layer_default"
-            },
-            "rule_id": "default",
-            "group": "default",
-            "group_name": "default",
-            "is_device_based": false,
-            "explicit_parameters": [],
-            "secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ],
-            "undelegated_secondary_exposures": [
-                {
-                    "gate": "global_holdout",
-                    "gateValue": "false",
-                    "ruleID": "3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
-                }
-            ]
-        }
+    "test_browser_version": {
+      "__meta": "Unsupported",
+      "name": "test_browser_version",
+      "value": false,
+      "rule_id": "default",
+      "secondary_exposures": []
+   },
+       "test_public":{
+          "name":"test_public",
+          "value":true,
+          "rule_id":"6X3qJgyfwA81IJ2dxI7lYp",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_email":{
+          "name":"test_email",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_country_partial":{
+          "name":"test_country_partial",
+          "value":false,
+          "rule_id":"disabled",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_environment_tier":{
+          "name":"test_environment_tier",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_version":{
+          "name":"test_version",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_time_before":{
+          "name":"test_time_before",
+          "value":true,
+          "rule_id":"7D6TdBegTvqbRaX911ML2M",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_time_after":{
+          "name":"test_time_after",
+          "value":true,
+          "rule_id":"7dLw42P46krCdgsoQ56Pmb",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_small_pass_gate":{
+          "name":"test_small_pass_gate",
+          "value":false,
+          "rule_id":"z8TLPpo1vD3PEHQEGelqK",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_time_before_string":{
+          "name":"test_time_before_string",
+          "value":true,
+          "rule_id":"szd83kcXtdcFnZE2PKtDM",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_user_bucket":{
+          "name":"test_user_bucket",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_ua_os":{
+          "name":"test_ua_os",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_ip_field":{
+          "name":"test_ip_field",
+          "value":true,
+          "rule_id":"7eoXUdsOAIbMuWt3l4C61L:100.00:1",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_nested_gate_condition":{
+          "name":"test_nested_gate_condition",
+          "value":true,
+          "rule_id":"6MlXHRavmo1ujM1NkZNjhQ",
+          "secondary_exposures":[
+             {
+                "gate":"test_email",
+                "gateValue":"false",
+                "ruleID":"default"
+             },
+             {
+                "gate":"test_environment_tier",
+                "gateValue":"false",
+                "ruleID":"default"
+             }
+          ]
+       },
+       "test_segment_condition":{
+          "name":"test_segment_condition",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_custom":{
+          "name":"test_custom",
+          "value":true,
+          "rule_id":"2ZvouPSlQPnTLWWiDWUlnF",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_custom_contains_none":{
+          "name":"test_custom_contains_none",
+          "value":true,
+          "rule_id":"5M0PlwDuhhb2X2OYwOH0IC",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_any_with_number_value":{
+          "name":"test_any_with_number_value",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "double_nested_gates":{
+          "name":"double_nested_gates",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             {
+                "gate":"test_segment_condition",
+                "gateValue":"false",
+                "ruleID":"default"
+             }
+          ]
+       },
+       "test_id_list":{
+          "name":"test_id_list",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_null_operator":{
+          "name":"test_null_operator",
+          "value":true,
+          "rule_id":"5kiqP6V3pTnL6GCbm5Vgtg",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_unit_id":{
+          "name":"test_unit_id",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_rule_unit_id":{
+          "name":"test_rule_unit_id",
+          "value":true,
+          "rule_id":"6iCAbcoqgssZDWNju3ph6j",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_not_in_id_list":{
+          "name":"test_not_in_id_list",
+          "value":true,
+          "rule_id":"9GFfHZ3jf8EZa8yxn3Iva:100.00:1",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_time_before_failing":{
+          "name":"test_time_before_failing",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_time_after_failing":{
+          "name":"test_time_after_failing",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_version_gte":{
+          "name":"test_version_gte",
+          "value":true,
+          "rule_id":"2xkLCJRQnLAlvUH8tTbIE",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_version_gte_failing":{
+          "name":"test_version_gte_failing",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_version_lte":{
+          "name":"test_version_lte",
+          "value":true,
+          "rule_id":"1A9FNoBLb7PEsfRVLScevg",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_version_lte_failing":{
+          "name":"test_version_lte_failing",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_custom_gt":{
+          "name":"test_custom_gt",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_custom_lt":{
+          "name":"test_custom_lt",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_time_on":{
+          "name":"test_time_on",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_email_regex":{
+          "name":"test_email_regex",
+          "value":false,
+          "rule_id":"3ZI6LR6wUI0dddvG2WePmZ",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_numeric":{
+          "name":"test_numeric",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_user_id_and_custom_field":{
+          "name":"test_user_id_and_custom_field",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ]
+       },
+       "test_custom_id_and_custom_field":{
+          "name":"test_custom_id_and_custom_field",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ]
+       },
+       "test_holdout_default_value_gate":{
+          "name":"test_holdout_default_value_gate",
+          "value":true,
+          "rule_id":"disabled",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             },
+             {
+                "gate":"test_holdout",
+                "gateValue":"false",
+                "ruleID":"1SYnDQxZZtiWMfEHVZDcAC:10.00:1"
+             }
+          ]
+       },
+       "test_locale":{
+          "name":"test_locale",
+          "value":true,
+          "rule_id":"2DGlZ0nIDb4r3F526FqYcC:100.00:2",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ]
+       },
+       "test_50_50":{
+          "name":"test_50_50",
+          "value":false,
+          "rule_id":"6U5gYSQ2jRCDWvfPzKSQY9",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ]
+       },
+       "test_partial_rollout":{
+          "name":"test_partial_rollout",
+          "value":true,
+          "rule_id":"65iAiN8iwbmwGOiVNCeW9B",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ]
+       },
+       "test_stable_id":{
+          "name":"test_stable_id",
+          "value":false,
+          "rule_id":"1Vd874zYXhzzeBCKygFmNp:50.00:2",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_big_int":{
+          "name":"test_big_int",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ]
+       },
+       "test_staging_rules":{
+          "name":"test_staging_rules",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ]
+       },
+       "test_windows_7":{
+          "name":"test_windows_7",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ]
+       },
+       "test_unit_id_is_null":{
+          "name":"test_unit_id_is_null",
+          "value":false,
+          "rule_id":"disabled",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_numeric_custom_id":{
+          "name":"test_numeric_custom_id",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_user_id_empty":{
+          "name":"test_user_id_empty",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ]
+       },
+       "test_many_rules":{
+          "name":"test_many_rules",
+          "value":true,
+          "rule_id":"6p3sVuRytVeSGuCweaGB5B",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ]
+       },
+       "test_targeting_gate_with_no_rules":{
+          "name":"test_targeting_gate_with_no_rules",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ]
+       },
+       "test_gate_with_targeting_gate":{
+          "name":"test_gate_with_targeting_gate",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             },
+             {
+                "gate":"test_targeting_gate_with_no_rules",
+                "gateValue":"false",
+                "ruleID":"default"
+             }
+          ]
+       },
+       "test_heavy_nesting":{
+          "name":"test_heavy_nesting",
+          "value":true,
+          "rule_id":"7p2CZGJh5GdCro9MHblaTk",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             },
+             {
+                "gate":"test_holdout",
+                "gateValue":"false",
+                "ruleID":"1SYnDQxZZtiWMfEHVZDcAC:10.00:1"
+             }
+          ]
+       },
+       "test_numeric_user_id":{
+          "name":"test_numeric_user_id",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ]
+       },
+       "test_disabled_gate":{
+          "name":"test_disabled_gate",
+          "value":false,
+          "rule_id":"disabled",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_iso_timestamp":{
+          "name":"test_iso_timestamp",
+          "value":false,
+          "rule_id":"disabled",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_null_fields":{
+          "name":"test_null_fields",
+          "value":false,
+          "rule_id":"disabled",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_numeric_lte_gte":{
+          "name":"test_numeric_lte_gte",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ]
+       },
+       "test_string_comparisons":{
+          "name":"test_string_comparisons",
+          "value":true,
+          "rule_id":"2d4C57ae3MB5JKTcx3Lusb",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ]
+       },
+       "test_putting_CAPITAL_letters_in_id":{
+          "name":"test_putting_CAPITAL_letters_in_id",
+          "value":true,
+          "rule_id":"3Gv6T9YIObRmqZV5nAv0fO",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ]
+       },
+       "test_large_user":{
+          "name":"test_large_user",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ]
+       },
+       "test_is_us":{
+          "name":"test_is_us",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ]
+       },
+       "test_device_model_2":{
+          "name":"test_device_model_2",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ]
+       },
+       "test_case_sensitive":{
+          "name":"test_case_sensitive",
+          "value":false,
+          "rule_id":"default",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ]
+       },
+       "test_array_any":{
+          "name":"test_array_any",
+          "value":false,
+          "rule_id":"disabled",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_array_none":{
+          "name":"test_array_none",
+          "value":false,
+          "rule_id":"disabled",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_array_all":{
+          "name":"test_array_all",
+          "value":false,
+          "rule_id":"disabled",
+          "secondary_exposures":[
+             
+          ]
+       },
+       "test_array_not_all":{
+          "name":"test_array_not_all",
+          "value":false,
+          "rule_id":"disabled",
+          "secondary_exposures":[
+             
+          ]
+       }
+    },
+    "dynamic_configs":{
+       "operating_system_config":{
+          "name":"operating_system_config",
+          "value":{
+             "num":13,
+             "bool":true,
+             "str":"hello",
+             "arr":[
+                "hi",
+                "there"
+             ],
+             "obj":{
+                "a":"bc"
+             }
+          },
+          "rule_id":"default",
+          "group":"default",
+          "secondary_exposures":[
+             {
+                "gate":"test_email",
+                "gateValue":"false",
+                "ruleID":"default"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ],
+          "passed":false
+       },
+       "test_environment_config":{
+          "name":"test_environment_config",
+          "value":{
+             "header_text":"production"
+          },
+          "rule_id":"default",
+          "group":"default",
+          "secondary_exposures":[
+             
+          ],
+          "explicit_parameters":[
+             
+          ],
+          "passed":false
+       },
+       "test_email_config":{
+          "name":"test_email_config",
+          "value":{
+             "header_text":"everyone else"
+          },
+          "rule_id":"default",
+          "group":"default",
+          "secondary_exposures":[
+             
+          ],
+          "explicit_parameters":[
+             
+          ],
+          "passed":false
+       },
+       "test_custom_config":{
+          "name":"test_custom_config",
+          "value":{
+             "header_text":"old user test"
+          },
+          "rule_id":"3ZCniK9rvnQyXDQlQ1tGD9",
+          "group":"3ZCniK9rvnQyXDQlQ1tGD9",
+          "secondary_exposures":[
+             
+          ],
+          "explicit_parameters":[
+             
+          ],
+          "passed":true
+       },
+       "test_disabled_config":{
+          "name":"test_disabled_config",
+          "value":{
+             "default":"disabled but default!"
+          },
+          "rule_id":"disabled",
+          "group":"disabled",
+          "secondary_exposures":[
+             
+          ],
+          "explicit_parameters":[
+             
+          ],
+          "passed":false
+       },
+       "big_number":{
+          "name":"big_number",
+          "value":{
+             "foo":1e+21,
+             "bar":1e+60,
+             "boo":99,
+             "bbb":1e+55,
+             "rar":9999999999
+          },
+          "rule_id":"default",
+          "group":"default",
+          "secondary_exposures":[
+             
+          ],
+          "explicit_parameters":[
+             
+          ],
+          "passed":false
+       },
+       "test_empty_array":{
+          "name":"test_empty_array",
+          "value":{
+             "value":[
+                
+             ]
+          },
+          "rule_id":"default",
+          "group":"default",
+          "secondary_exposures":[
+             
+          ],
+          "explicit_parameters":[
+             
+          ],
+          "passed":false
+       },
+       "test_experiment_no_targeting":{
+          "name":"test_experiment_no_targeting",
+          "value":{
+             "value":"test_2"
+          },
+          "rule_id":"54QJzwYUMmgIKOIn9uPq28",
+          "group":"54QJzwYUMmgIKOIn9uPq28",
+          "group_name":"Test2",
+          "secondary_exposures":[
+             
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "test_experiment_with_targeting":{
+          "name":"test_experiment_with_targeting",
+          "value":{
+             
+          },
+          "rule_id":"layerAssignment",
+          "group":"layerAssignment",
+          "secondary_exposures":[
+             
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "test_exp_random_id":{
+          "name":"test_exp_random_id",
+          "value":{
+             
+          },
+          "rule_id":"layerAssignment",
+          "group":"layerAssignment",
+          "secondary_exposures":[
+             
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "test_exp_random_id_allocated":{
+          "name":"test_exp_random_id_allocated",
+          "value":{
+             "bool":true,
+             "string":"test3"
+          },
+          "rule_id":"4qC3kJ5j58KwBAt2VLKL7M",
+          "group":"4qC3kJ5j58KwBAt2VLKL7M",
+          "group_name":"Test #3",
+          "secondary_exposures":[
+             
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "test_country_layer_2":{
+          "name":"test_country_layer_2",
+          "value":{
+             
+          },
+          "rule_id":"layerAssignment",
+          "group":"layerAssignment",
+          "secondary_exposures":[
+             
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "device_exp":{
+          "name":"device_exp",
+          "value":{
+             "sample_parameter":true
+          },
+          "rule_id":"5UXv4fzk8lK9fQXvhHLGgA",
+          "group":"5UXv4fzk8lK9fQXvhHLGgA",
+          "group_name":"Test",
+          "secondary_exposures":[
+             
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "test_exp_with_layers":{
+          "name":"test_exp_with_layers",
+          "value":{
+             "layer_param":"a",
+             "another_param":false
+          },
+          "rule_id":"layerAssignment",
+          "group":"layerAssignment",
+          "secondary_exposures":[
+             
+          ],
+          "explicit_parameters":[
+             "another_param"
+          ]
+       },
+       "test_decision_made":{
+          "name":"test_decision_made",
+          "value":{
+             "test":"test"
+          },
+          "rule_id":"launchedGroup",
+          "group":"launchedGroup",
+          "group_name":"Test",
+          "secondary_exposures":[
+             
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "test_exp_with_layers_and_holdout":{
+          "name":"test_exp_with_layers_and_holdout",
+          "value":{
+             "layer_param":"control",
+             "another_param":false
+          },
+          "rule_id":"1TKp6duhoSeXlK1E38XG1F",
+          "group":"1TKp6duhoSeXlK1E38XG1F",
+          "group_name":"Control",
+          "secondary_exposures":[
+             {
+                "gate":"layer_holdout",
+                "gateValue":"false",
+                "ruleID":"2bAVp6R3C85vCYrR6be36n:10.00:5"
+             }
+          ],
+          "explicit_parameters":[
+             "layer_param"
+          ]
+       },
+       "test_exp_with_layers_and_targeting":{
+          "name":"test_exp_with_layers_and_targeting",
+          "value":{
+             "layer_param":"a",
+             "another_param":false
+          },
+          "rule_id":"layerAssignment",
+          "group":"layerAssignment",
+          "secondary_exposures":[
+             
+          ],
+          "explicit_parameters":[
+             "another_param",
+             "layer_param"
+          ]
+       },
+       "test_exp_with_layers_targeting_and_holdout":{
+          "name":"test_exp_with_layers_targeting_and_holdout",
+          "value":{
+             "shared_string_param":"test_string",
+             "shared_number_param":420
+          },
+          "rule_id":"5mM61GxB5D9yEqx0Of8wah",
+          "group":"5mM61GxB5D9yEqx0Of8wah",
+          "group_name":"Test",
+          "secondary_exposures":[
+             {
+                "gate":"layer_holdout",
+                "gateValue":"false",
+                "ruleID":"2bAVp6R3C85vCYrR6be36n:10.00:5"
+             },
+             {
+                "gate":"test_public",
+                "gateValue":"true",
+                "ruleID":"6X3qJgyfwA81IJ2dxI7lYp"
+             }
+          ],
+          "explicit_parameters":[
+             "shared_string_param"
+          ]
+       },
+       "a_experiment":{
+          "name":"a_experiment",
+          "value":{
+             
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "b_experiment":{
+          "name":"b_experiment",
+          "value":{
+             
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "experiment_with_many_params":{
+          "name":"experiment_with_many_params",
+          "value":{
+             "a_string":"layer",
+             "another_string":"layer_default",
+             "a_number":799,
+             "a_bool":false,
+             "an_object":{
+                "value":"layer_default"
+             },
+             "an_array":[
+                "layer_default"
+             ],
+             "another_bool":true,
+             "another_number":0
+          },
+          "rule_id":"layerAssignment",
+          "group":"layerAssignment",
+          "secondary_exposures":[
+             
+          ],
+          "explicit_parameters":[
+             "a_string",
+             "a_number",
+             "an_array",
+             "another_number",
+             "another_bool"
+          ]
+       },
+       "an_experiment":{
+          "name":"an_experiment",
+          "value":{
+             
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "an_experiment1":{
+          "name":"an_experiment1",
+          "value":{
+             
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "experiment_one":{
+          "name":"experiment_one",
+          "value":{
+             "shared_param":"layer_value"
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "experiment_two":{
+          "name":"experiment_two",
+          "value":{
+             "shared_param":"layer_value"
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "shipped_exp":{
+          "name":"shipped_exp",
+          "value":{
+             "a_string_param":"test_value"
+          },
+          "rule_id":"launchedGroup",
+          "group":"launchedGroup",
+          "group_name":"Test",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             "a_string_param"
+          ]
+       },
+       "an-experiment":{
+          "name":"an-experiment",
+          "value":{
+             
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "an-experiment3":{
+          "name":"an-experiment3",
+          "value":{
+             
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "an-experiment4":{
+          "name":"an-experiment4",
+          "value":{
+             
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "an-experiment7":{
+          "name":"an-experiment7",
+          "value":{
+             
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "an-experiment8":{
+          "name":"an-experiment8",
+          "value":{
+             
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "an-experiment9":{
+          "name":"an-experiment9",
+          "value":{
+             
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "an-experiment11":{
+          "name":"an-experiment11",
+          "value":{
+             
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "an-experiment14":{
+          "name":"an-experiment14",
+          "value":{
+             
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "an-experiment15":{
+          "name":"an-experiment15",
+          "value":{
+             
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "an-experiment16":{
+          "name":"an-experiment16",
+          "value":{
+             
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "an-experiment18":{
+          "name":"an-experiment18",
+          "value":{
+             
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "an-experiment19":{
+          "name":"an-experiment19",
+          "value":{
+             
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "an-experimenta":{
+          "name":"an-experimenta",
+          "value":{
+             
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "an-experimentaa":{
+          "name":"an-experimentaa",
+          "value":{
+             
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "not_started_exp_in_layer_with_holdout":{
+          "name":"not_started_exp_in_layer_with_holdout",
+          "value":{
+             "exp_val":"shipped_test",
+             "layer_val":"layer_default"
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             },
+             {
+                "gate":"layer_holdout",
+                "gateValue":"false",
+                "ruleID":"2bAVp6R3C85vCYrR6be36n:10.00:5"
+             }
+          ],
+          "explicit_parameters":[
+             "exp_val"
+          ]
+       },
+       "running_exp_in_layer_with_holdout":{
+          "name":"running_exp_in_layer_with_holdout",
+          "value":{
+             "exp_val":"shipped_test",
+             "layer_val":"layer_default"
+          },
+          "rule_id":"layerAssignment",
+          "group":"layerAssignment",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             },
+             {
+                "gate":"layer_holdout",
+                "gateValue":"false",
+                "ruleID":"2bAVp6R3C85vCYrR6be36n:10.00:5"
+             }
+          ],
+          "explicit_parameters":[
+             "exp_val"
+          ]
+       },
+       "shipped_exp_in_layer_with_holdout":{
+          "name":"shipped_exp_in_layer_with_holdout",
+          "value":{
+             "exp_val":"shipped_test",
+             "layer_val":"layer_default"
+          },
+          "rule_id":"launchedGroup",
+          "group":"launchedGroup",
+          "group_name":"Test",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             },
+             {
+                "gate":"layer_holdout",
+                "gateValue":"false",
+                "ruleID":"2bAVp6R3C85vCYrR6be36n:10.00:5"
+             }
+          ],
+          "explicit_parameters":[
+             "exp_val"
+          ]
+       },
+       "not_started_exp_in_layer_no_holdout":{
+          "name":"not_started_exp_in_layer_no_holdout",
+          "value":{
+             "exp_val":"shipped_test",
+             "layer_val":"layer_default"
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             "exp_val"
+          ]
+       },
+       "running_exp_in_layer_no_holdout":{
+          "name":"running_exp_in_layer_no_holdout",
+          "value":{
+             "exp_val":"shipped_test",
+             "layer_val":"layer_default"
+          },
+          "rule_id":"layerAssignment",
+          "group":"layerAssignment",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             "exp_val"
+          ]
+       },
+       "shipped_exp_in_layer_no_holdout":{
+          "name":"shipped_exp_in_layer_no_holdout",
+          "value":{
+             "exp_val":"shipped_test",
+             "layer_val":"layer_default"
+          },
+          "rule_id":"launchedGroup",
+          "group":"launchedGroup",
+          "group_name":"Test",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             "exp_val"
+          ]
+       },
+       "abandoned_exp_in_layer_with_holdout":{
+          "name":"abandoned_exp_in_layer_with_holdout",
+          "value":{
+             "exp_val":"shipped_test",
+             "layer_val":"layer_default"
+          },
+          "rule_id":"abandoned",
+          "group":"abandoned",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             },
+             {
+                "gate":"layer_holdout",
+                "gateValue":"false",
+                "ruleID":"2bAVp6R3C85vCYrR6be36n:10.00:5"
+             }
+          ],
+          "explicit_parameters":[
+             "exp_val"
+          ]
+       },
+       "targeted_exp_in_layer_with_holdout":{
+          "name":"targeted_exp_in_layer_with_holdout",
+          "value":{
+             "exp_val":"shipped_test",
+             "layer_val":"layer_default"
+          },
+          "rule_id":"layerAssignment",
+          "group":"layerAssignment",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             },
+             {
+                "gate":"layer_holdout",
+                "gateValue":"false",
+                "ruleID":"2bAVp6R3C85vCYrR6be36n:10.00:5"
+             }
+          ],
+          "explicit_parameters":[
+             "exp_val"
+          ]
+       },
+       "not_started_exp_unlayered_with_holdout":{
+          "name":"not_started_exp_unlayered_with_holdout",
+          "value":{
+             
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             },
+             {
+                "gate":"exp_holdout",
+                "gateValue":"false",
+                "ruleID":"1rEqLOpCROaRafv7ubGgax"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "running_exp_in_unlayered_with_holdout":{
+          "name":"running_exp_in_unlayered_with_holdout",
+          "value":{
+             "exp_val":"control"
+          },
+          "rule_id":"5suobctw6dpT6KUryHlnUG",
+          "group":"5suobctw6dpT6KUryHlnUG",
+          "group_name":"Control",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             },
+             {
+                "gate":"exp_holdout",
+                "gateValue":"false",
+                "ruleID":"1rEqLOpCROaRafv7ubGgax"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "shipped_exp_in_unlayered_with_holdout":{
+          "name":"shipped_exp_in_unlayered_with_holdout",
+          "value":{
+             "exp_val":"shipped_test"
+          },
+          "rule_id":"launchedGroup",
+          "group":"launchedGroup",
+          "group_name":"Test",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             },
+             {
+                "gate":"exp_holdout",
+                "gateValue":"false",
+                "ruleID":"1rEqLOpCROaRafv7ubGgax"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "targeted_exp_in_unlayered_with_holdout":{
+          "name":"targeted_exp_in_unlayered_with_holdout",
+          "value":{
+             
+          },
+          "rule_id":"targetingGate",
+          "group":"targetingGate",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             },
+             {
+                "gate":"exp_holdout",
+                "gateValue":"false",
+                "ruleID":"1rEqLOpCROaRafv7ubGgax"
+             },
+             {
+                "gate":"test_50_50",
+                "gateValue":"false",
+                "ruleID":"6U5gYSQ2jRCDWvfPzKSQY9"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "not_started_exp_unlayered_no_holdout":{
+          "name":"not_started_exp_unlayered_no_holdout",
+          "value":{
+             
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "test_exp_5050_targeting":{
+          "name":"test_exp_5050_targeting",
+          "value":{
+             
+          },
+          "rule_id":"targetingGate",
+          "group":"targetingGate",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             },
+             {
+                "gate":"test_50_50",
+                "gateValue":"false",
+                "ruleID":"6U5gYSQ2jRCDWvfPzKSQY9"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "test_targetting_with_capital_letter_gate":{
+          "name":"test_targetting_with_capital_letter_gate",
+          "value":{
+             "Result":"This is right"
+          },
+          "rule_id":"74pyYBYPZ5Xly55E6J3lEq",
+          "group":"74pyYBYPZ5Xly55E6J3lEq",
+          "group_name":"Test",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             },
+             {
+                "gate":"test_putting_CAPITAL_letters_in_id",
+                "gateValue":"true",
+                "ruleID":"3Gv6T9YIObRmqZV5nAv0fO"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "test_switchback":{
+          "name":"test_switchback",
+          "value":{
+             
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "test_exp_50_50_with_targeting_v2":{
+          "name":"test_exp_50_50_with_targeting_v2",
+          "value":{
+             
+          },
+          "rule_id":"targetingGate",
+          "group":"targetingGate",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             },
+             {
+                "gate":"test_is_us",
+                "gateValue":"false",
+                "ruleID":"default"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "inline_targeting_rules_exp":{
+          "name":"inline_targeting_rules_exp",
+          "value":{
+             
+          },
+          "rule_id":"inlineTargetingRules",
+          "group":"inlineTargetingRules",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "test":{
+          "name":"test",
+          "value":{
+             
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "exp_with_obj_and_array":{
+          "name":"exp_with_obj_and_array",
+          "value":{
+             "obj_param":{
+                "group":"test"
+             },
+             "arr_param":[
+                true,
+                false,
+                true
+             ]
+          },
+          "rule_id":"23gt15KsgEAbUiwEapclqk",
+          "group":"23gt15KsgEAbUiwEapclqk",
+          "group_name":"Test",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             
+          ]
+       },
+       "test_switchback_experiment_in_layer":{
+          "name":"test_switchback_experiment_in_layer",
+          "value":{
+             "group":"Layer"
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "explicit_parameters":[
+             "group"
+          ]
+       },
+       "test_autotune":{
+          "name":"test_autotune",
+          "value":{
+             
+          },
+          "rule_id":"5380HnrABE4p869fZhtUV9",
+          "group":"5380HnrABE4p869fZhtUV9",
+          "group_name":"black",
+          "secondary_exposures":[
+             
+          ],
+          "explicit_parameters":[
+             
+          ]
+       }
+    },
+    "layer_configs":{
+       "Basic_test_layer":{
+          "name":"Basic_test_layer",
+          "value":{
+             "value":"test_2"
+          },
+          "rule_id":"54QJzwYUMmgIKOIn9uPq28",
+          "group":"54QJzwYUMmgIKOIn9uPq28",
+          "group_name":"Test2",
+          "allocated_experiment_name":"test_experiment_no_targeting",
+          "is_device_based":false,
+          "is_experiment_active":true,
+          "explicit_parameters":[
+             
+          ],
+          "is_user_in_experiment":true,
+          "secondary_exposures":[
+             
+          ],
+          "undelegated_secondary_exposures":[
+             
+          ]
+       },
+       "country_test_layer":{
+          "name":"country_test_layer",
+          "value":{
+             
+          },
+          "rule_id":"default",
+          "group":"default",
+          "is_device_based":false,
+          "explicit_parameters":[
+             
+          ],
+          "secondary_exposures":[
+             
+          ],
+          "undelegated_secondary_exposures":[
+             
+          ]
+       },
+       "random_id_layer":{
+          "name":"random_id_layer",
+          "value":{
+             
+          },
+          "rule_id":"default",
+          "group":"default",
+          "is_device_based":false,
+          "explicit_parameters":[
+             
+          ],
+          "secondary_exposures":[
+             
+          ],
+          "undelegated_secondary_exposures":[
+             
+          ]
+       },
+       "test_layer":{
+          "name":"test_layer",
+          "value":{
+             "layer_param":"control",
+             "another_param":false
+          },
+          "rule_id":"1TKp6duhoSeXlK1E38XG1F",
+          "group":"1TKp6duhoSeXlK1E38XG1F",
+          "group_name":"Control",
+          "allocated_experiment_name":"test_exp_with_layers_and_holdout",
+          "is_device_based":false,
+          "is_experiment_active":true,
+          "explicit_parameters":[
+             "layer_param"
+          ],
+          "is_user_in_experiment":true,
+          "secondary_exposures":[
+             {
+                "gate":"layer_holdout",
+                "gateValue":"false",
+                "ruleID":"2bAVp6R3C85vCYrR6be36n:10.00:5"
+             }
+          ],
+          "undelegated_secondary_exposures":[
+             
+          ]
+       },
+       "test_layer_with_no_exp":{
+          "name":"test_layer_with_no_exp",
+          "value":{
+             "a_param":"foo"
+          },
+          "rule_id":"default",
+          "group":"default",
+          "is_device_based":false,
+          "explicit_parameters":[
+             
+          ],
+          "secondary_exposures":[
+             
+          ],
+          "undelegated_secondary_exposures":[
+             
+          ]
+       },
+       "test_layer_with_holdout":{
+          "name":"test_layer_with_holdout",
+          "value":{
+             "shared_string_param":"test_string",
+             "shared_number_param":420
+          },
+          "rule_id":"5mM61GxB5D9yEqx0Of8wah",
+          "group":"5mM61GxB5D9yEqx0Of8wah",
+          "group_name":"Test",
+          "allocated_experiment_name":"test_exp_with_layers_targeting_and_holdout",
+          "is_device_based":false,
+          "is_experiment_active":true,
+          "explicit_parameters":[
+             "shared_string_param"
+          ],
+          "is_user_in_experiment":true,
+          "secondary_exposures":[
+             {
+                "gate":"layer_holdout",
+                "gateValue":"false",
+                "ruleID":"2bAVp6R3C85vCYrR6be36n:10.00:5"
+             },
+             {
+                "gate":"test_public",
+                "gateValue":"true",
+                "ruleID":"6X3qJgyfwA81IJ2dxI7lYp"
+             }
+          ],
+          "undelegated_secondary_exposures":[
+             {
+                "gate":"layer_holdout",
+                "gateValue":"false",
+                "ruleID":"2bAVp6R3C85vCYrR6be36n:10.00:5"
+             }
+          ]
+       },
+       "layer_with_many_params":{
+          "name":"layer_with_many_params",
+          "value":{
+             "a_string":"layer",
+             "another_string":"layer_default",
+             "a_number":799,
+             "a_bool":false,
+             "an_object":{
+                "value":"layer_default"
+             },
+             "an_array":[
+                "layer_default"
+             ],
+             "another_bool":true,
+             "another_number":0
+          },
+          "rule_id":"default",
+          "group":"default",
+          "is_device_based":false,
+          "explicit_parameters":[
+             
+          ],
+          "secondary_exposures":[
+             
+          ],
+          "undelegated_secondary_exposures":[
+             
+          ]
+       },
+       "layer_in_global_holdout":{
+          "name":"layer_in_global_holdout",
+          "value":{
+             "shared_param":"layer_value"
+          },
+          "rule_id":"default",
+          "group":"default",
+          "is_device_based":false,
+          "explicit_parameters":[
+             
+          ],
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "undelegated_secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ]
+       },
+       "layer_with_inactive_exp":{
+          "name":"layer_with_inactive_exp",
+          "value":{
+             "a_string_param":"test_value"
+          },
+          "rule_id":"default",
+          "group":"default",
+          "is_device_based":false,
+          "explicit_parameters":[
+             
+          ],
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "undelegated_secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ]
+       },
+       "test_layer_in_holdout":{
+          "name":"test_layer_in_holdout",
+          "value":{
+             "exp_val":"shipped_test",
+             "layer_val":"layer_default"
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "allocated_experiment_name":"not_started_exp_in_layer_with_holdout",
+          "is_device_based":false,
+          "is_experiment_active":false,
+          "explicit_parameters":[
+             "exp_val"
+          ],
+          "is_user_in_experiment":false,
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             },
+             {
+                "gate":"layer_holdout",
+                "gateValue":"false",
+                "ruleID":"2bAVp6R3C85vCYrR6be36n:10.00:5"
+             }
+          ],
+          "undelegated_secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             },
+             {
+                "gate":"layer_holdout",
+                "gateValue":"false",
+                "ruleID":"2bAVp6R3C85vCYrR6be36n:10.00:5"
+             }
+          ]
+       },
+       "test_layer_not_in_holdout":{
+          "name":"test_layer_not_in_holdout",
+          "value":{
+             "exp_val":"shipped_test",
+             "layer_val":"layer_default"
+          },
+          "rule_id":"default",
+          "group":"default",
+          "is_device_based":false,
+          "explicit_parameters":[
+             
+          ],
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "undelegated_secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ]
+       },
+       "test_switchback_layer":{
+          "name":"test_switchback_layer",
+          "value":{
+             "group":"Layer"
+          },
+          "rule_id":"prestart",
+          "group":"prestart",
+          "allocated_experiment_name":"test_switchback_experiment_in_layer",
+          "is_device_based":false,
+          "is_experiment_active":false,
+          "explicit_parameters":[
+             "group"
+          ],
+          "is_user_in_experiment":false,
+          "secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ],
+          "undelegated_secondary_exposures":[
+             {
+                "gate":"global_holdout",
+                "gateValue":"false",
+                "ruleID":"3QoA4ncNdVGBaMt3N1KYjz:0.50:1"
+             }
+          ]
+       }
     }
-}
+ }
