@@ -60,7 +60,7 @@ const BOOL SHOULD_DEMO_ERROR_EVENTS = false;
     
     
     // No User Error
-    id _ = [[Statsig sharedInstance]
+    FeatureGate *noUserGate = [[Statsig sharedInstance]
      getFeatureGate:@"a_gate"
      forUser:nil
      options:nil];

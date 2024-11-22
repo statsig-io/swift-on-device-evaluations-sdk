@@ -12,28 +12,16 @@ public enum SdkDemoSimpleGroupName: String, TypedGroupName {
 }
 
 class SdkDemoExperiments {
-    static let AnExperiment = SdkDemoTypedAnExperiment.self
-    static let AnotherExperiment = SdkDemoTypedAnotherExperiment.self
-}
-
-struct SdkDemoTypedAnExperiment: TypedExperimentMemoizedByUserID {
-    static var name = "an_experiment"
-
-    var groupName: SdkDemoSimpleGroupName?
-    var value: TypedNoValue?
-}
-
-struct SdkDemoTypedAnotherExperiment: TypedExperiment {
-    static var name = "another_experiment"
+    class AnExperiment: TypedExperiment<SdkDemoSimpleGroupName, TypedNoValue> {
+        init() { super.init("an_experiment", isMemoizable: true) }
+    }
     
-    var groupName: SdkDemoTypedAnotherExperimentGroup?
     enum SdkDemoTypedAnotherExperimentGroup: String, TypedGroupName {
         case control = "Control"
         case testOne = "Test One"
         case testTwo = "Test Two"
     }
     
-    var value: AnotherExperimentValue?
     struct AnotherExperimentValue: Decodable {
         let aString: String
         let aBool: Bool
@@ -42,5 +30,9 @@ struct SdkDemoTypedAnotherExperiment: TypedExperiment {
             case aString = "a_string"
             case aBool = "a_bool"
         }
+    }
+    
+    class AnotherExperiment: TypedExperiment<SdkDemoSimpleGroupName, AnotherExperimentValue> {
+        init() { super.init("another_experiment") }
     }
 }

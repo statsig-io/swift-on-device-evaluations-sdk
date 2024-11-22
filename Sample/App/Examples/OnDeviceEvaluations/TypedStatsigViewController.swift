@@ -1,6 +1,7 @@
 import UIKit
 import StatsigOnDeviceEvaluations
 
+
 class TypedStatsigViewController: UIViewController {
     let user = StatsigUser(userID: "a-user")
     let statsig = Statsig()
@@ -25,11 +26,11 @@ class TypedStatsigViewController: UIViewController {
     }
     
     func render() {
-        var texts = ["- Strict Typing -"]
+        var texts = ["-- Strict Typing --"]
 
         evalAndAppendResults(texts: &texts)
 
-        texts.append("- After Empty Specs Update -")
+        texts.append("-- After Empty Specs Update --")
         
         // Update specs to be entirely empty
         let path = Bundle.main.path(forResource: "EmptySynchronousSpecs", ofType: "json")!
@@ -51,14 +52,15 @@ class TypedStatsigViewController: UIViewController {
         let aGate = statsig.typed.getFeatureGate(SdkDemoGates.aGate, user)
         texts.append("\(aGate.name): \(aGate.value ? "Pass": "Fail")")
         
+        
         // Get an Experiment (with params) using strict typing
-        let anotherExperiment = statsig.typed.getExperiment(SdkDemoExperiments.AnotherExperiment, user)
+        let anotherExperiment = statsig.typed.getExperiment(SdkDemoExperiments.AnotherExperiment(), user)
         let value = anotherExperiment.value
         texts.append("\(anotherExperiment.name): \(value?.aString ?? "Not Found") - \(value?.aBool == true ? "Pass" : "Fail")")
 
         // Get an Experiment using strict typing
-        let anExperiment = statsig.typed.getExperiment(SdkDemoExperiments.AnExperiment, user)
-        switch anExperiment.groupName {
+        let anExperiment = statsig.typed.getExperiment(SdkDemoExperiments.AnExperiment(), user)
+        switch anExperiment.group {
         case .test:
             texts.append("\(anExperiment.name): Test Group")
             break

@@ -2,7 +2,7 @@ import Foundation
 
 class MemoStore {
     var gates: [String: FeatureGate] = [:]
-    var experiments: [String: any TypedExperiment] = [:]
+    var experiments: [String: Any] = [:]
 }
 
 @objc
@@ -37,50 +37,45 @@ open class TypedStatsigProvider: NSObject {
         return tryMemoizeFeatureGate(name, gate, user)
     }
     
-    open func getExperiment<T: TypedExperiment>(
-        _ type: T.Type,
+    open func getExperiment<G: TypedGroupName, V: Decodable, E: TypedExperiment<G, V>>(
+        _ experiment: E,
         _ user: StatsigUser? = nil,
         _ options: GetExperimentOptions? = nil
-    ) -> T {
-        guard let (client, user) = validate(user, type.name) else {
-            return T.init()
+    ) -> E {
+        let result = experiment.new()
+        
+        guard let (client, user) = validate(user, experiment.name) else {
+            return result
         }
-
-        if let found = tryGetMemoExperiment(type, user) {
+        
+        if result.name == InvalidTypedExperimentSubclassError {
+            let err = "TypedExperiment '\(E.self)' does not implement init"
+            self.client?.emitter.emitError(err, .typedInvalidSubclass)
+            return result
+        }
+        
+        if let found = tryGetMemoExperiment(experiment, user) {
             return found
         }
         
-        let experiment = client.getExperiment(type.name, user, options)
-        
-        var group: T.GroupNameType? = nil
-        if let groupName = experiment.groupName {
-            group = T.GroupNameType.init(rawValue:groupName)
+        let rawExperiment = client.getExperiment(experiment.name, user, options)
 
-            if group == nil {
-                let err = "Failed to convert group name '\(groupName)' to type '\(T.GroupNameType.self)'"
-                self.client?.emitter.emitError(err, .typedBadGroup)
-                return tryMemoizeExperiment(T.init(), user)
-            }
+        result.trySetGroupFromString(rawExperiment.groupName)
+        result.trySetValueFromData(rawExperiment.rawValue)
+
+        if let rawGroupName = rawExperiment.groupName, result.group == nil {
+            let err = "Failed to convert group name '\(rawGroupName)' to type '\(G.self)'"
+            self.client?.emitter.emitError(err, .typedInvalidGroup)
         }
 
-        var value: T.ValueType? = nil
-        if let raw = experiment.rawValue {
-            let decoder = JSONDecoder()
-            value = try? decoder.decode(T.ValueType.self, from: raw)
-            
-            if value == nil {
-                let json = String(data: raw, encoding: .utf8) ?? "<UNKNOWN>"
-                let subjson = json.prefix(100)
-                let err = "Failed to deserialize json value '\(subjson)' to type '\(T.ValueType.self)'"
-                self.client?.emitter.emitError(err, .typedBadValue)
-                return tryMemoizeExperiment(T.init(groupName: group, value: nil), user)
-            }
+        if V.self != TypedNoValue.self, let rawValue = rawExperiment.rawValue, result.value == nil {
+            let json = String(data: rawValue, encoding: .utf8) ?? "<UNKNOWN>"
+            let subjson = json.prefix(100)
+            let err = "Failed to deserialize json value '\(subjson)' to type '\(V.self)'"
+            self.client?.emitter.emitError(err, .typedInvalidValue)
         }
 
-        return tryMemoizeExperiment(
-            T.init(groupName: group, value: value),
-            user
-        )
+        return tryMemoizeExperiment(result, user)
     }
     
     open func bind(_ client: Statsig, _ options: StatsigOptions?) -> Void {
@@ -120,22 +115,22 @@ open class TypedStatsigProvider: NSObject {
 
 // MARK: Memoization
 extension TypedStatsigProvider {
-    private func tryGetMemoExperiment<T: TypedExperiment>(
-        _ type: T.Type,
+    private func tryGetMemoExperiment<G: TypedGroupName, V: Decodable, E: TypedExperiment<G, V>>(
+        _ experiment: E,
         _ user: StatsigUser
-    ) -> T? {
-        if !type.isMemoizable {
+    ) -> E? {
+        if !experiment.isMemoizable {
             return nil
         }
         
-        let key = getMemoKey(user, type.memoUnitIdType, type.name)
-        return memo.experiments[key] as? T
+        let key = getMemoKey(user, experiment.memoUnitIdType, experiment.name)
+        return (memo.experiments[key] as? E)?.clone()
     }
     
-    private func tryMemoizeExperiment<T: TypedExperiment>(
-        _ experiment: T,
+    private func tryMemoizeExperiment<G: TypedGroupName, V: Decodable, E: TypedExperiment<G, V>>(
+        _ experiment: E,
         _ user: StatsigUser
-    ) -> T {
+    ) -> E {
         if !experiment.isMemoizable {
             return experiment
         }

@@ -6,85 +6,62 @@ public protocol TypedGroupName {
 
 public struct TypedNoValue: Decodable {}
 
-public protocol TypedExperiment {
-    associatedtype GroupNameType: TypedGroupName
-    associatedtype ValueType: Decodable
-    
-    static var name: String { get }
-    static var isMemoizable: Bool { get }
-    static var memoUnitIdType: String { get }
+internal let InvalidTypedExperimentSubclassError: String = "InvalidTypedExperimentSubclass"
 
-    init()
-    init(groupName: GroupNameType?, value: ValueType?)
-}
+open class TypedExperiment<G: TypedGroupName, V: Decodable> {
+    public private(set) var name: String
+    public private(set) var isMemoizable: Bool
+    public private(set) var memoUnitIdType: String
+    public private(set) var group: G?
+    public private(set) var value: V?
 
-extension TypedExperiment {
-    public static var isMemoizable: Bool {
-        return false
+    public required init() {
+        self.name = InvalidTypedExperimentSubclassError
+        self.isMemoizable = true
+        self.memoUnitIdType = "userID"
+    }
+
+    public init(
+        _ name: String,
+        isMemoizable: Bool = false,
+        memoUnitIdType: String = "userID"
+    ) {
+        self.name = name
+        self.isMemoizable = isMemoizable
+        self.memoUnitIdType = memoUnitIdType
     }
     
-    public static var memoUnitIdType: String {
-        return "userID"
+    internal func new() -> Self {
+        let inst = Self.init()
+        inst.name = self.name
+        inst.isMemoizable = self.isMemoizable
+        inst.memoUnitIdType = self.memoUnitIdType
+        return inst
+    }
+
+    internal func clone() -> Self {
+        let inst = self.new()
+        inst.value = self.value
+        inst.group = self.group
+        return inst
+    }
+
+    internal func trySetGroupFromString(_ input: String?) {
+        guard let input = input else {
+            return
+        }
+        
+        group = G.init(rawValue: input)
     }
     
-    public var groupName: GroupNameType? {
-        get { nil }
-        set { }
-    }
+    internal func trySetValueFromData(_ input: Data?) {
+        guard let input = input else {
+            return
+        }
 
-    public var value: ValueType? {
-        get { nil }
-        set { }
-    }
-    
-    public var name: String {
-        Self.name
-    }
-
-    public var isMemoizable: Bool {
-        Self.isMemoizable
-    }
-    
-    public var memoUnitIdType: String {
-        Self.memoUnitIdType
-    }
-
-    public init() {
-        self.init(groupName: nil, value: nil)
-    }
-
-    public init(_ groupName: GroupNameType, _ value: ValueType) {
-        self.init(groupName: groupName, value: value)
-    }
-}
-
-
-// MARK: UserID + Memoization
-
-public protocol TypedExperimentMemoizedByUserID: TypedExperiment {}
-
-extension TypedExperimentMemoizedByUserID {
-    public static var isMemoizable: Bool {
-        return true
-    }
-    
-    public static var memoUnitIdType: String {
-        return "userID"
+        let decoder = JSONDecoder()
+        value = try? decoder.decode(V.self, from: input)
     }
 }
 
-
-// MARK: StableID + Memoization
-
-public protocol TypedExperimentMemoizedByStableID: TypedExperiment {}
-
-extension TypedExperimentMemoizedByStableID {
-    public static var isMemoizable: Bool {
-        return true
-    }
-    
-    public static var memoUnitIdType: String {
-        return "stableID"
-    }
-}
-
+open class TypedExperimentWithoutValue<G: TypedGroupName>: TypedExperiment<G, TypedNoValue> {}

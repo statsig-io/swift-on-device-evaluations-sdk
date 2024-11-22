@@ -6,8 +6,9 @@ import Foundation
     case invalidSyncInterval
     case backgroundSyncFailure
     case unsupportedConfiguration
-    case typedBadGroup
-    case typedBadValue
+    case typedInvalidSubclass
+    case typedInvalidGroup
+    case typedInvalidValue
 }
 
 @objc public enum StatsigClientEvent: Int, CustomStringConvertible {
