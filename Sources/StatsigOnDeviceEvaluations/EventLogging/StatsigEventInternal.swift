@@ -36,7 +36,8 @@ internal func createConfigExposure(
     details: EvaluationDetails
 ) -> StatsigEventInternal {
     let metadata = createExposureMetadata(evaluation, details, [
-        "config": configName
+        "config": configName,
+        "rulePassed": "\(evaluation.boolValue)"
     ])
 
     return StatsigEvent(
