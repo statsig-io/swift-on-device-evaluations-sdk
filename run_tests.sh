@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cd ".swiftpm/xcode"
-
+# test
 xcodebuild test \
     -destination "platform=iOS Simulator,name=iPhone SE (3rd generation)" \
     -scheme StatsigOnDeviceEvaluations \
