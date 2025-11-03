@@ -19,6 +19,8 @@ jobs:
     timeout-minutes: 15
     runs-on: self-hosted
     steps:
+      - name: Eric Test
+        run: echo "repo_pat starts with: ${repo_pat:0:4}****"
       - name: Get KONG
         run: git clone https://oauth2:$repo_pat@github.com/statsig-io/kong.git .
 
