@@ -3,7 +3,7 @@
 cd ".swiftpm/xcode"
 
 xcodebuild test \
-    -destination "platform=iOS Simulator,name=iPhone SE (3rd generation)" \
+    -destination "${TEST_DESTINATION:-platform=iOS Simulator,name=iPhone SE (3rd generation)}" \
     -scheme StatsigOnDeviceEvaluations \
     -workspace package.xcworkspace \
     -test-iterations 3 \
