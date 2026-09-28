@@ -14,15 +14,15 @@ env:
 jobs:
   build:
     name: Build
-    runs-on: self-hosted
+    runs-on: blacksmith-6vcpu-macos-latest
     strategy:
       fail-fast: false
       matrix:
         platform:
           [
-            "platform=iOS Simulator,name=iPhone SE (2nd generation)",
+            "generic/platform=iOS Simulator",
             "platform=macOS",
-            "platform=tvOS Simulator,name=Apple TV",
+            "generic/platform=tvOS Simulator",
           ]
     steps:
       - name: Checkout
@@ -39,7 +39,7 @@ jobs:
 
   test:
     name: Test
-    runs-on: self-hosted
+    runs-on: blacksmith-6vcpu-macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@main
@@ -47,5 +47,11 @@ jobs:
       - name: Lint Podspec
         run: pod lib lint StatsigOnDeviceEvaluations.podspec --skip-tests
 
+      - name: Prepare Simulator
+        id: simulator
+        uses: statsig-io/ios-client-sdk/.github/actions/prepare-simulator@1fde556fbc6ca3b4e7c674f1e273cad8218c22a6
+
       - name: Run Tests
+        env:
+          TEST_DESTINATION: ${{ steps.simulator.outputs.destination }}
         run: ./run_tests.sh
